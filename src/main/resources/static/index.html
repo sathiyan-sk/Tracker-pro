@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrackerPro | Home</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f8f9fa;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+          .logo-section {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        .logo-text {
+            font-size: 24px;
+            font-weight: bold;
+            color: #f8f8f3;
+        }
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #dbeafe;
+        }
+
+        .login-btn {
+            background: #fff;
+            color: #1e3a8a;
+            padding: 0.7rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .login-btn:hover {
+            background: #f3f4f6;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #60a5fa 100%);
+            color: white;
+            padding: 8rem 0 4rem;
+            text-align: center;
+            margin-top: 70px;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .cta-btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .cta-primary {
+            background: #fff;
+            color: #1e3a8a;
+        }
+
+        .cta-secondary {
+            background: transparent;
+            color: #fff;
+            border: 2px solid #fff;
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 4rem 0;
+            background: #fff;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: #1e3a8a;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .feature-card {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            text-align: center;
+            transition: all 0.3s ease;
+            border: 1px solid #e5e7eb;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 40px rgba(30, 58, 138, 0.15);
+        }
+
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, #f7f7f7, #feffff);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 1.5rem;
+            color: white;
+        }
+
+        .feature-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1rem;
+            color: #1e3a8a;
+        }
+
+        .feature-card p {
+            color: #6b7280;
+            line-height: 1.6;
+        }
+
+        /* User Roles Section */
+        .user-roles {
+            padding: 4rem 0;
+            background: #f8f9fa;
+        }
+
+        .roles-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .role-card {
+            background: #fff;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            text-align: center;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .role-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+        }
+
+        .role-avatar {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #f1f5f4, #f6f8f7);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 2rem;
+            color: white;
+        }
+
+        .role-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 1rem;
+            color: #050a18;
+        }
+
+        .role-features {
+            list-style: none;
+            text-align: left;
+        }
+
+        .role-features li {
+            padding: 0.3rem 0;
+            color: #6b7280;
+        }
+
+        .role-features li:before {
+            content: '✓';
+            color: #10b981;
+            font-weight: bold;
+            margin-right: 0.5rem;
+        }
+
+         .section-title {
+            text-align: center;
+            font-size: 36px;
+            margin-bottom: 20px;
+            color: #222;
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 60px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        /* Stats Section */
+        .stats {
+            padding: 4rem 0;
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            color: white;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            text-align: center;
+        }
+
+        .stat-item h3 {
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-item p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        /* Footer */
+        .footer {
+            background-color: #222;
+            color: #fff;
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .footer-section h4 {
+            margin-bottom: 15px;
+            color: #ffcc00;
+        }
+
+        .footer-section p, .footer-section a {
+            color: #ccc;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .footer-section a:hover {
+            color: #ffcc00;
+        }
+
+        .footer-bottom {
+            border-top: 1px solid #444;
+            padding-top: 20px;
+            color: #888;
+        }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero p {
+                font-size: 1.1rem;
+            }
+
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .features-grid,
+            .roles-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Animation Classes */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeIn 0.8s ease forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+<header>
+    <nav class="container">
+        <div class="logo-section">
+            <img src="LOGO.png" alt="Company Logo" class="logo">
+            <div class="logo-text">Tracker Pro</div>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#features">Features</a></li>
+            <li><a href="#roles">User Roles</a></li>
+        </ul>
+        <a href="loginPage.html" class="login-btn">Login</a>
+    </nav>
+</header>
+
+<main>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1 class="fade-in">All-in One Student Management Solution</h1>
+            <p class="fade-in">Streamline your entire workforce lifecycle from recruitment to evaluation with our comprehensive corporate management platform</p>
+            <div class="cta-buttons fade-in">
+                <a href="loginPage.html" class="cta-btn cta-primary">Access Portal</a>
+                <a href="#features" class="cta-btn cta-secondary">Explore Features</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features" id="features">
+        <div class="container">
+            <h2 class="section-title">Comprehensive Management Features</h2>
+            <div class="features-grid">
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">ᯓ🏃🏻‍♀️‍➡️</div>
+                    <h3>Student Management</h3>
+                    <p>Complete application tracking, screening, and selection process with automated workflows and communication tools.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">❇️</div>
+                    <h3>Talent Acquition</h3>
+                    <p>Recruitment, Student records management, performance tracking, and comprehensive reporting capabilities.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">💼</div>
+                    <h3>Faculty Evaluation</h3>
+                    <p>Structured assessment tools, progress monitoring, and competency evaluation for academic and training roles.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">🖥️</div>
+                    <h3>Admin Control</h3>
+                    <p>System-wide configuration, user management, security controls, and comprehensive audit trails.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">🌐</div>
+                    <h3>Progress Monitoring</h3>
+                    <p>Track employee development, milestone achievements, and performance metrics across all departments.</p>
+                </div>
+                <div class="feature-card fade-in">
+                    <div class="feature-icon">🔀</div>
+                    <h3>Workflow Automation</h3>
+                    <p>Automated processes for onboarding, evaluations, notifications, and document management.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- User Roles Section -->
+    <section class="user-roles" id="roles">
+        <div class="container">
+            <h2 class="section-title">Easy Actions for Every Role</h2>
+            <p class="section-subtitle">Designed to meet the unique needs of different user types in educational and corporate environments.</p>
+            <div class="roles-grid">
+                <div class="role-card fade-in">
+                    <div class="role-avatar">🔰  </div>
+                    <h3>HR Personnel</h3>
+                    <ul class="role-features">
+                        <li>Candidate database management</li>
+                        <li>Recruitment workflow control</li>
+                        <li>Performance analytics</li>
+                        <li>Policy management</li>
+                    </ul>
+                </div>
+                <div class="role-card fade-in">
+                    <div class="role-avatar">🙋‍♂️</div>
+                    <h3>Student</h3>
+                    <ul class="role-features">
+                        <li>Apply Course or Application</li>
+                        <li>Status tracking</li>
+                        <li>Student Workspace</li>
+                        <li>Rewards</li>
+                    </ul>
+                </div>
+                <div class="role-card fade-in">
+                    <div class="role-avatar">👥</div>
+                    <h3>Faculty</h3>
+                    <ul class="role-features">
+                        <li>Student evaluation tools</li>
+                        <li>Performance metrics</li>
+                        <li>Progress tracking</li>
+                        <li>Report generation</li>
+                    </ul>
+                </div>
+                <div class="role-card fade-in">
+                    <div class="role-avatar">⚡</div>
+                    <h3>Administrator</h3>
+                    <ul class="role-features">
+                        <li>System configuration</li>
+                        <li>User access control</li>
+                        <li>Global analytics</li>
+                        <li>Security management</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="stats">
+        <div class="container">
+            <div class="stats-grid">
+                <div class="stat-item fade-in">
+                    <h3>500+</h3>
+                    <p>Applicants Target Reached</p>
+                </div>
+                <div class="stat-item fade-in">
+                    <h3>50k+</h3>
+                    <p>Employees Managed</p>
+                </div>
+                <div class="stat-item fade-in">
+                    <h3>95%</h3>
+                    <p>Process Efficiency</p>
+                </div>
+                <div class="stat-item fade-in">
+                    <h3>24&#47;7</h3>
+                    <p>System Availability</p>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer class="footer">
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>Tracker Pro</h4>
+                <p>All-in-One Candidate management tool for teams and individuals.</p>
+            </div>
+            <div class="footer-section">
+                <h4>Quick Links</h4>
+                <a href="loginPage.html">Login</a>
+                <a href="registerPage.html">Register</a>
+                <a href="#features">Features</a>
+            </div>
+            <div class="footer-section">
+                <h4>Contact</h4>
+                <p>sathiyan@trackerpro.com</p>
+                <p>+044 56565-55555</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 Tracker Pro. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // Navigation function
+    function navigateTo(page) {
+        window.location.href = page;
+    }
+
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            const target = document.querySelector(this.getAttribute('href'));
+            if (target) {
+                target.scrollIntoView({
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }
+        });
+    });
+
+    // Intersection Observer for animations
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.style.animationDelay = '0.2s';
+                entry.target.classList.add('fade-in');
+            }
+        });
+    }, observerOptions);
+
+    // Observe all animatable elements
+    document.addEventListener('DOMContentLoaded', function() {
+        const animatableElements = document.querySelectorAll('.feature-card, .role-card, .stat-item');
+        animatableElements.forEach(el => {
+            observer.observe(el);
+        });
+    });
+
+    // Counter animation for stats
+    function animateCounter(element, target) {
+        let current = 0;
+        const increment = target / 100;
+        const timer = setInterval(() => {
+            current += increment;
+            if (current >= target) {
+                current = target;
+                clearInterval(timer);
+            }
+            element.textContent = Math.floor(current) + (target >= 1000 ? 'k+' : target >= 100 ? '+' : '%');
+        }, 20);
+    }
+
+    // Animate stats when in view
+    const statsObserver = new IntersectionObserver(function(entries) {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const h3 = entry.target.querySelector('h3');
+                const text = h3.textContent;
+                const number = parseInt(text.replace(/[^0-9]/g, ''));
+                animateCounter(h3, number);
+                statsObserver.unobserve(entry.target);
+            }
+        });
+    }, { threshold: 0.5 });
+
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.stat-item').forEach(item => {
+            statsObserver.observe(item);
+        });
+    });
+</script>
+</body>
+</html>
