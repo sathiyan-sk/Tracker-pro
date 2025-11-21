@@ -1,0 +1,1388 @@
+<!DOCTYPE html><html lang="en"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>TrackerPro - Admin Dashboard</title> <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"> <style> :root{--primary-color:#4a6fff;--primary-light:#e5eaff;--primary-dark:#3a5ccc;--secondary-color:#ff7e42;--text-color:#333333;--text-light:#666666;--light-color:#f8f9fc;--gray-color:#dfe2e9;--success-color:#2ecc71;--warning-color:#f1c40f;--danger-color:#e74c3c;--white:#ffffff;--shadow-sm:0 2px 4px rgba(0,0,0,0.05);--shadow-md:0 4px 8px rgba(0,0,0,0.1);--border-radius-sm:4px;--border-radius-md:8px;--transition:all 0.3s ease;--header-height:70px;--sidebar-width:250px;--bg-card:#ffffff;--border:#e2e8f0;--text-muted:#64748b;--text-secondary:#475569;--text-primary:#1e293b;--bg-hover:#f1f5f9}*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Poppins',sans-serif;background-color:#f9fafb;color:var(--text-color);line-height:1.6;overflow-x:hidden}.header-bar{background-color:var(--white);height:var(--header-height);position:fixed;top:0;left:0;right:0;z-index:100;box-shadow:var(--shadow-sm);display:flex;align-items:center;padding:0 2rem 0 5rem;justify-content:space-between}.logo-container{display:flex;align-items:center;gap:0.75rem}.logo{height:38px;width:38px;object-fit:contain}.logo-text{font-size:1.4rem;font-weight:600;color:black;white-space:nowrap}.header-actions{display:flex;align-items:center;gap:1rem}.header-search{position:relative;width:300px}.header-search input{width:100%;padding:0.5rem 1rem 0.5rem 2.5rem;border-radius:50px;border:1px solid var(--gray-color);font-size:0.9rem;outline:none;transition:var(--transition)}.header-search input:focus{border-color:var(--primary-color);box-shadow:0 0 0 3px var(--primary-light)}.header-search::before{content:'🔍︎';position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:1rem;color:var(--text-light)}.header-notifications{position:relative;cursor:pointer;width:40px;height:40px;display:flex;align-items:center;justify-content:center;background-color:var(--light-color);border-radius:50%;transition:var(--transition)}.header-notifications:hover{background-color:var(--primary-light)}.header-notifications::after{content:'8';position:absolute;top:-2px;right:-2px;background-color:var(--secondary-color);color:white;font-size:0.7rem;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:600}.user-profile{display:flex;align-items:center;gap:0.75rem;cursor:pointer}.user-avatar{width:40px;height:40px;background-color:var(--primary-light);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:600;color:var(--primary-dark);font-size:1.2rem}.user-details .user-name{font-weight:500;font-size:0.9rem;line-height:1.2}.user-details .user-role{font-size:0.8rem;color:var(--text-light)}.dashboard-container{display:flex;min-height:100vh;padding-top:var(--header-height)}.sidebar{width:var(--sidebar-width);background:var(--bg-card);border-right:1px solid var(--border);height:calc(100vh - var(--header-height));position:fixed;top:var(--header-height);left:0;overflow-y:auto;padding:1.5rem 0 0 0;z-index:90;transition:all 0.3s ease;display:flex;flex-direction:column}.sidebar.collapsed{transform:translateX(-230px)}.nav-section{margin-bottom:1rem;padding-bottom:1rem;flex:1}.nav-title{font-size:0.75rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;padding:0 1.5rem;margin-bottom:0.5rem}.nav-item{display:flex;align-items:center;padding:0.75rem 1.5rem;color:var(--text-secondary);text-decoration:none;font-size:0.875rem;font-weight:500;transition:var(--transition);position:relative;cursor:pointer;border-left:3px solid transparent;margin:2px 0}.nav-item:hover{background:var(--bg-hover);color:var(--text-primary)}.nav-item.active{background:var(--primary-light);color:var(--primary-color);font-weight:600;border-left:3px solid var(--primary-color)}.nav-icon{width:20px;height:20px;margin-right:0.75rem;opacity:0.8}.nav-badge{margin-left:auto;font-size:0.75rem;padding:0.125rem 0.5rem;background:var(--danger-color);color:white;border-radius:10px;font-weight:600;min-width:1.25rem;text-align:center}.nav-item-text{width:100%}.sidebar-footer{margin-top:auto;padding:1rem 0 0 0;border-top:1px solid var(--border);background:var(--white)}.logout-nav-item{display:flex;align-items:center;padding:0.75rem 1.5rem;color:var(--danger-color);text-decoration:none;font-size:0.875rem;font-weight:500;transition:var(--transition);cursor:pointer;border-left:3px solid transparent;margin:2px 0}.logout-nav-item:hover{background:rgba(231,76,60,0.1);border-left:3px solid var(--danger-color)}.logout-nav-item .logout-icon-sidebar{font-size:1.1rem;margin-right:0.75rem}.main-content{flex:1;margin-left:var(--sidebar-width);padding:2rem;transition:margin-left 0.3s ease;padding-top:calc(var(--header-height) + 1rem)}.sidebar.collapsed ~ .main-content{margin-left:0}.page{display:none}.page.active-page{display:block}.page-title{margin-bottom:2rem;font-size:1.6rem;font-weight:600}.dashboard-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.5rem;margin-bottom:2rem}.stat-card{background-color:var(--white);border-radius:var(--border-radius-md);box-shadow:var(--shadow-sm);padding:1.5rem;transition:var(--transition);position:relative;overflow:hidden}.stat-card:hover{box-shadow:var(--shadow-md);transform:translateY(-3px)}.stat-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%}.stat-card.primary::before{background-color:var(--primary-color)}.stat-card.secondary::before{background-color:var(--secondary-color)}.stat-card.success::before{background-color:var(--success-color)}.stat-card.warning::before{background-color:var(--warning-color)}.stat-card .stat-icon{position:absolute;top:1.5rem;right:1.5rem;font-size:2rem;opacity:0.1}.stat-card .stat-title{font-size:0.9rem;color:var(--text-light);margin-bottom:0.5rem;font-weight:500}.stat-card .stat-value{font-size:1.75rem;font-weight:600;margin-bottom:1rem}.stat-card .stat-description{font-size:0.85rem;color:var(--text-light);margin-top:auto}.content-area{background-color:var(--white);border-radius:var(--border-radius-md);box-shadow:var(--shadow-sm);padding:1.5rem;margin-bottom:2rem}.content-area h2{margin-bottom:1.5rem;font-size:1.2rem;font-weight:600;border-bottom:1px solid var(--gray-color);padding-bottom:0.75rem}.data-table{width:100%;border-collapse:collapse}.data-table th,.data-table td{padding:1rem;text-align:left;border-bottom:1px solid var(--gray-color);vertical-align:middle}.data-table th{font-weight:500;color:var(--text-light);font-size:0.9rem}.data-table tbody tr:hover{background-color:var(--light-color)}.badge{padding:0.4rem 0.85rem;border-radius:4px;font-size:0.75rem;font-weight:500;display:inline-block}.badge-success{background-color:rgba(46,204,113,0.15);color:#27ae60;border:1px solid rgba(46,204,113,0.3)}.badge-warning{background-color:rgba(241,196,15,0.15);color:#f39c12;border:1px solid rgba(241,196,15,0.3)}.badge-danger{background-color:rgba(231,76,60,0.15);color:#c0392b;border:1px solid rgba(231,76,60,0.3)}.badge-primary{background-color:rgba(74,111,255,0.15);color:#4a6fff;border:1px solid rgba(74,111,255,0.3)}.badge-info{background-color:rgba(52,152,219,0.15);color:#2980b9;border:1px solid rgba(52,152,219,0.3)}.badge-disabled{background-color:rgba(149,165,166,0.15);color:#7f8c8d;border:1px solid rgba(149,165,166,0.3)}.actions{display:flex;gap:0.5rem;flex-wrap:wrap}.btn{padding:0.5rem 1rem;border-radius:var(--border-radius-sm);font-size:0.875rem;font-weight:500;cursor:pointer;border:none;transition:var(--transition);display:inline-flex;align-items:center;justify-content:center;line-height:1}.btn-sm{padding:0.35rem 0.75rem;font-size:0.75rem}.btn-primary{background-color:var(--primary-color);color:white}.btn-primary:hover{background-color:var(--primary-dark)}.btn-success{background-color:var(--success-color);color:white}.btn-danger{background-color:var(--danger-color);color:white}.btn-secondary{background-color:var(--secondary-color);color:white}.btn-outline{background-color:var(--white);border:1px solid var(--gray-color);color:var(--text-color)}.btn-outline:hover{background-color:var(--light-color)}.btn-outline.active{background-color:var(--primary-color);color:white;border-color:var(--primary-color)}.table-actions{display:flex;justify-content:space-between;margin-bottom:1rem;align-items:center;flex-wrap:wrap;gap:1rem}.form-control{padding:0.5rem 1rem;border:1px solid var(--gray-color);border-radius:var(--border-radius-sm);font-size:0.875rem;outline:none;transition:var(--transition);width:100%}.form-control:focus{border-color:var(--primary-color);box-shadow:0 0 0 3px var(--primary-light)}.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background-color:rgba(0,0,0,0.5);z-index:1000;justify-content:center;align-items:center}.modal.active{display:flex}.modal-content{background-color:var(--white);border-radius:var(--border-radius-md);width:100%;padding:2rem;box-shadow:var(--shadow-md);position:relative;max-height:calc(100vh - 100px);overflow-y:auto}.modal-content.small{max-width:500px}.modal-content.medium{max-width:700px}.modal-content.large{max-width:900px}.modal-content.extra-large{max-width:1200px}.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;padding-bottom:0.75rem;border-bottom:1px solid var(--gray-color)}.modal-header h3{margin:0;font-weight:600;font-size:1.2rem}.close-modal{background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--text-light)}.modal-body{margin-bottom:1.5rem}.modal-footer{display:flex;justify-content:flex-end;gap:1rem;padding-top:1rem;border-top:1px solid var(--gray-color)}.form-group{margin-bottom:1.25rem}.form-group label{display:block;margin-bottom:0.5rem;font-weight:500;font-size:0.875rem}select.form-control{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 1rem center;background-size:1rem}textarea.form-control{min-height:100px;resize:vertical}.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem;margin-bottom:2rem}.pagination{display:flex;justify-content:center;align-items:center;gap:0.5rem;margin-top:2rem}.pagination button{padding:0.5rem 1rem;border:1px solid var(--gray-color);background:white;cursor:pointer;border-radius:var(--border-radius-sm)}.pagination button:hover{background:var(--light-color)}.pagination button.active{background:var(--primary-color);color:white;border-color:var(--primary-color)}.pagination button:disabled{opacity:0.5;cursor:not-allowed}.search-filter-bar{display:flex;gap:1rem;margin-bottom:2rem;flex-wrap:wrap;align-items:center}.search-filter-bar .form-control{min-width:200px}.alert{padding:1rem;border-radius:var(--border-radius-sm);margin-bottom:1rem;border:1px solid}.alert-success{background:rgba(46,204,113,0.1);border-color:var(--success-color);color:var(--success-color)}.alert-error{background:rgba(231,76,60,0.1);border-color:var(--danger-color);color:var(--danger-color)}.alert-info{background:var(--primary-light);border-color:var(--primary-color);color:var(--primary-color)}.menu-toggle{position:fixed;left:20px;top:15px;width:40px;height:40px;background:var(--white);border:none;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:5px;cursor:pointer;z-index:1001;box-shadow:0 2px 8px rgba(0,0,0,0.1);transition:all 0.3s ease}.menu-toggle span{width:20px;height:2px;background:#333;border-radius:2px;transition:none}.settings-tabs{display:flex;gap:1rem;margin-bottom:2rem;border-bottom:1px solid var(--border);flex-wrap:wrap}.settings-tab{padding:1rem 1.5rem;background:transparent;border:none;border-bottom:3px solid transparent;cursor:pointer;font-weight:500;font-size:0.95rem;color:var(--text-secondary);transition:all 0.2s ease}.settings-tab:hover{color:var(--primary-color)}.settings-tab.active{color:var(--primary-color);border-bottom-color:var(--primary-color)}.settings-content{display:none}.settings-content.active{display:block}.analytics-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.5rem;margin-bottom:2rem}.checkbox-group{display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem}.checkbox-group input[type="checkbox"]{width:18px;height:18px;cursor:pointer}.checkbox-group label{margin-bottom:0;cursor:pointer}.application-count{display:inline-flex;align-items:center;gap:0.5rem;padding:0.25rem 0.75rem;background:var(--primary-light);color:var(--primary-color);border-radius:12px;font-size:0.85rem;font-weight:600}.status-toggle{display:inline-flex;align-items:center;gap:0.5rem}.status-toggle input{width:40px;height:20px}.preview-container{background:var(--light-color);padding:2rem;border-radius:var(--border-radius-md);border:1px solid var(--border)}.preview-container h4{margin-bottom:1rem;color:var(--text-primary)}.preview-container .preview-field{margin-bottom:1rem}.preview-container .preview-label{font-weight:600;color:var(--text-secondary);font-size:0.85rem;margin-bottom:0.25rem}.preview-container .preview-value{color:var(--text-color);font-size:0.95rem}.info-card{background:var(--light-color);padding:1.5rem;border-radius:var(--border-radius-md);border-left:4px solid var(--primary-color);margin-bottom:1.5rem}.info-card h4{margin-bottom:0.5rem;color:var(--text-primary)}.info-card p{color:var(--text-secondary);font-size:0.9rem;line-height:1.6}@media (max-width:768px){.header-bar{padding:0 1rem 0 4.5rem}.logo-text{font-size:1.1rem}.sidebar{transform:translateX(-100%)}.sidebar.collapsed{transform:translateX(-100%)}.sidebar:not(.collapsed){transform:translateX(0)}.main-content{margin-left:0}.dashboard-stats{grid-template-columns:1fr}.table-actions{flex-direction:column;align-items:stretch}.search-filter-bar{flex-direction:column;align-items:stretch}.settings-tabs{overflow-x:auto}} </style> </head> <body> <header class="header-bar"> <button class="menu-toggle" id="menuToggle" onclick="toggleSidebar()"> <span></span> <span></span> <span></span> </button> <div class="logo-container"> <img src="LOGO.png" alt="TrackerPro Logo" class="logo" onerror="this.style.display='none'"> <h1 class="logo-text">TrackerPro</h1> </div> <div class="header-actions"> <div class="header-search"> <input type="text" placeholder="Search..." id="headerSearch"> </div> <div class="header-notifications" title="Notifications" id="notificationsBtn">🔔</div> <div class="user-profile" title="Admin Profile"> <div class="user-avatar">A</div> <div class="user-details"> <div class="user-name">Admin User</div> <div class="user-role">Administrator</div> </div> </div> </div> </header>
+    <div class="dashboard-container">
+    <aside class="sidebar" id="sidebar">
+        <div class="nav-section">
+            <div class="nav-item active" data-page="dashboard">
+                <span class="nav-item-text">Dashboard</span>
+            </div>
+            <div class="nav-item" data-page="registrations">
+                <span class="nav-item-text">All Registrations</span>
+            </div>
+            <div class="nav-item" data-page="user-management">
+                <span class="nav-item-text">User Management</span>
+            </div>
+            <div class="nav-item" data-page="internship-management">
+                <span class="nav-item-text">Career Outcomes</span>
+            </div>
+            <div class="nav-item" data-page="complaints">
+                <span class="nav-item-text">Complaints Management</span>
+            </div>
+            <div class="nav-item" data-page="system-settings">
+                <span class="nav-item-text">System Settings</span>
+            </div>
+        </div>
+        <div class="sidebar-footer">
+            <div class="logout-nav-item" onclick="logout()">
+                <span class="logout-icon-sidebar">【﻿⏻】</span>
+                <span>Logout</span>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <div id="dashboard" class="page active-page">
+            <h1 class="page-title">Welcome to Workspace</h1>
+            
+            <div class="dashboard-stats">
+                <div class="stat-card primary">
+                    <span class="stat-icon">🎓</span>
+                    <div class="stat-title">Total Students</div>
+                    <div class="stat-value" id="totalRegistrations">0</div>
+                    <div class="stat-description">+12% from last month</div>
+                </div>
+                <div class="stat-card secondary">
+                    <span class="stat-icon">👨‍🏫</span>
+                    <div class="stat-title">Faculty & HR</div>
+                    <div class="stat-value" id="totalUsers">0</div>
+                    <div class="stat-description">Active users</div>
+                </div>
+                <div class="stat-card success">
+                    <span class="stat-icon">📚</span>
+                    <div class="stat-title">Published Posts</div>
+                    <div class="stat-value" id="totalPosts">0</div>
+                    <div class="stat-description">Available posts</div>
+                </div>
+                <div class="stat-card warning">
+                    <span class="stat-icon">⭐</span>
+                    <div class="stat-title">New Students</div>
+                    <div class="stat-value" id="newUsers">0</div>
+                    <div class="stat-description">This week</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="registrations" class="page">
+            <h1 class="page-title">All Registrations</h1>
+            
+            <div class="search-filter-bar">
+                <input type="text" class="form-control" placeholder="Search students by name, email..." id="registrationSearch" oninput="filterRegistrations()">
+                <button class="btn btn-danger" onclick="deleteSelectedRegistrations()" id="deleteSelectedBtn" style="display:none;">Delete Selected</button>
+                <button class="btn btn-primary" onclick="exportRegistrations()">Export Data</button>
+            </div>
+
+            <div class="content-area">
+                <div class="table-actions">
+                    <div>
+                        <button class="btn btn-outline" onclick="refreshRegistrations()">Refresh</button>
+                    </div>
+                    <div>
+                        <span>Showing <span id="registrationShowingCount">0</span> of <span id="registrationTotalCount">0</span> entries</span>
+                    </div>
+                </div>
+                
+                <div style="overflow-x: auto;">
+                    <table class="data-table" id="registrationsTable">
+                        <thead>
+                            <tr>
+                                <th><input type="checkbox" id="selectAll" onchange="toggleSelectAll()"></th>
+                                <th>First Name</th>
+                                <th>Last Name</th>
+                                <th>Email</th>
+                                <th>Gender</th>
+                                <th>DOB</th>
+                                <th>City</th>
+                                <th>Mobile No</th>
+                                <th>Role</th>
+                                <th>Registered On</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                
+                <div class="pagination" id="registrationPagination"></div>
+            </div>
+        </div>
+
+        <div id="user-management" class="page">
+            <h1 class="page-title">User Management</h1>
+
+            <div class="content-area">
+                <div class="table-actions">
+                    <button class="btn btn-primary" onclick="openAddUserModal()">+ Add User (HR/Faculty Only)</button>
+                    <div>
+                        <button class="btn btn-outline active" onclick="filterUsers('all')" id="filterAll">All Users</button>
+                        <button class="btn btn-outline" onclick="filterUsers('faculty')" id="filterFaculty">Faculty</button>
+                        <button class="btn btn-outline" onclick="filterUsers('hr')" id="filterHR">HR Staff</button>
+                    </div>
+                </div>
+
+                <div style="overflow-x: auto;">
+                    <table class="data-table" id="usersTable">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Last Login</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="internship-management" class="page">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                <h1 class="page-title" style="margin-bottom: 0;">Career Outcomes</h1>
+                <button class="btn btn-primary" onclick="toggleInternshipForm()">
+                    <span id="internshipFormToggleText">Create New Post</span>
+                </button>
+            </div>
+
+            <div class="content-area">
+                <div class="table-actions">
+                    <h2 style="margin: 0;">All Posts</h2>
+                    <button class="btn btn-outline" onclick="loadInternshipsData()">🗘</button>
+                </div>
+                <div id="internshipsList"></div>
+            </div>
+
+            <div id="internshipFormSheet" class="modal" style="align-items: flex-start; padding-top: 2rem;">
+                <div class="modal-content large" style="margin-top: 0; max-height: calc(100vh - 4rem);">
+                    <div class="modal-header">
+                        <h3 id="internshipModalTitle">Create New Post</h3>
+                        <button class="close-modal" onclick="toggleInternshipForm()">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="internshipForm" onsubmit="saveInternship(event)" class="form-grid">
+                            <div class="form-group">
+                                <label for="internshipCode">Internship ID *</label>
+                                <input type="text" id="internshipCode" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="internshipTitle">Internship Title *</label>
+                                <input type="text" id="internshipTitle" class="form-control" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="internshipDuration">Duration (Months) *</label>
+                                <input type="number" id="internshipDuration" class="form-control" min="1" max="60" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="internshipWorkMode">Work Mode *</label>
+                                <select id="internshipWorkMode" class="form-control" required>
+                                    <option value="">Select Work Mode</option>
+                                    <option value="Online">Online</option>
+                                    <option value="Offline">Offline</option>
+                                    <option value="Hybrid">Hybrid</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="internshipPrerequisites">Required Skills</label>
+                                <input type="text" id="internshipPrerequisites" class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label for="internshipStatus">Status *</label>
+                                <select id="internshipStatus" class="form-control" required>
+                                    <option value="Draft">Draft (Hidden from students)</option>
+                                    <option value="Posted">Posted (Visible to students)</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="grid-column: 1 / -1;">
+                                <label for="internshipDescription">Post Description *</label>
+                                <textarea id="internshipDescription" class="form-control" rows="4" required></textarea>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline" onclick="toggleInternshipForm()">Cancel</button>
+                        <button type="button" class="btn btn-secondary" onclick="previewPost()">Preview</button>
+                        <button type="submit" form="internshipForm" class="btn btn-primary">Save Post</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="previewModal" class="modal">
+                <div class="modal-content large">
+                    <div class="modal-header">
+                        <h3>Post Preview</h3>
+                        <button class="close-modal" onclick="closeModal('previewModal')">&times;</button>
+                    </div>
+                    <div class="modal-body" id="previewContent"></div>
+                    <div class="modal-footer" id="previewModalFooter">
+                        <button class="btn btn-outline" onclick="closeModal('previewModal')">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="complaints" class="page">
+            <h1 class="page-title">Complaints Management</h1>
+
+            <div class="info-card">
+                <h4>Complaints System Overview</h4>
+                <p>This section is designed to manage student complaints, feedback, and grievances. Features include complaint tracking, priority assignment, status management, and resolution workflows. The full complaint management system will be implemented in future updates with complete backend integration.</p>
+            </div>
+
+            <div class="analytics-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">📊</div>
+                    <div class="stat-title">Total Complaints</div>
+                    <div class="stat-value">24</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🔓</div>
+                    <div class="stat-title">Open</div>
+                    <div class="stat-value">8</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-title">Resolved</div>
+                    <div class="stat-value">16</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🔥</div>
+                    <div class="stat-title">High Priority</div>
+                    <div class="stat-value">3</div>
+                </div>
+            </div>
+
+            <div class="content-area">
+                <h2>Sample Complaints Data</h2>
+                <div class="table-actions">
+                    <div>
+                        <button class="btn btn-outline" disabled>Export Report</button>
+                        <button class="btn btn-outline" disabled>Mark All Read</button>
+                    </div>
+                    <div>
+                        <select class="form-control" disabled>
+                            <option value="">All Status</option>
+                            <option value="Open">Open</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Resolved">Resolved</option>
+                        </select>
+                        <select class="form-control" disabled>
+                            <option value="">All Priority</option>
+                            <option value="High">High</option>
+                            <option value="Medium">Medium</option>
+                            <option value="Low">Low</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div style="overflow-x: auto;">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Category</th>
+                                <th>Priority</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                                <th>Assigned To</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>#C001</td>
+                                <td>Course Quality</td>
+                                <td><span class="badge badge-danger">High</span></td>
+                                <td>2024-01-15</td>
+                                <td><span class="badge badge-warning">Open</span></td>
+                                <td>Unassigned</td>
+                                <td><div class="actions"><button class="btn btn-sm btn-outline" disabled>View</button><button class="btn btn-sm btn-primary" disabled>Assign</button><button class="btn btn-sm btn-success" disabled>Resolve</button></div></td>
+                            </tr>
+                            <tr>
+                                <td>#C002</td>
+                                <td>Faculty Behavior</td>
+                                <td><span class="badge badge-warning">Medium</span></td>
+                                <td>2024-01-14</td>
+                                <td><span class="badge badge-success">Resolved</span></td>
+                                <td>Admin User</td>
+                                <td><div class="actions"><button class="btn btn-sm btn-outline" disabled>View</button></div></td>
+                            </tr>
+                            <tr>
+                                <td>#C003</td>
+                                <td>Technical Issue</td>
+                                <td><span class="badge badge-primary">Low</span></td>
+                                <td>2024-01-13</td>
+                                <td><span class="badge badge-info">In Progress</span></td>
+                                <td>Tech Team</td>
+                                <td><div class="actions"><button class="btn btn-sm btn-outline" disabled>View</button><button class="btn btn-sm btn-success" disabled>Resolve</button></div></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div id="system-settings" class="page">
+            <h1 class="page-title">System Settings</h1>
+
+            <div class="info-card">
+                <h4>System Configuration Center</h4>
+                <p>This section provides comprehensive system configuration options including general settings, registration controls, notification preferences, email templates, backup management, and audit logs. Full functionality with backend integration will be implemented in future development phases.</p>
+            </div>
+
+            <div class="content-area">
+                <div class="settings-tabs">
+                    <button class="settings-tab active" onclick="showSettingsTab('general')">General Settings</button>
+                    <button class="settings-tab" onclick="showSettingsTab('registration')">Registration</button>
+                    <button class="settings-tab" onclick="showSettingsTab('notifications')">Notifications</button>
+                    <button class="settings-tab" onclick="showSettingsTab('email')">Email Templates</button>
+                    <button class="settings-tab" onclick="showSettingsTab('backup')">Backup & Restore</button>
+                    <button class="settings-tab" onclick="showSettingsTab('audit')">Audit Logs</button>
+                </div>
+
+                <div id="generalSettings" class="settings-content active">
+                    <h3>General System Configuration</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="systemName">System Name</label>
+                            <input type="text" id="systemName" class="form-control" value="TrackerPro SPTS" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="supportEmail">Support Email</label>
+                            <input type="email" id="supportEmail" class="form-control" value="support@trackerpro.com" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="organizationName">Organization Name</label>
+                            <input type="text" id="organizationName" class="form-control" value="Educational Institute" disabled>
+                        </div>
+                        <div class="form-group">
+                            <label for="maxAdminLogin">Max Admin Login Attempts</label>
+                            <input type="number" id="maxAdminLogin" class="form-control" value="5" min="1" disabled>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" disabled>Save Settings</button>
+                </div>
+
+                <div id="registrationSettings" class="settings-content">
+                    <h3>Registration & Admission Settings</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="registrationStatus">Registration Control</label>
+                            <select id="registrationStatus" class="form-control" disabled>
+                                <option value="open" selected>Open for Applications</option>
+                                <option value="closed">Closed - No New Applications</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="studentAgeReq">Student Age Requirement</label>
+                            <input type="text" id="studentAgeReq" class="form-control" value="18-30 years" disabled>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" disabled>Update Settings</button>
+                </div>
+
+                <div id="notificationSettings" class="settings-content">
+                    <h3>Notification Preferences</h3>
+                    <h4>Email Notifications</h4>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="newApplications" checked disabled>
+                        <label for="newApplications">New Student Applications</label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="batchUpdates" checked disabled>
+                        <label for="batchUpdates">Batch Status Updates</label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="securityAlerts" checked disabled>
+                        <label for="securityAlerts">System Security Alerts</label>
+                    </div>
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="complaintNotifications" checked disabled>
+                        <label for="complaintNotifications">New Complaint Submissions</label>
+                    </div>
+                    <button class="btn btn-primary" disabled>Save Preferences</button>
+                </div>
+
+                <div id="emailSettings" class="settings-content">
+                    <h3>Email Templates Configuration</h3>
+                    <div class="form-group">
+                        <label for="welcomeEmail">Welcome Email Template</label>
+                        <textarea id="welcomeEmail" class="form-control" rows="5" placeholder="Enter welcome email template..." disabled></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="approvalEmail">Application Approval Template</label>
+                        <textarea id="approvalEmail" class="form-control" rows="5" placeholder="Enter approval email template..." disabled></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="rejectionEmail">Application Rejection Template</label>
+                        <textarea id="rejectionEmail" class="form-control" rows="5" placeholder="Enter rejection email template..." disabled></textarea>
+                    </div>
+                    <button class="btn btn-primary" disabled>Save Templates</button>
+                </div>
+
+                <div id="backupSettings" class="settings-content">
+                    <h3>Backup & Restore</h3>
+                    <div class="alert alert-info">
+                        Regular backups help protect your data. Create backups before major updates.
+                    </div>
+                    <div style="margin: 2rem 0;">
+                        <button class="btn btn-primary" disabled>Create Backup Now</button>
+                        <button class="btn btn-outline" disabled>Restore from Backup</button>
+                    </div>
+                    <h4>Backup History</h4>
+                    <div style="overflow-x: auto;">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Backup Date</th>
+                                    <th>Size</th>
+                                    <th>Type</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>2024-01-15 10:30 AM</td>
+                                    <td>2.5 MB</td>
+                                    <td>Automatic</td>
+                                    <td><span class="badge badge-success">Complete</span></td>
+                                    <td><button class="btn btn-sm btn-outline" disabled>Restore</button></td>
+                                </tr>
+                                <tr>
+                                    <td>2024-01-10 08:15 AM</td>
+                                    <td>2.3 MB</td>
+                                    <td>Manual</td>
+                                    <td><span class="badge badge-success">Complete</span></td>
+                                    <td><button class="btn btn-sm btn-outline" disabled>Restore</button></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="auditSettings" class="settings-content">
+                    <h3>Audit Logs & User Activity</h3>
+                    <div class="form-group">
+                        <label for="auditDateFilter">Filter by Date</label>
+                        <input type="date" id="auditDateFilter" class="form-control" disabled>
+                    </div>
+                    <div style="overflow-x: auto;">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Timestamp</th>
+                                    <th>User</th>
+                                    <th>Action</th>
+                                    <th>Details</th>
+                                    <th>IP Address</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>2024-01-15 14:30:25</td>
+                                    <td>Admin User</td>
+                                    <td>User Created</td>
+                                    <td>Created new faculty account</td>
+                                    <td>192.168.1.100</td>
+                                </tr>
+                                <tr>
+                                    <td>2024-01-15 12:15:10</td>
+                                    <td>Admin User</td>
+                                    <td>Post Published</td>
+                                    <td>Published internship post #WD-001</td>
+                                    <td>192.168.1.100</td>
+                                </tr>
+                                <tr>
+                                    <td>2024-01-15 09:45:00</td>
+                                    <td>Admin User</td>
+                                    <td>Login</td>
+                                    <td>Successful login to admin dashboard</td>
+                                    <td>192.168.1.100</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+</div>
+
+<div id="userModal" class="modal">
+    <div class="modal-content medium">
+        <div class="modal-header">
+            <h3 id="userModalTitle">Add New User</h3>
+            <button class="close-modal" onclick="closeModal('userModal')">&times;</button>
+        </div>
+        <div class="modal-body">
+            <form id="userForm" onsubmit="saveUser(event)" class="form-grid">
+                <div class="form-group">
+                    <label for="userFirstName">First Name *</label>
+                    <input type="text" id="userFirstName" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="userLastName">Last Name</label>
+                    <input type="text" id="userLastName" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="userEmail">Email (Login Username) *</label>
+                    <input type="email" id="userEmail" class="form-control" required>
+                </div>
+                <div class="form-group">
+                    <label for="userPassword">Password (Login Password) *</label>
+                    <input type="password" id="userPassword" class="form-control" minlength="8" required placeholder="Minimum 8 characters">
+                </div>
+                <div class="form-group">
+                    <label for="userRole">Role *</label>
+                    <select id="userRole" class="form-control" required>
+                        <option value="">Select Role</option>
+                        <option value="Faculty">Faculty</option>
+                        <option value="HR">HR Staff</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="userGender">Gender</label>
+                    <select id="userGender" class="form-control">
+                        <option value="">Select Gender</option>
+                        <option value="Male">Male</option>
+                        <option value="Female">Female</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="userMobile">Mobile Number</label>
+                    <input type="tel" id="userMobile" class="form-control">
+                </div>
+                <div class="form-group">
+                    <label for="userCity">City</label>
+                    <input type="text" id="userCity" class="form-control">
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" onclick="closeModal('userModal')">Cancel</button>
+            <button type="submit" form="userForm" class="btn btn-primary">Save User</button>
+        </div>
+    </div>
+</div>
+
+<div id="viewUserModal" class="modal">
+    <div class="modal-content medium">
+        <div class="modal-header">
+            <h3>User Details</h3>
+            <button class="close-modal" onclick="closeModal('viewUserModal')">&times;</button>
+        </div>
+        <div class="modal-body" id="viewUserContent"></div>
+        <div class="modal-footer">
+            <button class="btn btn-outline" onclick="closeModal('viewUserModal')">Close</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // API Configuration (Backend Integration Ready)
+    const API_CONFIG = {
+        BASE_URL: '/api/v1',
+        ENDPOINTS: {
+            REGISTRATIONS: '/registrations',
+            USERS: '/users',
+            INTERNSHIPS: '/internships',
+            COMPLAINTS: '/complaints',
+            SETTINGS: '/settings'
+        }
+    };
+
+    class DataManager {
+        constructor() {
+            this.initializeData();
+        }
+
+        initializeData() {
+            if (!localStorage.getItem('trackerProData')) {
+                const initialData = {
+                    registrations: [
+                        {id: 1, firstName: "John", lastName: "Smith", email: "john.s@example.com", gender: "Male", dob: "17/10/2003", city: "Pune", mobile: "8940967403", role: "Student", registeredOn: "2023-10-26", status: "Active"},
+                        {id: 2, firstName: "Sarah", lastName: "Johnson", email: "sarah.j@example.com", gender: "Female", dob: "22/05/1995", city: "Mumbai", mobile: "9876543210", role: "Faculty", registeredOn: "2023-10-25", status: "Active", password: "faculty123"},
+                        {id: 3, firstName: "Mike", lastName: "Wilson", email: "mike.w@example.com", gender: "Male", dob: "15/08/1990", city: "Delhi", mobile: "7654321098", role: "HR", registeredOn: "2023-10-24", status: "Active", password: "hr123456"}
+                    ],
+                    internships: [
+                        {id: 1, code: "WD-001", title: "Full Stack Web Development Internship", duration: 6, workMode: "Hybrid", prerequisites: "Basic Programming Knowledge", description: "Complete full-stack web development internship covering frontend and backend technologies.", status: "Posted", applications: 25},
+                        {id: 2, code: "DS-001", title: "Data Science Fundamentals", duration: 4, workMode: "Online", prerequisites: "Mathematics, Statistics", description: "Introduction to data science concepts and tools including Python, SQL, and basic machine learning.", status: "Draft", applications: 0}
+                    ],
+                    complaints: [],
+                    settings: {systemName: "TrackerPro SPTS", supportEmail: "support@trackerpro.com", organizationName: "Educational Institute", maxAdminLogin: 5, registrationStatus: "open", studentAgeReq: "20-25 years"}
+                };
+                localStorage.setItem('trackerProData', JSON.stringify(initialData));
+            }
+        }
+
+        getData() {
+            return JSON.parse(localStorage.getItem('trackerProData'));
+        }
+
+        saveData(data) {
+            localStorage.setItem('trackerProData', JSON.stringify(data));
+        }
+
+        getRegistrations(filter = '', role = '') {
+            const data = this.getData();
+            let registrations = data.registrations;
+            if (filter) {
+                registrations = registrations.filter(reg => 
+                    reg.firstName.toLowerCase().includes(filter.toLowerCase()) ||
+                    reg.lastName.toLowerCase().includes(filter.toLowerCase()) ||
+                    reg.email.toLowerCase().includes(filter.toLowerCase())
+                );
+            }
+            if (role) {
+                registrations = registrations.filter(reg => reg.role === role);
+            }
+            return registrations;
+        }
+
+        addRegistration(registration) {
+            const data = this.getData();
+            registration.id = data.registrations.length + 1;
+            registration.registeredOn = new Date().toISOString().split('T');
+            registration.status = "Active";
+            data.registrations.push(registration);
+            this.saveData(data);
+            return registration;
+        }
+
+        updateRegistration(id, updatedData) {
+            const data = this.getData();
+            const index = data.registrations.findIndex(reg => reg.id == id);
+            if (index !== -1) {
+                data.registrations[index] = {...data.registrations[index], ...updatedData};
+                this.saveData(data);
+                return data.registrations[index];
+            }
+            return null;
+        }
+
+        deleteRegistration(id) {
+            const data = this.getData();
+            data.registrations = data.registrations.filter(reg => reg.id != id);
+            this.saveData(data);
+        }
+
+        deleteMultipleRegistrations(ids) {
+            const data = this.getData();
+            data.registrations = data.registrations.filter(reg => !ids.includes(reg.id));
+            this.saveData(data);
+        }
+
+        getInternships() {
+            return this.getData().internships;
+        }
+
+        addInternship(internship) {
+            const data = this.getData();
+            internship.id = data.internships.length + 1;
+            internship.applications = 0;
+            data.internships.push(internship);
+            this.saveData(data);
+            return internship;
+        }
+
+        updateInternship(id, updatedData) {
+            const data = this.getData();
+            const index = data.internships.findIndex(post => post.id == id);
+            if (index !== -1) {
+                data.internships[index] = {...data.internships[index], ...updatedData};
+                this.saveData(data);
+                return data.internships[index];
+            }
+            return null;
+        }
+
+        deleteInternship(id) {
+            const data = this.getData();
+            data.internships = data.internships.filter(post => post.id != id);
+            this.saveData(data);
+        }
+    }
+
+    const dataManager = new DataManager();
+    let currentPage = 'dashboard';
+    let editingUserId = null;
+    let editingInternshipId = null;
+    let selectedRegistrations = [];
+    let currentPageNumber = 1;
+    let currentFilter = 'all';
+    const itemsPerPage = 10;
+
+    document.addEventListener('DOMContentLoaded', function() {
+        initializeApp();
+    });
+
+    function initializeApp() {
+        setupEventListeners();
+        updateDashboardStats();
+        showStatusMessage('Dashboard loaded successfully', 'success');
+    }
+
+    function setupEventListeners() {
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const page = this.getAttribute('data-page');
+                if (page) {
+                    navigateToPage(page);
+                }
+            });
+        });
+
+        document.getElementById('headerSearch').addEventListener('input', function() {
+            if (currentPage === 'registrations') {
+                filterRegistrations();
+            }
+        });
+
+        document.querySelectorAll('.modal').forEach(modal => {
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    closeModal(modal.id);
+                }
+            });
+        });
+    }
+
+    function navigateToPage(page) {
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.classList.remove('active');
+        });
+        document.querySelector(`[data-page="${page}"]`).classList.add('active');
+        document.querySelectorAll('.page').forEach(pageElement => {
+            pageElement.classList.remove('active-page');
+        });
+        const targetPage = document.getElementById(page);
+        if (targetPage) {
+            targetPage.classList.add('active-page');
+            currentPage = page;
+            switch(page) {
+                case 'dashboard':
+                    updateDashboardStats();
+                    break;
+                case 'registrations':
+                    loadRegistrationsData();
+                    break;
+                case 'user-management':
+                    currentFilter = 'all';
+                    loadUsersData();
+                    break;
+                case 'internship-management':
+                    loadInternshipsData();
+                    break;
+            }
+        }
+    }
+
+    function updateDashboardStats() {
+        const registrations = dataManager.getRegistrations();
+        const internships = dataManager.getInternships();
+        const students = registrations.filter(r => r.role === 'Student');
+        const faculty = registrations.filter(r => r.role === 'Faculty');
+        const hr = registrations.filter(r => r.role === 'HR');
+        const totalStudents = students.length;
+        const totalFacultyHR = faculty.length + hr.length;
+        const publishedPosts = internships.filter(p => p.status === 'Posted').length;
+        const newStudents = students.filter(r => {
+            const regDate = new Date(r.registeredOn);
+            const weekAgo = new Date();
+            weekAgo.setDate(weekAgo.getDate() - 7);
+            return regDate >= weekAgo;
+        }).length;
+
+        document.getElementById('totalRegistrations').textContent = totalStudents;
+        document.getElementById('totalUsers').textContent = totalFacultyHR;
+        document.getElementById('totalPosts').textContent = publishedPosts;
+        document.getElementById('newUsers').textContent = newStudents;
+    }
+
+    function loadRegistrationsData() {
+        const allRegistrations = dataManager.getRegistrations();
+        const studentRegistrations = allRegistrations.filter(reg => reg.role === 'Student');
+        renderRegistrationsTable(studentRegistrations);
+    }
+
+    function renderRegistrationsTable(registrations) {
+        const tbody = document.querySelector('#registrationsTable tbody');
+        const start = (currentPageNumber - 1) * itemsPerPage;
+        const end = start + itemsPerPage;
+        const paginatedData = registrations.slice(start, end);
+        
+        tbody.innerHTML = paginatedData.map(reg => `
+            <tr>
+                <td><input type="checkbox" class="reg-checkbox" value="${reg.id}" onchange="updateSelectedRegistrations()"></td>
+                <td>${reg.firstName}</td>
+                <td>${reg.lastName || '-'}</td>
+                <td>${reg.email}</td>
+                <td>${reg.gender || '-'}</td>
+                <td>${reg.dob || '-'}</td>
+                <td>${reg.city || '-'}</td>
+                <td>${reg.mobile || '-'}</td>
+                <td><span class="badge badge-primary">${reg.role}</span></td>
+                <td>${reg.registeredOn}</td>
+                <td>
+                    <div class="actions">
+                        <button class="btn btn-sm btn-outline" onclick="viewRegistration(${reg.id})">View</button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteUser(${reg.id})">Delete</button>
+                    </div>
+                </td>
+            </tr>
+        `).join('');
+
+        document.getElementById('registrationShowingCount').textContent = paginatedData.length;
+        document.getElementById('registrationTotalCount').textContent = registrations.length;
+        renderPagination(registrations.length);
+        document.getElementById('selectAll').checked = false;
+        selectedRegistrations = [];
+    }
+
+    function renderPagination(totalItems) {
+        const totalPages = Math.ceil(totalItems / itemsPerPage);
+        const paginationContainer = document.getElementById('registrationPagination');
+        let paginationHTML = '';
+        
+        paginationHTML += `<button onclick="changePage(${currentPageNumber - 1})" ${currentPageNumber === 1 ? 'disabled' : ''}>Previous</button>`;
+        
+        for (let i = 1; i <= totalPages; i++) {
+            paginationHTML += `<button class="${i === currentPageNumber ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
+        }
+        
+        paginationHTML += `<button onclick="changePage(${currentPageNumber + 1})" ${currentPageNumber === totalPages ? 'disabled' : ''}>Next</button>`;
+        
+        paginationContainer.innerHTML = paginationHTML;
+    }
+
+    function changePage(page) {
+        const totalPages = Math.ceil(dataManager.getRegistrations().filter(r => r.role === 'Student').length / itemsPerPage);
+        if (page < 1 || page > totalPages) return;
+        currentPageNumber = page;
+        loadRegistrationsData();
+    }
+
+    function toggleSelectAll() {
+        const checkboxes = document.querySelectorAll('.reg-checkbox');
+        const selectAll = document.getElementById('selectAll');
+        checkboxes.forEach(cb => {
+            cb.checked = selectAll.checked;
+        });
+        updateSelectedRegistrations();
+    }
+
+    function updateSelectedRegistrations() {
+        selectedRegistrations = Array.from(document.querySelectorAll('.reg-checkbox:checked')).map(cb => parseInt(cb.value));
+        const deleteBtn = document.getElementById('deleteSelectedBtn');
+        if (selectedRegistrations.length > 0) {
+            deleteBtn.style.display = 'inline-flex';
+        } else {
+            deleteBtn.style.display = 'none';
+        }
+    }
+
+    function deleteSelectedRegistrations() {
+        if (selectedRegistrations.length === 0) {
+            showStatusMessage('Please select registrations to delete', 'error');
+            return;
+        }
+        if (confirm(`Are you sure you want to delete ${selectedRegistrations.length} selected registration(s)? This action cannot be undone.`)) {
+            dataManager.deleteMultipleRegistrations(selectedRegistrations);
+            selectedRegistrations = [];
+            loadRegistrationsData();
+            updateDashboardStats();
+            showStatusMessage('Selected registrations deleted successfully', 'success');
+        }
+    }
+
+    function filterRegistrations() {
+        const searchTerm = document.getElementById('registrationSearch')?.value || '';
+        let allRegistrations = dataManager.getRegistrations();
+        let studentRegistrations = allRegistrations.filter(reg => reg.role === 'Student');
+        
+        if (searchTerm) {
+            studentRegistrations = studentRegistrations.filter(reg => 
+                reg.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                reg.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                reg.email.toLowerCase().includes(searchTerm.toLowerCase())
+            );
+        }
+        
+        currentPageNumber = 1;
+        renderRegistrationsTable(studentRegistrations);
+    }
+
+    function refreshRegistrations() {
+        currentPageNumber = 1;
+        loadRegistrationsData();
+        showStatusMessage('Registration data refreshed', 'success');
+    }
+
+    function exportRegistrations() {
+        const registrations = dataManager.getRegistrations().filter(r => r.role === 'Student');
+        const csvContent = convertToCSV(registrations);
+        downloadFile(csvContent, 'registrations.csv', 'text/csv');
+        showStatusMessage('Registration data exported successfully', 'success');
+    }
+
+    function viewRegistration(id) {
+        const user = dataManager.getRegistrations().find(u => u.id == id);
+        if (user) {
+            const content = `
+                <div class="preview-container">
+                    <div class="preview-field"><div class="preview-label">Full Name</div><div class="preview-value">${user.firstName} ${user.lastName || ''}</div></div>
+                    <div class="preview-field"><div class="preview-label">Email</div><div class="preview-value">${user.email}</div></div>
+                    <div class="preview-field"><div class="preview-label">Role</div><div class="preview-value"><span class="badge badge-primary">${user.role}</span></div></div>
+                    <div class="preview-field"><div class="preview-label">Gender</div><div class="preview-value">${user.gender || 'N/A'}</div></div>
+                    <div class="preview-field"><div class="preview-label">Date of Birth</div><div class="preview-value">${user.dob || 'N/A'}</div></div>
+                    <div class="preview-field"><div class="preview-label">Mobile</div><div class="preview-value">${user.mobile || 'N/A'}</div></div>
+                    <div class="preview-field"><div class="preview-label">City</div><div class="preview-value">${user.city || 'N/A'}</div></div>
+                    <div class="preview-field"><div class="preview-label">Registered On</div><div class="preview-value">${user.registeredOn}</div></div>
+                    <div class="preview-field"><div class="preview-label">Status</div><div class="preview-value"><span class="badge badge-${user.status === 'Active' ? 'success' : 'disabled'}">${user.status}</span></div></div>
+                </div>
+            `;
+            document.getElementById('viewUserContent').innerHTML = content;
+            document.getElementById('viewUserModal').classList.add('active');
+        }
+    }
+
+    function loadUsersData() {
+        const allUsers = dataManager.getRegistrations();
+        let facultyHRUsers = allUsers.filter(user => user.role === 'Faculty' || user.role === 'HR');
+        
+        if (currentFilter === 'faculty') {
+            facultyHRUsers = facultyHRUsers.filter(user => user.role === 'Faculty');
+        } else if (currentFilter === 'hr') {
+            facultyHRUsers = facultyHRUsers.filter(user => user.role === 'HR');
+        }
+        
+        renderUsersTable(facultyHRUsers);
+    }
+
+    function renderUsersTable(users) {
+        const tbody = document.querySelector('#usersTable tbody');
+        tbody.innerHTML = users.map(user => `
+            <tr>
+                <td>${user.firstName} ${user.lastName || ''}</td>
+                <td>${user.email}</td>
+                <td><span class="badge badge-primary">${user.role}</span></td>
+                <td><span class="badge badge-${user.status === 'Active' ? 'success' : 'disabled'}">${user.status}</span></td>
+                <td>${user.lastLogin || 'Never'}</td>
+                <td>
+                    <div class="actions">
+                        <button class="btn btn-sm btn-outline" onclick="editUser(${user.id})">Modify</button>
+                        <button class="btn btn-sm btn-${user.status === 'Active' ? 'danger' : 'success'}" onclick="toggleUserStatus(${user.id})">
+                            ${user.status === 'Active' ? 'Disable' : 'Enable'}
+                        </button>
+                    </div>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    function filterUsers(type) {
+        currentFilter = type;
+        
+        document.querySelectorAll('#user-management .table-actions .btn-outline').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        
+        const buttonId = type === 'all' ? 'filterAll' : type === 'faculty' ? 'filterFaculty' : 'filterHR';
+        document.getElementById(buttonId).classList.add('active');
+        
+        loadUsersData();
+    }
+
+    function openAddUserModal() {
+        editingUserId = null;
+        document.getElementById('userModalTitle').textContent = 'Add New User';
+        clearUserForm();
+        document.getElementById('userModal').classList.add('active');
+    }
+
+    function editUser(id) {
+        const user = dataManager.getRegistrations().find(u => u.id == id);
+        if (user) {
+            editingUserId = id;
+            document.getElementById('userModalTitle').textContent = 'Edit User';
+            populateUserForm(user);
+            document.getElementById('userModal').classList.add('active');
+        }
+    }
+
+    function deleteUser(id) {
+        if (confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
+            dataManager.deleteRegistration(id);
+            loadRegistrationsData();
+            updateDashboardStats();
+            showStatusMessage('User deleted successfully', 'success');
+        }
+    }
+
+    function toggleUserStatus(id) {
+        const user = dataManager.getRegistrations().find(u => u.id == id);
+        if (user) {
+            const newStatus = user.status === 'Active' ? 'Disabled' : 'Active';
+            dataManager.updateRegistration(id, {status: newStatus});
+            loadUsersData();
+            showStatusMessage(`User ${newStatus.toLowerCase()} successfully`, 'success');
+        }
+    }
+
+    function saveUser(event) {
+        if (event) event.preventDefault();
+        
+        const formData = {
+            firstName: document.getElementById('userFirstName').value,
+            lastName: document.getElementById('userLastName').value,
+            email: document.getElementById('userEmail').value,
+            password: document.getElementById('userPassword').value,
+            role: document.getElementById('userRole').value,
+            gender: document.getElementById('userGender').value,
+            mobile: document.getElementById('userMobile').value,
+            city: document.getElementById('userCity').value
+        };
+
+        if (!formData.firstName || !formData.email || !formData.role) {
+            showStatusMessage('Please fill in all required fields', 'error');
+            return;
+        }
+
+        if (!editingUserId && (!formData.password || formData.password.length < 8)) {
+            showStatusMessage('Password must be at least 8 characters', 'error');
+            return;
+        }
+
+        try {
+            if (editingUserId) {
+                if (formData.password && formData.password.length < 8) {
+                    showStatusMessage('Password must be at least 8 characters', 'error');
+                    return;
+                }
+                if (!formData.password) {
+                    delete formData.password;
+                }
+                dataManager.updateRegistration(editingUserId, formData);
+                showStatusMessage('User updated successfully', 'success');
+            } else {
+                dataManager.addRegistration(formData);
+                showStatusMessage('User added successfully', 'success');
+            }
+            
+            closeModal('userModal');
+            loadRegistrationsData();
+            loadUsersData();
+            updateDashboardStats();
+        } catch (error) {
+            showStatusMessage('Error saving user', 'error');
+        }
+    }
+
+    function populateUserForm(user) {
+        document.getElementById('userFirstName').value = user.firstName || '';
+        document.getElementById('userLastName').value = user.lastName || '';
+        document.getElementById('userEmail').value = user.email || '';
+        document.getElementById('userPassword').value = '';
+        document.getElementById('userPassword').placeholder = 'Leave empty to keep current password';
+        document.getElementById('userPassword').required = false;
+        document.getElementById('userRole').value = user.role || '';
+        document.getElementById('userGender').value = user.gender || '';
+        document.getElementById('userMobile').value = user.mobile || '';
+        document.getElementById('userCity').value = user.city || '';
+    }
+
+    function clearUserForm() {
+        document.getElementById('userForm').reset();
+        document.getElementById('userPassword').placeholder = 'Minimum 8 characters';
+        document.getElementById('userPassword').required = true;
+    }
+
+    function loadInternshipsData() {
+        const internships = dataManager.getInternships();
+        renderInternshipsGrid(internships);
+    }
+
+    function renderInternshipsGrid(internships) {
+        const container = document.getElementById('internshipsList');
+        if (internships.length === 0) {
+            container.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-light)">No posts found. Create your first post!</div>';
+            return;
+        }
+        
+        container.innerHTML = `
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(350px,1fr));gap:1.5rem;">
+                ${internships.map(post => `
+                    <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--border-radius-md);padding:1.5rem;transition:var(--transition);cursor:pointer;" onclick="previewPostById(${post.id})">
+                        <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:1rem;">
+                            <div>
+                                <h3 style="margin:0 0 0.5rem 0;font-size:1.1rem;">${post.title}</h3>
+                                <p style="margin:0;color:var(--text-light);font-size:0.85rem;">${post.code}</p>
+                            </div>
+                            <span class="badge badge-${post.status === 'Posted' ? 'success' : 'warning'}">${post.status}</span>
+                        </div>
+                        <div style="margin-bottom:1rem;">
+                            <span class="badge badge-primary">${post.workMode}</span>
+                            <span style="margin-left:0.5rem;color:var(--text-light);font-size:0.85rem;">${post.duration} months</span>
+                        </div>
+                        <div class="application-count">📄 ${post.applications || 0} Applications</div>
+                        <p style="margin:1rem 0;color:var(--text-secondary);font-size:0.9rem;">${post.description}</p>
+                        <div class="actions" style="margin-top:1rem;gap:0.5rem;">
+                            <button class="btn btn-sm btn-${post.status === 'Draft' ? 'success' : 'outline'}" onclick="event.stopPropagation();togglePostStatus(${post.id})">
+                                ${post.status === 'Draft' ? 'Publish' : 'Unpublish'}
+                            </button>
+                            <button class="btn btn-sm btn-danger" onclick="event.stopPropagation();deleteInternship(${post.id})">Delete</button>
+                        </div>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    }
+
+    function saveInternship(event) {
+        if (event) event.preventDefault();
+        
+        const formData = {
+            code: document.getElementById('internshipCode').value,
+            title: document.getElementById('internshipTitle').value,
+            duration: parseInt(document.getElementById('internshipDuration').value),
+            workMode: document.getElementById('internshipWorkMode').value,
+            prerequisites: document.getElementById('internshipPrerequisites').value,
+            description: document.getElementById('internshipDescription').value,
+            status: document.getElementById('internshipStatus').value
+        };
+
+        if (!formData.code || !formData.title || !formData.workMode || !formData.duration) {
+            showStatusMessage('Please fill in all required fields', 'error');
+            return;
+        }
+
+        try {
+            if (editingInternshipId) {
+                dataManager.updateInternship(editingInternshipId, formData);
+                showStatusMessage('Post updated successfully', 'success');
+                editingInternshipId = null;
+            } else {
+                dataManager.addInternship(formData);
+                showStatusMessage('Post created successfully', 'success');
+            }
+            
+            document.getElementById('internshipForm').reset();
+            toggleInternshipForm();
+            loadInternshipsData();
+            updateDashboardStats();
+        } catch (error) {
+            console.error('Error saving internship:', error);
+            showStatusMessage('Error saving post', 'error');
+        }
+    }
+
+    function toggleInternshipForm() {
+        const formSheet = document.getElementById('internshipFormSheet');
+        const toggleText = document.getElementById('internshipFormToggleText');
+        
+        if (formSheet.classList.contains('active')) {
+            formSheet.classList.remove('active');
+            toggleText.textContent = 'Create New Post';
+            editingInternshipId = null;
+            document.getElementById('internshipForm').reset();
+            document.getElementById('internshipModalTitle').textContent = 'Create New Post';
+        } else {
+            formSheet.classList.add('active');
+            toggleText.textContent = 'Close Form';
+            editingInternshipId = null;
+            document.getElementById('internshipForm').reset();
+            document.getElementById('internshipModalTitle').textContent = 'Create New Post';
+        }
+    }
+
+    function editInternship(id) {
+        const post = dataManager.getInternships().find(p => p.id == id);
+        if (post) {
+            editingInternshipId = id;
+            document.getElementById('internshipCode').value = post.code;
+            document.getElementById('internshipTitle').value = post.title;
+            document.getElementById('internshipDuration').value = post.duration;
+            document.getElementById('internshipWorkMode').value = post.workMode;
+            document.getElementById('internshipPrerequisites').value = post.prerequisites;
+            document.getElementById('internshipDescription').value = post.description;
+            document.getElementById('internshipStatus').value = post.status;
+            document.getElementById('internshipFormSheet').classList.add('active');
+            document.getElementById('internshipFormToggleText').textContent = 'Close Form';
+            document.getElementById('internshipModalTitle').textContent = 'Edit Post';
+        }
+    }
+
+    function deleteInternship(id) {
+        if (confirm('Are you sure you want to delete this post? This action cannot be undone.')) {
+            dataManager.deleteInternship(id);
+            loadInternshipsData();
+            updateDashboardStats();
+            showStatusMessage('Post deleted successfully', 'success');
+        }
+    }
+
+    function togglePostStatus(id) {
+        const post = dataManager.getInternships().find(p => p.id === id);
+        if (post) {
+            post.status = post.status === 'Draft' ? 'Posted' : 'Draft';
+            dataManager.updateInternship(id, {status: post.status});
+            loadInternshipsData();
+            updateDashboardStats();
+            showStatusMessage(`Post ${post.status.toLowerCase()} successfully`, 'success');
+        }
+    }
+
+    function previewPost() {
+        const data = {
+            code: document.getElementById('internshipCode').value,
+            title: document.getElementById('internshipTitle').value,
+            duration: document.getElementById('internshipDuration').value,
+            workMode: document.getElementById('internshipWorkMode').value,
+            prerequisites: document.getElementById('internshipPrerequisites').value,
+            description: document.getElementById('internshipDescription').value,
+            status: document.getElementById('internshipStatus').value
+        };
+        showPreview(data, null);
+    }
+
+    function previewPostById(id) {
+        const post = dataManager.getInternships().find(p => p.id === id);
+        if (post) showPreview(post, id);
+    }
+
+    function showPreview(data, postId) {
+        const content = `
+            <div class="preview-container">
+                <h4>📋 Post Preview</h4>
+                <div class="preview-field"><div class="preview-label">Internship ID</div><div class="preview-value">${data.code}</div></div>
+                <div class="preview-field"><div class="preview-label">Title</div><div class="preview-value">${data.title}</div></div>
+                <div class="preview-field"><div class="preview-label">Work Mode</div><div class="preview-value"><span class="badge badge-primary">${data.workMode}</span></div></div>
+                <div class="preview-field"><div class="preview-label">Duration</div><div class="preview-value">${data.duration || 'Not specified'} months</div></div>
+                <div class="preview-field"><div class="preview-label">Required Skills</div><div class="preview-value">${data.prerequisites || 'None'}</div></div>
+                <div class="preview-field"><div class="preview-label">Status</div><div class="preview-value"><span class="badge badge-${data.status === 'Posted' ? 'success' : 'warning'}">${data.status || 'Draft'}</span></div></div>
+                <div class="preview-field"><div class="preview-label">Applications</div><div class="preview-value">${data.applications || 0} received</div></div>
+                <div class="preview-field"><div class="preview-label">Description</div><div class="preview-value">${data.description}</div></div>
+            </div>
+        `;
+        document.getElementById('previewContent').innerHTML = content;
+        
+        const footer = document.getElementById('previewModalFooter');
+        if (postId) {
+            footer.innerHTML = `
+                <button class="btn btn-outline" onclick="closeModal('previewModal')">Close</button>
+                <button class="btn btn-primary" onclick="closeModal('previewModal');editInternship(${postId})">Edit Post</button>
+            `;
+        } else {
+            footer.innerHTML = `<button class="btn btn-outline" onclick="closeModal('previewModal')">Close</button>`;
+        }
+        
+        document.getElementById('previewModal').classList.add('active');
+    }
+
+    function showSettingsTab(tab) {
+        document.querySelectorAll('.settings-tab').forEach(btn => {
+            btn.classList.remove('active');
+        });
+        event.target.classList.add('active');
+        
+        document.querySelectorAll('.settings-content').forEach(content => {
+            content.classList.remove('active');
+        });
+        
+        const contentMap = {
+            'general': 'generalSettings',
+            'registration': 'registrationSettings',
+            'notifications': 'notificationSettings',
+            'email': 'emailSettings',
+            'backup': 'backupSettings',
+            'audit': 'auditSettings'
+        };
+        
+        const targetContent = document.getElementById(contentMap[tab]);
+        if (targetContent) {
+            targetContent.classList.add('active');
+        }
+    }
+
+    function closeModal(modalId) {
+        document.getElementById(modalId).classList.remove('active');
+    }
+
+    function showStatusMessage(message, type = 'info') {
+        const alertDiv = document.createElement('div');
+        alertDiv.className = `alert alert-${type === 'success' ? 'success' : type === 'error' ? 'error' : 'info'}`;
+        alertDiv.textContent = message;
+        alertDiv.style.position = 'fixed';
+        alertDiv.style.top = '80px';
+        alertDiv.style.right = '20px';
+        alertDiv.style.zIndex = '9999';
+        alertDiv.style.minWidth = '300px';
+        document.body.appendChild(alertDiv);
+        setTimeout(() => {
+            alertDiv.remove();
+        }, 3000);
+    }
+
+    function convertToCSV(data) {
+        if (!data || data.length === 0) return '';
+        const headers = Object.keys(data);
+        const csvRows = [
+            headers.join(','),
+            ...data.map(row => 
+                headers.map(header => {
+                    const value = row[header];
+                    return typeof value === 'string' && value.includes(',') ? `"${value}"` : value;
+                }).join(',')
+            )
+        ];
+        return csvRows.join('\n');
+    }
+
+    function downloadFile(content, filename, mimeType) {
+        const blob = new Blob([content], {type: mimeType});
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        window.URL.revokeObjectURL(url);
+    }
+
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        sidebar.classList.toggle('collapsed');
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                if (window.innerWidth <= 768) {
+                    const sidebar = document.getElementById('sidebar');
+                    sidebar.classList.add('collapsed');
+                }
+            });
+        });
+    });
+
+    function logout() {
+        if (confirm('Are you sure you want to logout?')) {
+            window.location.href = 'loginPage.html';
+        }
+    }
+
+    window.addEventListener('error', function(e) {
+        console.error('Application error:', e.error);
+        showStatusMessage('An unexpected error occurred', 'error');
+    });
+
+    window.addEventListener('unhandledrejection', function(e) {
+        console.error('Unhandled promise rejection:', e.reason);
+        showStatusMessage('Server error occurred', 'error');
+    });
+</script>
+</body>
+</html>
