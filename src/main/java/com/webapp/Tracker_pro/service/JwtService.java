@@ -111,7 +111,7 @@ public class JwtService {
     /**
      * Get signing key from secret
      */
-    private Key getSignInKey() {
+    private javax.crypto.SecretKey getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
