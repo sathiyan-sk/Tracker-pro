@@ -1,0 +1,1022 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>User Register | Tracker Pro</title>
+  <!-- Flatpickr CSS for beautiful calendar -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+  <style>
+    :root {
+      --primary-color: #ffcc00;
+      --text-color: #333;
+      --border-color: #ddd;
+      --bg-color: #fff;
+      --shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+    }
+
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: #f5f6fa;
+    }
+
+    .register-container {
+      display: flex;
+      width: 100%;
+      max-width: 1000px;
+      background: var(--bg-color);
+      border-radius: 12px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+
+    /* Left Form Section */
+    .register-form-section {
+      flex: 1;
+      padding: 40px;
+    }
+
+    .logo-section {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .logo-icon {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+      margin-right: 10px;
+    }
+
+    .logo-text {
+      font-size: 22px;
+      font-weight: bold;
+      color: var(--text-color);
+    }
+
+    .form-title {
+      margin-bottom: 25px;
+      font-size: 20px;
+      font-weight: bold;
+      color: var(--text-color);
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      position: relative;
+    }
+
+    .form-group label {
+      margin-bottom: 6px;
+      font-size: 14px;
+      color: var(--text-color);
+    }
+
+    .form-group input,
+    .form-group select {
+      padding: 10px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: Arial, sans-serif;
+      height: 42px;
+    }
+
+    .form-group select {
+      cursor: pointer;
+      background: white;
+    }
+
+    /* === PASSWORD & DATE WRAPPER ALIGNMENT === */
+    .password-wrapper,
+    .date-wrapper {
+      position: relative;
+      width: 100%;
+    }
+
+    .password-wrapper input,
+    .date-wrapper input {
+      width: 100%;
+      padding-right: 45px;
+    }
+
+    .password-toggle,
+    .date-toggle {
+      position: absolute;
+      right: 12px;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 6px;
+      border-radius: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+    }
+
+    .password-toggle:hover {
+      background: rgba(0, 0, 0, 0.05);
+    }
+
+    .password-toggle:focus {
+      outline: none;
+      background: rgba(0, 0, 0, 0.1);
+    }
+
+    .eye-icon,
+    .date-icon {
+      width: 18px;
+      height: 18px;
+      fill: #666;
+      transition: fill 0.2s ease;
+    }
+
+    .password-toggle:hover .eye-icon {
+      fill: #333;
+    }
+
+    .date-toggle {
+      pointer-events: none;
+    }
+
+    .signup-button {
+      margin-top: 25px;
+      width: 100%;
+      padding: 12px;
+      background: var(--primary-color);
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background 0.3s ease;
+      margin-bottom: 20px;
+      background: #ffdb4d;
+    }
+
+    .signup-button:hover {
+      background: #e6c852;
+    }
+
+    .signup-button:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+    }
+
+    /* Error styling */
+    .form-group.error input,
+    .form-group.error select {
+      border-color: #e74c3c;
+    }
+
+    .error-message {
+      font-size: 12px;
+      color: #e74c3c;
+      margin-top: 5px;
+      display: none;
+    }
+
+    .form-group.error .error-message {
+      display: block;
+    }
+
+    /* === GENERAL ALERT === */
+    .alert {
+      display: none;
+      padding: 12px 16px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      font-size: 14px;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .alert.show {
+      display: flex;
+    }
+
+    .alert-error {
+      background: #fee;
+      color: #c00;
+      border: 1px solid #fcc;
+    }
+
+    .alert-success {
+      background: #efe;
+      color: #0a0;
+      border: 1px solid #cfc;
+    }
+
+    /* === FOOTER LINKS === */
+    .auth-footer {
+      text-align: center;
+      font-size: 14px;
+      color: #6b7280;
+    }
+
+    .auth-footer a {
+      color: #2568ef;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.2s ease;
+    }
+
+    .auth-footer a:hover {
+      text-decoration: underline;
+      color: #0b4ed8;
+    }
+
+    /* Right Illustration Section */
+    .illustration-section {
+      flex: 1;
+      background: #fafafa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .illustration-section img {
+      max-width: 90%;
+      height: auto;
+    }
+
+    /* === FLATPICKR CUSTOM STYLING === */
+    .flatpickr-calendar {
+      background: white;
+      border-radius: 8px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+      border: none;
+      font-family: Arial, sans-serif;
+    }
+
+    .flatpickr-day.selected {
+      background: var(--primary-color);
+      border-color: var(--primary-color);
+    }
+
+    .flatpickr-day.selected:hover {
+      background: #ffdb4d;
+      border-color: #ffdb4d;
+    }
+
+    @media(max-width: 768px) {
+      .register-container {
+        flex-direction: column;
+      }
+      .form-grid {
+        grid-template-columns: 1fr;
+      }
+      .form-group-full {
+        grid-column: span 1;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="register-container">
+    
+    <!-- Left Section: Form -->
+    <div class="register-form-section">
+      <div class="logo-section">
+        <img src="LOGO.png" alt="Product Logo" class="logo-icon">
+        <span class="logo-text">Tracker Pro</span>
+      </div>
+
+      <h2 class="form-title">Create your account</h2>
+
+      <!-- General Alert -->
+      <div class="alert alert-error" id="generalAlert">
+        <span>⚠️</span>
+        <span id="alertText"></span>
+      </div>
+
+      <form id="registrationForm" autocomplete="on">
+        <div class="form-grid">
+          <!-- Row 1: First Name & Last Name -->
+          <div class="form-group">
+            <label for="firstName">First Name :</label>
+            <input 
+              type="text" 
+              id="firstName" 
+              name="firstName" 
+              placeholder="Enter your first name" 
+              minlength="2"
+              maxlength="30"
+              autocomplete="given-name"
+              required>
+            <div class="error-message">First name is required</div>
+          </div>
+          
+          <div class="form-group">
+            <label for="lastName">Last Name:</label>
+            <input 
+              type="text" 
+              id="lastName" 
+              name="lastName" 
+              placeholder="Enter your last name" 
+              maxlength="30"
+              autocomplete="family-name">
+            <div class="error-message">Last name cannot exceed 30 characters</div>
+          </div>
+          
+          <!-- Row 2: Gender & DOB -->
+          <div class="form-group">
+            <label for="gender">Gender:</label>
+            <select id="gender" name="gender" autocomplete="sex" required>
+              <option value="">Select</option>
+              <option value="Male">Male</option>
+              <option value="Female">Female</option>
+              <option value="Other">Other</option>
+            </select>
+            <div class="error-message">Please select gender</div>
+          </div>
+          
+          <div class="form-group">
+            <label for="dob">Date of Birth</label>
+            <div class="date-wrapper">
+              <input 
+                type="text" 
+                id="dob" 
+                name="dob" 
+                placeholder="Select date" 
+                autocomplete="bday"
+                readonly 
+                required>
+              <div class="date-toggle">📅</div>
+            </div>
+            <div class="error-message">Age must be 20-25 years</div>
+          </div>
+          
+          <!-- Row 3: Location & Mobile No -->
+          <div class="form-group">
+            <label for="location">Address (City)</label>
+            <input 
+              type="text" 
+              id="location" 
+              name="location"
+              placeholder="Enter your city name"
+              maxlength="50"
+              autocomplete="address-level2">
+            <div class="error-message">Location cannot exceed 50 characters</div>
+          </div>
+
+          <div class="form-group">
+            <label for="mobileNo">Mobile No. :</label>
+            <input 
+              type="tel" 
+              id="mobileNo" 
+              name="mobileNo" 
+              placeholder="Enter 10-digit mobile number" 
+              maxlength="10" 
+              pattern="[0-9]{10}"
+              autocomplete="tel"
+              required>
+            <div class="error-message">Enter valid 10-digit mobile number</div>
+          </div>
+
+          <!-- Row 4: Email & Password -->
+          <div class="form-group">
+            <label for="email">Your Email :</label>
+            <input 
+              type="email" 
+              id="email" 
+              name="email" 
+              placeholder="eg.name@gmail.com" 
+              minlength="6"
+              maxlength="100"
+              autocomplete="email"
+              required>
+            <div class="error-message">Enter valid email address (6-100 characters)</div>
+          </div>
+
+          <div class="form-group">
+            <label for="password">Password :</label>
+            <div class="password-wrapper">
+              <input 
+                type="password" 
+                id="password" 
+                name="password" 
+                placeholder="Must be atleast 6 char" 
+                minlength="6"
+                maxlength="30"
+                autocomplete="new-password"
+                required>
+              <button type="button" class="password-toggle" id="togglePassword" aria-label="Toggle password visibility">
+                <svg class="eye-icon" id="eyeIcon" viewBox="0 0 24 24">
+                  <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                </svg>
+              </button>
+            </div>
+            <div class="error-message">Password must be 6-30 characters</div>
+          </div>
+        </div>
+        
+        <!-- Submit Button -->
+        <button type="submit" class="signup-button" id="submitBtn">
+          Register
+        </button>
+
+        <!-- Sign up Link -->
+        <div class="auth-footer">
+          Already registered? <a href="loginPage.html">Back to Login</a>
+        </div>
+      </form>
+    </div>
+
+    <!-- Right Section: Illustration -->
+    <div class="illustration-section">
+      <img src="illustration.png" alt="Illustration">
+    </div>
+  </div>
+
+  <!-- Flatpickr JavaScript -->
+  <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+  
+  <script>
+    'use strict';
+
+    // ============================================================================
+    // SECURITY & CONFIGURATION
+    // ============================================================================
+    const CONFIG = {
+      NAME_MIN: 2,
+      NAME_MAX: 30,
+      PASSWORD_MIN: 6,
+      PASSWORD_MAX: 30,
+      EMAIL_MIN: 6,
+      EMAIL_MAX: 100,
+      MOBILE_LENGTH: 10,
+      LOCATION_MAX: 50,
+      AGE_MIN: 20,
+      AGE_MAX: 25,
+      API_ENDPOINT: '/api/auth/register',
+      MAX_REGISTRATION_ATTEMPTS: 5,
+      LOCKOUT_TIME: 15 * 60 * 1000 // 15 minutes
+    };
+
+    // ============================================================================
+    // UTILITY FUNCTIONS - SECURITY
+    // ============================================================================
+    
+    // XSS Protection - Sanitize input
+    function sanitizeInput(input) {
+      if (typeof input !== 'string') return '';
+      return input
+        .replace(/[<>]/g, '') // Remove < and >
+        .replace(/javascript:/gi, '') // Remove javascript: protocol
+        .replace(/on\w+\s*=/gi, '') // Remove event handlers
+        .trim();
+    }
+
+    // SQL Injection Prevention
+    function detectSQLInjection(input) {
+      const sqlPatterns = [
+        /(\b(SELECT|INSERT|UPDATE|DELETE|DROP|CREATE|ALTER|EXEC|UNION)\b)/gi,
+        /(--|\*|;|\/\*|\*\/)/g,
+        /(OR|AND)\s+\d+\s*=\s*\d+/gi
+      ];
+      return sqlPatterns.some(pattern => pattern.test(input));
+    }
+
+    // Rate Limiting
+    class RegistrationRateLimiter {
+      constructor() {
+        this.attempts = this.getAttempts();
+        this.lockoutUntil = this.getLockoutTime();
+      }
+
+      getAttempts() {
+        const stored = localStorage.getItem('registrationAttempts');
+        return stored ? parseInt(stored, 10) : 0;
+      }
+
+      getLockoutTime() {
+        const stored = localStorage.getItem('registrationLockoutUntil');
+        return stored ? parseInt(stored, 10) : 0;
+      }
+
+      isLocked() {
+        if (this.lockoutUntil > Date.now()) {
+          const remainingTime = Math.ceil((this.lockoutUntil - Date.now()) / 60000);
+          return { locked: true, minutes: remainingTime };
+        }
+        if (this.lockoutUntil > 0 && this.lockoutUntil <= Date.now()) {
+          this.reset();
+        }
+        return { locked: false };
+      }
+
+      increment() {
+        this.attempts++;
+        localStorage.setItem('registrationAttempts', this.attempts.toString());
+
+        if (this.attempts >= CONFIG.MAX_REGISTRATION_ATTEMPTS) {
+          this.lockoutUntil = Date.now() + CONFIG.LOCKOUT_TIME;
+          localStorage.setItem('registrationLockoutUntil', this.lockoutUntil.toString());
+        }
+      }
+
+      reset() {
+        this.attempts = 0;
+        this.lockoutUntil = 0;
+        localStorage.removeItem('registrationAttempts');
+        localStorage.removeItem('registrationLockoutUntil');
+      }
+    }
+
+    const rateLimiter = new RegistrationRateLimiter();
+
+    // ============================================================================
+    // DOM ELEMENTS
+    // ============================================================================
+    const elements = {
+      form: document.getElementById('registrationForm'),
+      firstName: document.getElementById('firstName'),
+      lastName: document.getElementById('lastName'),
+      gender: document.getElementById('gender'),
+      dob: document.getElementById('dob'),
+      location: document.getElementById('location'),
+      mobileNo: document.getElementById('mobileNo'),
+      email: document.getElementById('email'),
+      password: document.getElementById('password'),
+      submitBtn: document.getElementById('submitBtn'),
+      toggleBtn: document.getElementById('togglePassword'),
+      eyeIcon: document.getElementById('eyeIcon'),
+      generalAlert: document.getElementById('generalAlert'),
+      alertText: document.getElementById('alertText')
+    };
+
+    // ============================================================================
+    // UTILITY FUNCTIONS
+    // ============================================================================
+    function calculateAge(dateStr) {
+      const [day, month, year] = dateStr.split('/').map(Number);
+      const birth = new Date(year, month - 1, day);
+      const today = new Date();
+      let age = today.getFullYear() - birth.getFullYear();
+      const monthDiff = today.getMonth() - birth.getMonth();
+      
+      if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) {
+        age--;
+      }
+      return age;
+    }
+
+    function showError(field, message) {
+      const group = field.closest('.form-group');
+      group.classList.add('error');
+      const errorElement = group.querySelector('.error-message');
+      if (errorElement) {
+        errorElement.textContent = message;
+      }
+    }
+
+    function clearError(field) {
+      const group = field.closest('.form-group');
+      group.classList.remove('error');
+    }
+
+    function clearAllErrors() {
+      document.querySelectorAll('.form-group.error').forEach(group => {
+        group.classList.remove('error');
+      });
+    }
+
+    function showAlert(message, type = 'error') {
+      elements.generalAlert.className = `alert alert-${type} show`;
+      elements.alertText.textContent = message;
+    }
+
+    function hideAlert() {
+      elements.generalAlert.classList.remove('show');
+    }
+
+    // ============================================================================
+    // VALIDATION CLASS
+    // ============================================================================
+    class FieldValidator {
+      constructor(field, type) {
+        this.field = field;
+        this.type = type;
+        this.init();
+      }
+
+      init() {
+        this.field.addEventListener('blur', () => this.validate());
+        this.field.addEventListener('input', () => {
+          if (this.field.closest('.form-group').classList.contains('error')) {
+            this.validate();
+          }
+          hideAlert();
+        });
+      }
+
+      validate() {
+        let value = this.field.value;
+        
+        // Sanitize input (except password)
+        if (this.type !== 'password') {
+          value = sanitizeInput(value);
+          this.field.value = value;
+        } else {
+          value = value.trim();
+        }
+        
+        clearError(this.field);
+
+        switch(this.type) {
+          case 'name':
+            return this.validateName(value, this.field.required);
+          case 'email':
+            return this.validateEmail(value);
+          case 'mobile':
+            return this.validateMobile(value);
+          case 'password':
+            return this.validatePassword(value);
+          case 'dob':
+            return this.validateDOB(value);
+          case 'select':
+            return this.validateSelect(value);
+          case 'location':
+            return this.validateLocation(value);
+          default:
+            return true;
+        }
+      }
+
+      validateName(value, isRequired) {
+        // Check for SQL injection
+        if (value && detectSQLInjection(value)) {
+          showError(this.field, 'Invalid characters detected');
+          return false;
+        }
+
+        if (isRequired && (!value || value.length < CONFIG.NAME_MIN)) {
+          showError(this.field, `Required (${CONFIG.NAME_MIN}-${CONFIG.NAME_MAX} characters)`);
+          return false;
+        }
+        if (value && value.length > CONFIG.NAME_MAX) {
+          showError(this.field, `Maximum ${CONFIG.NAME_MAX} characters allowed`);
+          return false;
+        }
+        // Only allow letters and spaces
+        if (value && !/^[a-zA-Z\s]+$/.test(value)) {
+          showError(this.field, 'Only letters and spaces allowed');
+          return false;
+        }
+        return true;
+      }
+
+      validateEmail(value) {
+        const emailRegex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        
+        if (!value) {
+          showError(this.field, 'Email is required');
+          return false;
+        }
+        
+        // Check for SQL injection
+        if (detectSQLInjection(value)) {
+          showError(this.field, 'Invalid characters detected');
+          return false;
+        }
+
+        if (!emailRegex.test(value)) {
+          showError(this.field, 'Enter valid email address');
+          return false;
+        }
+        if (value.length < CONFIG.EMAIL_MIN || value.length > CONFIG.EMAIL_MAX) {
+          showError(this.field, `Email must be ${CONFIG.EMAIL_MIN}-${CONFIG.EMAIL_MAX} characters`);
+          return false;
+        }
+        // Additional email security checks
+        if (value.includes('..') || value.startsWith('.') || value.endsWith('.')) {
+          showError(this.field, 'Invalid email format');
+          return false;
+        }
+        return true;
+      }
+
+      validateMobile(value) {
+        const cleanValue = value.replace(/[^0-9]/g, '');
+        if (cleanValue.length !== CONFIG.MOBILE_LENGTH) {
+          showError(this.field, 'Enter valid 10-digit mobile number');
+          return false;
+        }
+        // Indian mobile numbers start with 6-9
+        if (!/^[6-9]/.test(cleanValue)) {
+          showError(this.field, 'Mobile number must start with 6, 7, 8, or 9');
+          return false;
+        }
+        return true;
+      }
+
+      validatePassword(value) {
+        if (!value) {
+          showError(this.field, 'Password is required');
+          return false;
+        }
+        if (value.length < CONFIG.PASSWORD_MIN || value.length > CONFIG.PASSWORD_MAX) {
+          showError(this.field, `Password must be ${CONFIG.PASSWORD_MIN}-${CONFIG.PASSWORD_MAX} characters`);
+          return false;
+        }
+        return true;
+      }
+
+      validateDOB(value) {
+        if (!value) {
+          showError(this.field, 'Date of birth is required');
+          return false;
+        }
+        
+        const age = calculateAge(value);
+        if (age < CONFIG.AGE_MIN || age > CONFIG.AGE_MAX) {
+          showError(this.field, `Age must be between ${CONFIG.AGE_MIN}-${CONFIG.AGE_MAX} years`);
+          return false;
+        }
+        return true;
+      }
+
+      validateSelect(value) {
+        if (!value) {
+          showError(this.field, 'Please select an option');
+          return false;
+        }
+        return true;
+      }
+
+      validateLocation(value) {
+        // Check for SQL injection
+        if (value && detectSQLInjection(value)) {
+          showError(this.field, 'Invalid characters detected');
+          return false;
+        }
+
+        if (value && value.length > CONFIG.LOCATION_MAX) {
+          showError(this.field, `Location cannot exceed ${CONFIG.LOCATION_MAX} characters`);
+          return false;
+        }
+        // Only allow letters, spaces, and common punctuation
+        if (value && !/^[a-zA-Z\s,.-]+$/.test(value)) {
+          showError(this.field, 'Only letters, spaces, and punctuation allowed');
+          return false;
+        }
+        return true;
+      }
+    }
+
+    // ============================================================================
+    // INITIALIZE VALIDATORS
+    // ============================================================================
+    const validators = {
+      firstName: new FieldValidator(elements.firstName, 'name'),
+      lastName: new FieldValidator(elements.lastName, 'name'),
+      email: new FieldValidator(elements.email, 'email'),
+      mobile: new FieldValidator(elements.mobileNo, 'mobile'),
+      password: new FieldValidator(elements.password, 'password'),
+      dob: new FieldValidator(elements.dob, 'dob'),
+      gender: new FieldValidator(elements.gender, 'select'),
+      location: new FieldValidator(elements.location, 'location')
+    };
+
+    // ============================================================================
+    // PASSWORD TOGGLE
+    // ============================================================================
+    elements.toggleBtn.addEventListener('click', function() {
+      const type = elements.password.type === 'password' ? 'text' : 'password';
+      elements.password.type = type;
+      
+      // Update icon
+      if (type === 'text') {
+        // Eye slash icon (password visible)
+        elements.eyeIcon.innerHTML = `
+          <path d="M12 7c2.76 0 5 2.24 5 5 0 .65-.13 1.26-.36 1.83l2.92 2.92c1.51-1.26 2.7-2.89 3.43-4.75-1.73-4.39-6-7.5-11-7.5-1.4 0-2.74.25-3.98.7l2.16 2.16C10.74 7.13 11.35 7 12 7zM2 4.27l2.28 2.28.46.46C3.08 8.3 1.78 10.02 1 12c1.73 4.39 6 7.5 11 7.5 1.55 0 3.03-.3 4.38-.84l.42.42L19.73 22 21 20.73 3.27 3 2 4.27zM7.53 9.8l1.55 1.55c-.05.21-.08.43-.08.65 0 1.66 1.34 3 3 3 .22 0 .44-.03.65-.08l1.55 1.55c-.67.33-1.41.53-2.2.53-2.76 0-5-2.24-5-5 0-.79.2-1.53.53-2.2zm4.31-.78l3.15 3.15.02-.16c0-1.66-1.34-3-3-3l-.17.01z"/>
+        `;
+      } else {
+        // Regular eye icon (password hidden)
+        elements.eyeIcon.innerHTML = `
+          <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+        `;
+      }
+    });
+
+    // ============================================================================
+    // DATE PICKER INITIALIZATION
+    // ============================================================================
+    flatpickr("#dob", {
+      altInput: true,
+      altFormat: "d/m/Y",
+      dateFormat: "d/m/Y",
+      maxDate: "today",
+      yearRange: [1980, new Date().getFullYear()],
+      clickOpens: true,
+      allowInput: false,
+      theme: "light",
+      onChange: function() {
+        validators.dob.validate();
+      }
+    });
+
+    // ============================================================================
+    // MOBILE NUMBER FORMATTING
+    // ============================================================================
+    elements.mobileNo.addEventListener('input', function(e) {
+      e.target.value = e.target.value.replace(/[^0-9]/g, '').slice(0, CONFIG.MOBILE_LENGTH);
+    });
+
+    // ============================================================================
+    // TRIM SPACES ON BLUR
+    // ============================================================================
+    [elements.firstName, elements.lastName, elements.email, elements.location].forEach(field => {
+      field.addEventListener('blur', function() {
+        this.value = this.value.trim().replace(/\s+/g, ' ');
+      });
+    });
+
+    // ============================================================================
+    // FORM VALIDATION
+    // ============================================================================
+    function validateForm() {
+      clearAllErrors();
+      hideAlert();
+      let isValid = true;
+
+      // Validate all fields
+      Object.values(validators).forEach(validator => {
+        if (!validator.validate()) {
+          isValid = false;
+        }
+      });
+
+      return isValid;
+    }
+
+    // ============================================================================
+    // FORM SUBMISSION
+    // ============================================================================
+    elements.form.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      // Check rate limiting
+      const lockStatus = rateLimiter.isLocked();
+      if (lockStatus.locked) {
+        showAlert(`Too many registration attempts. Please try again in ${lockStatus.minutes} minute(s).`, 'error');
+        return;
+      }
+
+      if (!validateForm()) {
+        return;
+      }
+
+      // Disable submit button
+      elements.submitBtn.textContent = 'Registering...';
+      elements.submitBtn.disabled = true;
+
+      // Prepare form data with userType
+      const formData = {
+        firstName: sanitizeInput(elements.firstName.value.trim()),
+        lastName: sanitizeInput(elements.lastName.value.trim()),
+        gender: elements.gender.value,
+        dob: elements.dob.value, // Format: dd/MM/yyyy
+        location: sanitizeInput(elements.location.value.trim()),
+        mobileNo: elements.mobileNo.value,
+        email: sanitizeInput(elements.email.value.trim().toLowerCase()),
+        password: elements.password.value,
+        age: calculateAge(elements.dob.value),
+        userType: "STUDENT" // ADDED: Automatically set user type as STUDENT
+      };
+
+      try {
+        // Make API call
+        const response = await registerUser(formData);
+        
+        if (response.success) {
+          // Reset rate limiter on success
+          rateLimiter.reset();
+          
+          // Show success message
+          showAlert('Registration successful! Redirecting to login...', 'success');
+          
+          // Redirect to login page after 2 seconds
+          setTimeout(() => {
+            window.location.href = 'loginPage.html';
+          }, 2000);
+        } else {
+          throw new Error(response.message || 'Registration failed');
+        }
+      } catch (error) {
+        // Increment failed attempts
+        rateLimiter.increment();
+        
+        let errorMessage = error.message || 'Registration failed. Please try again.';
+        
+        // Handle specific error types
+        if (errorMessage.includes('email') || errorMessage.includes('Email')) {
+          errorMessage = 'This email is already registered. Please use a different email or login.';
+        } else if (errorMessage.includes('mobile') || errorMessage.includes('Mobile')) {
+          errorMessage = 'This mobile number is already registered.';
+        }
+        
+        showAlert(errorMessage, 'error');
+      } finally {
+        // Re-enable submit button
+        elements.submitBtn.textContent = 'Register';
+        elements.submitBtn.disabled = false;
+      }
+    });
+
+    // ============================================================================
+    // API FUNCTION (Backend Integration)
+    // ============================================================================
+    async function registerUser(data) {
+      try {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000); // 15 second timeout
+        
+        const response = await fetch(CONFIG.API_ENDPOINT, {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json' 
+          },
+          body: JSON.stringify(data),
+          signal: controller.signal
+        });
+        
+        clearTimeout(timeoutId);
+        
+        if (!response.ok) {
+          if (response.status === 409) {
+            throw new Error('Email or mobile number already registered');
+          } else if (response.status === 400) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Invalid registration data');
+          } else if (response.status >= 500) {
+            throw new Error('Server error. Please try again later.');
+          }
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        const result = await response.json();
+        return result;
+        
+      } catch (error) {
+        if (error.name === 'AbortError') {
+          throw new Error('Request timeout. Please check your connection.');
+        }
+        throw error;
+      }
+    }
+
+    // ============================================================================
+    // PAGE LOAD SECURITY CHECKS
+    // ============================================================================
+    window.addEventListener('load', function() {
+      // Check if locked out
+      const lockStatus = rateLimiter.isLocked();
+      if (lockStatus.locked) {
+        showAlert(`Too many registration attempts. Please try again in ${lockStatus.minutes} minute(s).`, 'error');
+        elements.submitBtn.disabled = true;
+        
+        // Re-enable after lockout time
+        setTimeout(() => {
+          location.reload();
+        }, lockStatus.minutes * 60 * 1000);
+      }
+    });
+
+    // ============================================================================
+    // PREVENT FORM RESUBMISSION
+    // ============================================================================
+    if (window.history.replaceState) {
+      window.history.replaceState(null, null, window.location.href);
+    }
+
+    // Clear sensitive data on page unload
+    window.addEventListener('beforeunload', function() {
+      elements.password.value = '';
+    });
+  </script>
+</body>
+</html>
