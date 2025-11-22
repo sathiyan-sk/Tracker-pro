@@ -163,4 +163,94 @@ public class AdminController {
             "message", "Data exported successfully"
         ));
     }
+
+    // ==================== Career Posts Endpoints ====================
+
+    /**
+     * Get all career posts
+     * GET /api/v1/career-posts
+     */
+    @GetMapping("/career-posts")
+    public ResponseEntity<Map<String, Object>> getAllCareerPosts() {
+        List<CareerPostResponse> posts = careerPostService.getAllPosts();
+        return ResponseEntity.ok(Map.of(
+            "success", true,
+            "data", posts,
+            "total", posts.size()
+        ));
+    }
+
+    /**
+     * Get career post by ID
+     * GET /api/v1/career-posts/{id}
+     */
+    @GetMapping("/career-posts/{id}")
+    public ResponseEntity<Map<String, Object>> getCareerPostById(@PathVariable Long id) {
+        CareerPostResponse post = careerPostService.getPostById(id);
+        return ResponseEntity.ok(Map.of(
+            "success", true,
+            "data", post
+        ));
+    }
+
+    /**
+     * Create new career post
+     * POST /api/v1/career-posts
+     * Note: Admin ID should be extracted from JWT token in production
+     */
+    @PostMapping("/career-posts")
+    public ResponseEntity<Map<String, Object>> createCareerPost(
+            @Valid @RequestBody CareerPostRequest request,
+            @RequestParam(required = false, defaultValue = "1") Long adminId) {
+        CareerPostResponse post = careerPostService.createPost(request, adminId);
+        return ResponseEntity.status(HttpStatus.CREATED).body(Map.of(
+            "success", true,
+            "message", "Career post created successfully",
+            "data", post
+        ));
+    }
+
+    /**
+     * Update career post
+     * PUT /api/v1/career-posts/{id}
+     */
+    @PutMapping("/career-posts/{id}")
+    public ResponseEntity<Map<String, Object>> updateCareerPost(
+            @PathVariable Long id,
+            @Valid @RequestBody CareerPostRequest request) {
+        CareerPostResponse post = careerPostService.updatePost(id, request);
+        return ResponseEntity.ok(Map.of(
+            "success", true,
+            "message", "Career post updated successfully",
+            "data", post
+        ));
+    }
+
+    /**
+     * Delete career post
+     * DELETE /api/v1/career-posts/{id}
+     */
+    @DeleteMapping("/career-posts/{id}")
+    public ResponseEntity<Map<String, Object>> deleteCareerPost(@PathVariable Long id) {
+        careerPostService.deletePost(id);
+        return ResponseEntity.ok(Map.of(
+            "success", true,
+            "message", "Career post deleted successfully"
+        ));
+    }
+
+    /**
+     * Search career posts by title or code
+     * GET /api/v1/career-posts/search?term=...
+     */
+    @GetMapping("/career-posts/search")
+    public ResponseEntity<Map<String, Object>> searchCareerPosts(
+            @RequestParam String term) {
+        List<CareerPostResponse> posts = careerPostService.searchPosts(term);
+        return ResponseEntity.ok(Map.of(
+            "success", true,
+            "data", posts,
+            "total", posts.size()
+        ));
+    }
 }
