@@ -931,24 +931,32 @@
         showStatusMessage('Registration data exported successfully', 'success');
     }
 
-    function viewRegistration(id) {
-        const user = dataManager.getRegistrations().find(u => u.id == id);
-        if (user) {
-            const content = `
-                <div class="preview-container">
-                    <div class="preview-field"><div class="preview-label">Full Name</div><div class="preview-value">${user.firstName} ${user.lastName || ''}</div></div>
-                    <div class="preview-field"><div class="preview-label">Email</div><div class="preview-value">${user.email}</div></div>
-                    <div class="preview-field"><div class="preview-label">Role</div><div class="preview-value"><span class="badge badge-primary">${user.role}</span></div></div>
-                    <div class="preview-field"><div class="preview-label">Gender</div><div class="preview-value">${user.gender || 'N/A'}</div></div>
-                    <div class="preview-field"><div class="preview-label">Date of Birth</div><div class="preview-value">${user.dob || 'N/A'}</div></div>
-                    <div class="preview-field"><div class="preview-label">Mobile</div><div class="preview-value">${user.mobile || 'N/A'}</div></div>
-                    <div class="preview-field"><div class="preview-label">City</div><div class="preview-value">${user.city || 'N/A'}</div></div>
-                    <div class="preview-field"><div class="preview-label">Registered On</div><div class="preview-value">${user.registeredOn}</div></div>
-                    <div class="preview-field"><div class="preview-label">Status</div><div class="preview-value"><span class="badge badge-${user.status === 'Active' ? 'success' : 'disabled'}">${user.status}</span></div></div>
-                </div>
-            `;
-            document.getElementById('viewUserContent').innerHTML = content;
-            document.getElementById('viewUserModal').classList.add('active');
+    async function viewRegistration(id) {
+        try {
+            const response = await apiManager.getAllRegistrations();
+            const users = response.data || [];
+            const user = users.find(u => u.id == id);
+            
+            if (user) {
+                const content = `
+                    <div class="preview-container">
+                        <div class="preview-field"><div class="preview-label">Full Name</div><div class="preview-value">${user.firstName} ${user.lastName || ''}</div></div>
+                        <div class="preview-field"><div class="preview-label">Email</div><div class="preview-value">${user.email}</div></div>
+                        <div class="preview-field"><div class="preview-label">Role</div><div class="preview-value"><span class="badge badge-primary">${user.userType}</span></div></div>
+                        <div class="preview-field"><div class="preview-label">Gender</div><div class="preview-value">${user.gender || 'N/A'}</div></div>
+                        <div class="preview-field"><div class="preview-label">Date of Birth</div><div class="preview-value">${user.dateOfBirth || 'N/A'}</div></div>
+                        <div class="preview-field"><div class="preview-label">Mobile</div><div class="preview-value">${user.mobileNo || 'N/A'}</div></div>
+                        <div class="preview-field"><div class="preview-label">City</div><div class="preview-value">${user.location || 'N/A'}</div></div>
+                        <div class="preview-field"><div class="preview-label">Registered On</div><div class="preview-value">${user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}</div></div>
+                        <div class="preview-field"><div class="preview-label">Status</div><div class="preview-value"><span class="badge badge-${user.isActive ? 'success' : 'disabled'}">${user.isActive ? 'Active' : 'Inactive'}</span></div></div>
+                    </div>
+                `;
+                document.getElementById('viewUserContent').innerHTML = content;
+                document.getElementById('viewUserModal').classList.add('active');
+            }
+        } catch (error) {
+            console.error('Error viewing registration:', error);
+            showStatusMessage('Failed to load registration details', 'error');
         }
     }
 
