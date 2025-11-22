@@ -818,14 +818,14 @@
                 <td>${reg.email}</td>
                 <td>${reg.gender || '-'}</td>
                 <td>${reg.dob || '-'}</td>
-                <td>${reg.city || '-'}</td>
-                <td>${reg.mobile || '-'}</td>
-                <td><span class="badge badge-primary">${reg.role}</span></td>
-                <td>${reg.registeredOn}</td>
+                <td>${reg.location || '-'}</td>
+                <td>${reg.mobileNo || '-'}</td>
+                <td><span class="badge badge-primary">${reg.userType}</span></td>
+                <td>${reg.createdAt ? new Date(reg.createdAt).toLocaleDateString() : '-'}</td>
                 <td>
                     <div class="actions">
                         <button class="btn btn-sm btn-outline" onclick="viewRegistration(${reg.id})">View</button>
-                        <button class="btn btn-sm btn-danger" onclick="deleteUser(${reg.id})">Delete</button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteRegistration(${reg.id})">Delete</button>
                     </div>
                 </td>
             </tr>
