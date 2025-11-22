@@ -1105,9 +1105,11 @@
             email: document.getElementById('userEmail').value,
             password: document.getElementById('userPassword').value,
             userType: document.getElementById('userRole').value,
-            gender: document.getElementById('userGender').value,
-            mobileNo: document.getElementById('userMobile').value,
-            location: document.getElementById('userCity').value
+            gender: document.getElementById('userGender').value || 'Other',
+            mobileNo: document.getElementById('userMobile').value || '0000000000',
+            location: document.getElementById('userCity').value || 'Not specified',
+            dob: document.getElementById('userDOB').value || '01/01/1990',
+            age: parseInt(document.getElementById('userAge').value) || 30
         };
 
         if (!formData.firstName || !formData.email || !formData.userType) {
@@ -1137,9 +1139,9 @@
             }
             
             closeModal('userModal');
-            loadRegistrationsData();
-            loadUsersData();
-            updateDashboardStats();
+            // Only reload users table, not registrations
+            await loadUsersData();
+            await updateDashboardStats();
         } catch (error) {
             console.error('Error saving user:', error);
             showStatusMessage('Error saving user: ' + (error.message || 'Unknown error'), 'error');
