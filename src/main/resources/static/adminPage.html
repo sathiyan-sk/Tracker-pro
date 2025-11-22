@@ -1061,13 +1061,22 @@
         }
     }
 
-    function toggleUserStatus(id) {
-        const user = dataManager.getRegistrations().find(u => u.id == id);
-        if (user) {
-            const newStatus = user.status === 'Active' ? 'Disabled' : 'Active';
-            dataManager.updateRegistration(id, {status: newStatus});
-            loadUsersData();
-            showStatusMessage(`User ${newStatus.toLowerCase()} successfully`, 'success');
+    async function toggleUserStatus(id) {
+        try {
+            const response = await apiManager.getUserById(id);
+            const user = response.data;
+            if (user) {
+                const updatedData = {
+                    ...user,
+                    isActive: !user.isActive
+                };
+                await apiManager.updateUser(id, updatedData);
+                loadUsersData();
+                showStatusMessage(`User ${updatedData.isActive ? 'enabled' : 'disabled'} successfully`, 'success');
+            }
+        } catch (error) {
+            console.error('Error toggling user status:', error);
+            showStatusMessage('Failed to update user status', 'error');
         }
     }
 
