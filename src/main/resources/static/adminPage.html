@@ -980,8 +980,8 @@
         try {
             const filterMap = {
                 'all': '',
-                'faculty': 'FACULTY',
-                'hr': 'HR'
+                'faculty': 'faculty',
+                'hr': 'hr'
             };
             const response = await apiManager.getUsers(filterMap[currentFilter] || '');
             const users = response.data || [];
