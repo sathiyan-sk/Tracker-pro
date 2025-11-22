@@ -821,11 +821,11 @@
         tbody.innerHTML = paginatedData.map(reg => `
             <tr>
                 <td><input type="checkbox" class="reg-checkbox" value="${reg.id}" onchange="updateSelectedRegistrations()"></td>
-                <td>${reg.firstName}</td>
+                <td>${reg.firstName || '-'}</td>
                 <td>${reg.lastName || '-'}</td>
                 <td>${reg.email}</td>
                 <td>${reg.gender || '-'}</td>
-                <td>${reg.dob || '-'}</td>
+                <td>${reg.dateOfBirth || '-'}</td>
                 <td>${reg.location || '-'}</td>
                 <td>${reg.mobileNo || '-'}</td>
                 <td><span class="badge badge-primary">${reg.userType}</span></td>
