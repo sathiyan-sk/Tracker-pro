@@ -5,22 +5,30 @@ import com.webapp.Tracker_pro.dto.LoginRequest;
 import com.webapp.Tracker_pro.dto.RegisterRequest;
 import com.webapp.Tracker_pro.exception.InvalidCredentialsException;
 import com.webapp.Tracker_pro.exception.UserAlreadyExistsException;
+import com.webapp.Tracker_pro.model.Admin;
 import com.webapp.Tracker_pro.model.User;
+import com.webapp.Tracker_pro.model.UserType;
+import com.webapp.Tracker_pro.repository.AdminRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 /**
  * Service for authentication operations including registration and login.
+ * Handles both Admin and User authentication.
  */
 @Service
 @RequiredArgsConstructor
 public class AuthService {
 
     private final UserService userService;
+    private final AdminRepository adminRepository;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
