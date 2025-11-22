@@ -945,17 +945,20 @@
         }
     }
 
-    function loadUsersData() {
-        const allUsers = dataManager.getRegistrations();
-        let facultyHRUsers = allUsers.filter(user => user.role === 'Faculty' || user.role === 'HR');
-        
-        if (currentFilter === 'faculty') {
-            facultyHRUsers = facultyHRUsers.filter(user => user.role === 'Faculty');
-        } else if (currentFilter === 'hr') {
-            facultyHRUsers = facultyHRUsers.filter(user => user.role === 'HR');
+    async function loadUsersData() {
+        try {
+            const filterMap = {
+                'all': '',
+                'faculty': 'FACULTY',
+                'hr': 'HR'
+            };
+            const response = await apiManager.getUsers(filterMap[currentFilter] || '');
+            const users = response.data || [];
+            renderUsersTable(users);
+        } catch (error) {
+            console.error('Error loading users:', error);
+            showStatusMessage('Failed to load users', 'error');
         }
-        
-        renderUsersTable(facultyHRUsers);
     }
 
     function renderUsersTable(users) {
