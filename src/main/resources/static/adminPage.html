@@ -1017,13 +1017,19 @@
         document.getElementById('userModal').classList.add('active');
     }
 
-    function editUser(id) {
-        const user = dataManager.getRegistrations().find(u => u.id == id);
-        if (user) {
-            editingUserId = id;
-            document.getElementById('userModalTitle').textContent = 'Edit User';
-            populateUserForm(user);
-            document.getElementById('userModal').classList.add('active');
+    async function editUser(id) {
+        try {
+            const response = await apiManager.getUserById(id);
+            const user = response.data;
+            if (user) {
+                editingUserId = id;
+                document.getElementById('userModalTitle').textContent = 'Edit User';
+                populateUserForm(user);
+                document.getElementById('userModal').classList.add('active');
+            }
+        } catch (error) {
+            console.error('Error loading user:', error);
+            showStatusMessage('Failed to load user details', 'error');
         }
     }
 
