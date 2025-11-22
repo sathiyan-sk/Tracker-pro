@@ -50,8 +50,8 @@ public class AdminService {
         LocalDateTime oneWeekAgo = LocalDateTime.now().minusDays(7);
         long newStudentsThisWeek = userRepository.countByCreatedAtAfter(oneWeekAgo);
 
-        // Published posts - for now returning 0 as internship posts feature is not yet implemented
-        long publishedPosts = 0;
+        // Published posts - get from career post service
+        long publishedPosts = careerPostService.getPostedPostsCount();
 
         log.info("Dashboard stats - Students: {}, Faculty/HR: {}, New this week: {}",
                 totalStudents, totalFacultyHR, newStudentsThisWeek);
