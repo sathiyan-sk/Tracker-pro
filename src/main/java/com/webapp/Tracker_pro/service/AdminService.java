@@ -29,6 +29,7 @@ public class AdminService {
 
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final CareerPostService careerPostService;
 
     /**
      * Get dashboard statistics
