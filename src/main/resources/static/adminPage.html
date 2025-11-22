@@ -911,9 +911,9 @@
         const searchTerm = document.getElementById('registrationSearch')?.value || '';
         try {
             const response = await apiManager.getAllRegistrations(searchTerm, 'STUDENT');
-            const studentRegistrations = response.data || [];
+            cachedRegistrations = response.data || [];
             currentPageNumber = 1;
-            renderRegistrationsTable(studentRegistrations);
+            renderRegistrationsTable(cachedRegistrations);
         } catch (error) {
             console.error('Error filtering registrations:', error);
             showStatusMessage('Failed to filter registrations', 'error');
