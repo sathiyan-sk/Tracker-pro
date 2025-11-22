@@ -53,6 +53,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         // Public endpoints (no authentication required)
                         .requestMatchers(
+                                "/",
                                 "/api/auth/**",
                                 "/error",
                                 "/**.html",
