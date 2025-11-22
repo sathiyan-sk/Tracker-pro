@@ -967,14 +967,14 @@
             <tr>
                 <td>${user.firstName} ${user.lastName || ''}</td>
                 <td>${user.email}</td>
-                <td><span class="badge badge-primary">${user.role}</span></td>
-                <td><span class="badge badge-${user.status === 'Active' ? 'success' : 'disabled'}">${user.status}</span></td>
-                <td>${user.lastLogin || 'Never'}</td>
+                <td><span class="badge badge-primary">${user.userType}</span></td>
+                <td><span class="badge badge-${user.isActive ? 'success' : 'disabled'}">${user.isActive ? 'Active' : 'Inactive'}</span></td>
+                <td>${user.updatedAt ? new Date(user.updatedAt).toLocaleDateString() : 'Never'}</td>
                 <td>
                     <div class="actions">
                         <button class="btn btn-sm btn-outline" onclick="editUser(${user.id})">Modify</button>
-                        <button class="btn btn-sm btn-${user.status === 'Active' ? 'danger' : 'success'}" onclick="toggleUserStatus(${user.id})">
-                            ${user.status === 'Active' ? 'Disable' : 'Enable'}
+                        <button class="btn btn-sm btn-${user.isActive ? 'danger' : 'success'}" onclick="toggleUserStatus(${user.id})">
+                            ${user.isActive ? 'Disable' : 'Enable'}
                         </button>
                     </div>
                 </td>
