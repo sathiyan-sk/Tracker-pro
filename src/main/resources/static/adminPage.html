@@ -793,10 +793,15 @@
         }
     }
 
-    function loadRegistrationsData() {
-        const allRegistrations = dataManager.getRegistrations();
-        const studentRegistrations = allRegistrations.filter(reg => reg.role === 'Student');
-        renderRegistrationsTable(studentRegistrations);
+    async function loadRegistrationsData() {
+        try {
+            const response = await apiManager.getAllRegistrations('', 'STUDENT');
+            const registrations = response.data || [];
+            renderRegistrationsTable(registrations);
+        } catch (error) {
+            console.error('Error loading registrations:', error);
+            showStatusMessage('Failed to load registrations', 'error');
+        }
     }
 
     function renderRegistrationsTable(registrations) {
