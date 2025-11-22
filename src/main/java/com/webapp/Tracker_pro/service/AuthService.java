@@ -92,24 +92,54 @@ public class AuthService {
 
     /**
      * Authenticate user and generate JWT token
+     * Handles both Admin and User authentication
      * @param request Login request containing email and password
      * @return AuthResponse with JWT token and user information
      */
     public AuthResponse login(LoginRequest request) {
+        String email = request.getEmail().trim().toLowerCase();
+        String password = request.getPassword();
+
+        // First, try to find Admin
+        Optional<Admin> adminOptional = adminRepository.findByEmail(email);
+        if (adminOptional.isPresent()) {
+            Admin admin = adminOptional.get();
+            
+            // Verify admin password
+            if (!passwordEncoder.matches(password, admin.getPassword())) {
+                throw new InvalidCredentialsException("Invalid email or password");
+            }
+
+            // Generate JWT token for admin
+            String jwtToken = jwtService.generateToken(admin);
+
+            // Build and return response for admin
+            return AuthResponse.builder()
+                    .success(true)
+                    .message("Login successful")
+                    .token(jwtToken)
+                    .user(AuthResponse.UserInfo.builder()
+                            .id(admin.getId())
+                            .firstName(admin.getFirstName())
+                            .lastName(admin.getLastName())
+                            .email(admin.getEmail())
+                            .userType(UserType.ADMIN)
+                            .mobileNo(admin.getMobileNo())
+                            .build())
+                    .build();
+        }
+
+        // If not admin, try regular user authentication
         try {
-            // Authenticate user
             authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(
-                            request.getEmail().trim().toLowerCase(),
-                            request.getPassword()
-                    )
+                    new UsernamePasswordAuthenticationToken(email, password)
             );
         } catch (Exception e) {
             throw new InvalidCredentialsException("Invalid email or password");
         }
 
         // Load user details
-        User user = userService.findByEmail(request.getEmail().trim().toLowerCase());
+        User user = userService.findByEmail(email);
 
         // Generate JWT token
         String jwtToken = jwtService.generateToken(user);
