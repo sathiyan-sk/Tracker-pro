@@ -1,8 +1,7 @@
 package com.webapp.Tracker_pro.config;
 
-import com.webapp.Tracker_pro.model.User;
-import com.webapp.Tracker_pro.model.UserType;
-import com.webapp.Tracker_pro.repository.UserRepository;
+import com.webapp.Tracker_pro.model.Admin;
+import com.webapp.Tracker_pro.repository.AdminRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
@@ -18,18 +17,17 @@ import org.springframework.stereotype.Component;
 @Slf4j
 public class DataInitializer implements CommandLineRunner {
 
-    private final UserRepository userRepository;
+    private final AdminRepository adminRepository;
     private final PasswordEncoder passwordEncoder;
 
     @Override
     public void run(String... args) throws Exception {
         // Check if admin user already exists
-        if (!userRepository.existsByEmail("admin@trackerpro.com")) {
+        if (!adminRepository.existsByEmail("admin@trackerpro.com")) {
             // Create default admin user
-            User admin = new User();
+            Admin admin = new Admin();
             admin.setFirstName("Admin");
             admin.setLastName("User");
-            admin.setUserType(UserType.ADMIN);
             admin.setEmail("admin@trackerpro.com");
             admin.setPassword(passwordEncoder.encode("admin123"));
             admin.setMobileNo("9999999999");
@@ -39,7 +37,7 @@ public class DataInitializer implements CommandLineRunner {
             admin.setLocation("System");
             admin.setIsActive(true);
 
-            userRepository.save(admin);
+            adminRepository.save(admin);
             
             log.info("✅ Default Admin User Created Successfully!");
             log.info("   Email: admin@trackerpro.com");
