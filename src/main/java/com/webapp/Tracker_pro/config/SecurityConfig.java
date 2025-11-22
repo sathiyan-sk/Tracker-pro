@@ -54,9 +54,6 @@ public class SecurityConfig {
                         // Public endpoints (no authentication required)
                         .requestMatchers(
                                 "/api/auth/**",
-                                "/student/**",
-                                "/admin/**",
-                                "/hr/**",
                                 "/error",
                                 "/**.html",
                                 "/**.css",
@@ -66,6 +63,9 @@ public class SecurityConfig {
                                 "/**.jpeg",
                                 "/**.svg"
                         ).permitAll()
+
+                        // Admin endpoints - require ADMIN role
+                        .requestMatchers("/api/v1/**").hasAuthority("ADMIN")
 
                         // All other requests require authentication
                         .anyRequest().authenticated()
