@@ -1128,10 +1128,10 @@
         document.getElementById('userPassword').value = '';
         document.getElementById('userPassword').placeholder = 'Leave empty to keep current password';
         document.getElementById('userPassword').required = false;
-        document.getElementById('userRole').value = user.role || '';
+        document.getElementById('userRole').value = user.userType || '';
         document.getElementById('userGender').value = user.gender || '';
-        document.getElementById('userMobile').value = user.mobile || '';
-        document.getElementById('userCity').value = user.city || '';
+        document.getElementById('userMobile').value = user.mobileNo || '';
+        document.getElementById('userCity').value = user.location || '';
     }
 
     function clearUserForm() {
