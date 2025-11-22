@@ -2,21 +2,22 @@
 class ApiManager {
     constructor() {
         this.baseUrl = '/api/v1';
-        this.token = localStorage.getItem('adminToken') || '';
+        this.token = localStorage.getItem('authToken') || '';
     }
 
     setToken(token) {
         this.token = token;
-        localStorage.setItem('adminToken', token);
+        localStorage.setItem('authToken', token);
     }
 
     getToken() {
-        return this.token || localStorage.getItem('adminToken');
+        return this.token || localStorage.getItem('authToken');
     }
 
     clearToken() {
         this.token = '';
-        localStorage.removeItem('adminToken');
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('userInfo');
     }
 
     async request(endpoint, options = {}) {
