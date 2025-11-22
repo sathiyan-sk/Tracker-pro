@@ -1396,6 +1396,7 @@
 
     function logout() {
         if (confirm('Are you sure you want to logout?')) {
+            apiManager.clearToken();
             window.location.href = 'loginPage.html';
         }
     }
