@@ -1071,7 +1071,7 @@
         }
     }
 
-    function saveUser(event) {
+    async function saveUser(event) {
         if (event) event.preventDefault();
         
         const formData = {
@@ -1079,35 +1079,35 @@
             lastName: document.getElementById('userLastName').value,
             email: document.getElementById('userEmail').value,
             password: document.getElementById('userPassword').value,
-            role: document.getElementById('userRole').value,
+            userType: document.getElementById('userRole').value,
             gender: document.getElementById('userGender').value,
-            mobile: document.getElementById('userMobile').value,
-            city: document.getElementById('userCity').value
+            mobileNo: document.getElementById('userMobile').value,
+            location: document.getElementById('userCity').value
         };
 
-        if (!formData.firstName || !formData.email || !formData.role) {
+        if (!formData.firstName || !formData.email || !formData.userType) {
             showStatusMessage('Please fill in all required fields', 'error');
             return;
         }
 
-        if (!editingUserId && (!formData.password || formData.password.length < 8)) {
-            showStatusMessage('Password must be at least 8 characters', 'error');
+        if (!editingUserId && (!formData.password || formData.password.length < 6)) {
+            showStatusMessage('Password must be at least 6 characters', 'error');
             return;
         }
 
         try {
             if (editingUserId) {
-                if (formData.password && formData.password.length < 8) {
-                    showStatusMessage('Password must be at least 8 characters', 'error');
+                if (formData.password && formData.password.length < 6) {
+                    showStatusMessage('Password must be at least 6 characters', 'error');
                     return;
                 }
                 if (!formData.password) {
                     delete formData.password;
                 }
-                dataManager.updateRegistration(editingUserId, formData);
+                await apiManager.updateUser(editingUserId, formData);
                 showStatusMessage('User updated successfully', 'success');
             } else {
-                dataManager.addRegistration(formData);
+                await apiManager.createUser(formData);
                 showStatusMessage('User added successfully', 'success');
             }
             
@@ -1116,7 +1116,8 @@
             loadUsersData();
             updateDashboardStats();
         } catch (error) {
-            showStatusMessage('Error saving user', 'error');
+            console.error('Error saving user:', error);
+            showStatusMessage('Error saving user: ' + (error.message || 'Unknown error'), 'error');
         }
     }
 
