@@ -863,10 +863,10 @@
     }
 
     function changePage(page) {
-        const totalPages = Math.ceil(dataManager.getRegistrations().filter(r => r.role === 'Student').length / itemsPerPage);
+        const totalPages = Math.ceil(cachedRegistrations.length / itemsPerPage);
         if (page < 1 || page > totalPages) return;
         currentPageNumber = page;
-        loadRegistrationsData();
+        renderRegistrationsTable(cachedRegistrations);
     }
 
     function toggleSelectAll() {
