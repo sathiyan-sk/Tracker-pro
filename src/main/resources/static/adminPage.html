@@ -804,8 +804,8 @@
     async function loadRegistrationsData() {
         try {
             const response = await apiManager.getAllRegistrations('', 'STUDENT');
-            const registrations = response.data || [];
-            renderRegistrationsTable(registrations);
+            cachedRegistrations = response.data || [];
+            renderRegistrationsTable(cachedRegistrations);
         } catch (error) {
             console.error('Error loading registrations:', error);
             showStatusMessage('Failed to load registrations', 'error');
