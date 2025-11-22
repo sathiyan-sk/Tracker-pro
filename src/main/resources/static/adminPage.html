@@ -720,6 +720,13 @@
     });
 
     function initializeApp() {
+        // Check if user is logged in
+        const token = apiManager.getToken();
+        if (!token) {
+            window.location.href = '/loginPage.html';
+            return;
+        }
+        
         setupEventListeners();
         updateDashboardStats();
         showStatusMessage('Dashboard loaded successfully', 'success');
