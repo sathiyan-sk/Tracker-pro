@@ -45,6 +45,9 @@ public class SecurityConfig {
         http
                 // Disable CSRF (not needed for stateless JWT authentication)
                 .csrf(AbstractHttpConfigurer::disable)
+                
+                // Allow H2 console to be embedded in frames
+                .headers(headers -> headers.frameOptions(frameOptions -> frameOptions.disable()))
 
                 // Configure CORS
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
