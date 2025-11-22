@@ -780,26 +780,17 @@
         }
     }
 
-    function updateDashboardStats() {
-        const registrations = dataManager.getRegistrations();
-        const internships = dataManager.getInternships();
-        const students = registrations.filter(r => r.role === 'Student');
-        const faculty = registrations.filter(r => r.role === 'Faculty');
-        const hr = registrations.filter(r => r.role === 'HR');
-        const totalStudents = students.length;
-        const totalFacultyHR = faculty.length + hr.length;
-        const publishedPosts = internships.filter(p => p.status === 'Posted').length;
-        const newStudents = students.filter(r => {
-            const regDate = new Date(r.registeredOn);
-            const weekAgo = new Date();
-            weekAgo.setDate(weekAgo.getDate() - 7);
-            return regDate >= weekAgo;
-        }).length;
-
-        document.getElementById('totalRegistrations').textContent = totalStudents;
-        document.getElementById('totalUsers').textContent = totalFacultyHR;
-        document.getElementById('totalPosts').textContent = publishedPosts;
-        document.getElementById('newUsers').textContent = newStudents;
+    async function updateDashboardStats() {
+        try {
+            const stats = await apiManager.getDashboardStats();
+            document.getElementById('totalRegistrations').textContent = stats.totalStudents || 0;
+            document.getElementById('totalUsers').textContent = stats.totalFacultyHR || 0;
+            document.getElementById('totalPosts').textContent = stats.publishedPosts || 0;
+            document.getElementById('newUsers').textContent = stats.newStudentsThisWeek || 0;
+        } catch (error) {
+            console.error('Error loading dashboard stats:', error);
+            showStatusMessage('Failed to load dashboard statistics', 'error');
+        }
     }
 
     function loadRegistrationsData() {
