@@ -887,17 +887,22 @@
         }
     }
 
-    function deleteSelectedRegistrations() {
+    async function deleteSelectedRegistrations() {
         if (selectedRegistrations.length === 0) {
             showStatusMessage('Please select registrations to delete', 'error');
             return;
         }
         if (confirm(`Are you sure you want to delete ${selectedRegistrations.length} selected registration(s)? This action cannot be undone.`)) {
-            dataManager.deleteMultipleRegistrations(selectedRegistrations);
-            selectedRegistrations = [];
-            loadRegistrationsData();
-            updateDashboardStats();
-            showStatusMessage('Selected registrations deleted successfully', 'success');
+            try {
+                await apiManager.deleteMultipleRegistrations(selectedRegistrations);
+                selectedRegistrations = [];
+                loadRegistrationsData();
+                updateDashboardStats();
+                showStatusMessage('Selected registrations deleted successfully', 'success');
+            } catch (error) {
+                console.error('Error deleting registrations:', error);
+                showStatusMessage('Failed to delete registrations', 'error');
+            }
         }
     }
 
