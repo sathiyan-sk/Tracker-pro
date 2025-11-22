@@ -236,6 +236,7 @@ public class AdminService {
 
     /**
      * Delete user by ID
+     * Note: Admin users are in a separate table, so only HR, Faculty, and Student users can be deleted here
      * @param id User ID
      */
     @Transactional
@@ -244,11 +245,6 @@ public class AdminService {
 
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("User not found with ID: " + id));
-
-        // Prevent deletion of admin users
-        if (user.getUserType() == UserType.ADMIN) {
-            throw new IllegalArgumentException("Admin users cannot be deleted");
-        }
 
         userRepository.delete(user);
         log.info("User deleted successfully with ID: {}", id);
