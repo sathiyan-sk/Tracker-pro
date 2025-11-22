@@ -3,6 +3,7 @@ package com.webapp.Tracker_pro.controller;
 import com.webapp.Tracker_pro.dto.*;
 import com.webapp.Tracker_pro.model.UserType;
 import com.webapp.Tracker_pro.service.AdminService;
+import com.webapp.Tracker_pro.service.CareerPostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,7 @@ import java.util.Map;
 public class AdminController {
 
     private final AdminService adminService;
+    private final CareerPostService careerPostService;
 
     /**
      * Get dashboard statistics
