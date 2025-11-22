@@ -906,21 +906,17 @@
         }
     }
 
-    function filterRegistrations() {
+    async function filterRegistrations() {
         const searchTerm = document.getElementById('registrationSearch')?.value || '';
-        let allRegistrations = dataManager.getRegistrations();
-        let studentRegistrations = allRegistrations.filter(reg => reg.role === 'Student');
-        
-        if (searchTerm) {
-            studentRegistrations = studentRegistrations.filter(reg => 
-                reg.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                reg.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                reg.email.toLowerCase().includes(searchTerm.toLowerCase())
-            );
+        try {
+            const response = await apiManager.getAllRegistrations(searchTerm, 'STUDENT');
+            const studentRegistrations = response.data || [];
+            currentPageNumber = 1;
+            renderRegistrationsTable(studentRegistrations);
+        } catch (error) {
+            console.error('Error filtering registrations:', error);
+            showStatusMessage('Failed to filter registrations', 'error');
         }
-        
-        currentPageNumber = 1;
-        renderRegistrationsTable(studentRegistrations);
     }
 
     function refreshRegistrations() {
@@ -929,11 +925,17 @@
         showStatusMessage('Registration data refreshed', 'success');
     }
 
-    function exportRegistrations() {
-        const registrations = dataManager.getRegistrations().filter(r => r.role === 'Student');
-        const csvContent = convertToCSV(registrations);
-        downloadFile(csvContent, 'registrations.csv', 'text/csv');
-        showStatusMessage('Registration data exported successfully', 'success');
+    async function exportRegistrations() {
+        try {
+            const response = await apiManager.exportRegistrations();
+            const registrations = response.data || [];
+            const csvContent = convertToCSV(registrations);
+            downloadFile(csvContent, 'registrations.csv', 'text/csv');
+            showStatusMessage('Registration data exported successfully', 'success');
+        } catch (error) {
+            console.error('Error exporting registrations:', error);
+            showStatusMessage('Failed to export registrations', 'error');
+        }
     }
 
     async function viewRegistration(id) {
