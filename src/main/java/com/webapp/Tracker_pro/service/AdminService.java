@@ -11,7 +11,7 @@ import java.util.List;
 
 /**
  * Production-Ready Admin Service
- * Version 2.0 - Refactored for normalized database structure
+ * Refactored for normalized database structure
  * 
  * This service acts as a facade, delegating operations to specialized services:
  * - StudentService: Handles all student-related operations
@@ -26,12 +26,12 @@ import java.util.List;
  * - Proper transaction management
  * 
  * @author TrackerPro Team
- * @version 2.0
+ * @version 1.0 Production
  */
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class AdminServiceV2 {
+public class AdminService {
 
     private final StudentService studentService;
     private final HRFacultyUserService hrFacultyUserService;
