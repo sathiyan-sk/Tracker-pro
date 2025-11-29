@@ -1,6 +1,6 @@
 package com.webapp.Tracker_pro.config;
 
-import com.webapp.Tracker_pro.service.UserService;
+import com.webapp.Tracker_pro.service.UnifiedUserDetailsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -27,6 +27,7 @@ import java.util.List;
 /**
  * Security configuration for the application.
  * Configures JWT-based authentication, CORS, and authorization rules.
+ * Uses UnifiedUserDetailsService to authenticate users from normalized tables.
  */
 @Configuration
 @EnableWebSecurity
@@ -35,7 +36,7 @@ import java.util.List;
 public class SecurityConfig {
 
     private final JwtAuthenticationFilter jwtAuthFilter;
-    private final UserService userService;
+    private final UnifiedUserDetailsService userDetailsService;
 
     /**
      * Configure security filter chain
