@@ -663,15 +663,37 @@
 </div>
 <script src="admin-api.js"></script>
 <script>
-    // CLEAR OLD LOCALSTORAGE ON FIRST LOAD
-      (function() {
-          const isFirstLoad = !sessionStorage.getItem('adminPageLoaded');
-          if (isFirstLoad) {
-              localStorage.removeItem('trackerProData');
-              sessionStorage.setItem('adminPageLoaded', 'true');
-              console.log('🗑️ Cleared old localStorage data');
-          }
-      })();
+    // ==========================================
+    // PRODUCTION ADMIN PANEL - API INTEGRATED
+    // TrackerPro v8.0 - Backend Connected
+    // ==========================================
+    
+    console.log('✅ TrackerPro Admin Panel - API Integrated Version');
+    
+    // Check authentication on page load
+    (function() {
+        const token = localStorage.getItem('authToken');
+        const userInfo = JSON.parse(localStorage.getItem('userInfo') || '{}');
+        
+        if (!token || userInfo.userType !== 'ADMIN') {
+            alert('Unauthorized access. Please login as admin.');
+            window.location.href = 'loginPage.html';
+            return;
+        }
+        
+        // Set token for API calls
+        window.AdminAPI.setAuthToken(token);
+        
+        // Update admin name in header
+        const userNameEl = document.querySelector('.user-name');
+        const userAvatarEl = document.querySelector('.user-avatar');
+        if (userNameEl && userInfo.firstName) {
+            userNameEl.textContent = `${userInfo.firstName} ${userInfo.lastName || ''}`;
+        }
+        if (userAvatarEl && userInfo.firstName) {
+            userAvatarEl.textContent = userInfo.firstName.charAt(0).toUpperCase();
+        }
+    })();
   class DataManager {
       constructor() {
           this.STORAGE_KEY = 'trackerProData';
