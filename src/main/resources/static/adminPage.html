@@ -1,5 +1,5 @@
 <!DOCTYPE html><html lang="en"> <head> <meta charset="UTF-8"> <meta name="viewport" content="width=device-width, initial-scale=1.0"> <title>TrackerPro - Admin Dashboard</title> <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet"> <style> :root{--primary-color:#4a6fff;--primary-light:#e5eaff;--primary-dark:#3a5ccc;--secondary-color:#ff7e42;--text-color:#333333;--text-light:#666666;--light-color:#f8f9fc;--gray-color:#dfe2e9;--success-color:#2ecc71;--warning-color:#f1c40f;--danger-color:#e74c3c;--white:#ffffff;--shadow-sm:0 2px 4px rgba(0,0,0,0.05);--shadow-md:0 4px 8px rgba(0,0,0,0.1);--border-radius-sm:4px;--border-radius-md:8px;--transition:all 0.3s ease;--header-height:70px;--sidebar-width:250px;--bg-card:#ffffff;--border:#e2e8f0;--text-muted:#64748b;--text-secondary:#475569;--text-primary:#1e293b;--bg-hover:#f1f5f9}*{margin:0;padding:0;box-sizing:border-box}body{font-family:'Poppins',sans-serif;background-color:#f9fafb;color:var(--text-color);line-height:1.6;overflow-x:hidden}.header-bar{background-color:var(--white);height:var(--header-height);position:fixed;top:0;left:0;right:0;z-index:100;box-shadow:var(--shadow-sm);display:flex;align-items:center;padding:0 2rem 0 5rem;justify-content:space-between}.logo-container{display:flex;align-items:center;gap:0.75rem}.logo{height:38px;width:38px;object-fit:contain}.logo-text{font-size:1.4rem;font-weight:600;color:black;white-space:nowrap}.header-actions{display:flex;align-items:center;gap:1rem}.header-search{position:relative;width:300px}.header-search input{width:100%;padding:0.5rem 1rem 0.5rem 2.5rem;border-radius:50px;border:1px solid var(--gray-color);font-size:0.9rem;outline:none;transition:var(--transition)}.header-search input:focus{border-color:var(--primary-color);box-shadow:0 0 0 3px var(--primary-light)}.header-search::before{content:'🔍︎';position:absolute;left:12px;top:50%;transform:translateY(-50%);font-size:1rem;color:var(--text-light)}.header-notifications{position:relative;cursor:pointer;width:40px;height:40px;display:flex;align-items:center;justify-content:center;background-color:var(--light-color);border-radius:50%;transition:var(--transition)}.header-notifications:hover{background-color:var(--primary-light)}.header-notifications::after{content:'8';position:absolute;top:-2px;right:-2px;background-color:var(--secondary-color);color:white;font-size:0.7rem;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:600}.user-profile{display:flex;align-items:center;gap:0.75rem;cursor:pointer}.user-avatar{width:40px;height:40px;background-color:var(--primary-light);border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:600;color:var(--primary-dark);font-size:1.2rem}.user-details .user-name{font-weight:500;font-size:0.9rem;line-height:1.2}.user-details .user-role{font-size:0.8rem;color:var(--text-light)}.dashboard-container{display:flex;min-height:100vh;padding-top:var(--header-height)}.sidebar{width:var(--sidebar-width);background:var(--bg-card);border-right:1px solid var(--border);height:calc(100vh - var(--header-height));position:fixed;top:var(--header-height);left:0;overflow-y:auto;padding:1.5rem 0 0 0;z-index:90;transition:all 0.3s ease;display:flex;flex-direction:column}.sidebar.collapsed{transform:translateX(-230px)}.nav-section{margin-bottom:1rem;padding-bottom:1rem;flex:1}.nav-title{font-size:0.75rem;font-weight:600;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.05em;padding:0 1.5rem;margin-bottom:0.5rem}.nav-item{display:flex;align-items:center;padding:0.75rem 1.5rem;color:var(--text-secondary);text-decoration:none;font-size:0.875rem;font-weight:500;transition:var(--transition);position:relative;cursor:pointer;border-left:3px solid transparent;margin:2px 0}.nav-item:hover{background:var(--bg-hover);color:var(--text-primary)}.nav-item.active{background:var(--primary-light);color:var(--primary-color);font-weight:600;border-left:3px solid var(--primary-color)}.nav-icon{width:20px;height:20px;margin-right:0.75rem;opacity:0.8}.nav-badge{margin-left:auto;font-size:0.75rem;padding:0.125rem 0.5rem;background:var(--danger-color);color:white;border-radius:10px;font-weight:600;min-width:1.25rem;text-align:center}.nav-item-text{width:100%}.sidebar-footer{margin-top:auto;padding:1rem 0 0 0;border-top:1px solid var(--border);background:var(--white)}.logout-nav-item{display:flex;align-items:center;padding:0.75rem 1.5rem;color:var(--danger-color);text-decoration:none;font-size:0.875rem;font-weight:500;transition:var(--transition);cursor:pointer;border-left:3px solid transparent;margin:2px 0}.logout-nav-item:hover{background:rgba(231,76,60,0.1);border-left:3px solid var(--danger-color)}.logout-nav-item .logout-icon-sidebar{font-size:1.1rem;margin-right:0.75rem}.main-content{flex:1;margin-left:var(--sidebar-width);padding:2rem;transition:margin-left 0.3s ease;padding-top:calc(var(--header-height) + 1rem)}.sidebar.collapsed ~ .main-content{margin-left:0}.page{display:none}.page.active-page{display:block}.page-title{margin-bottom:2rem;font-size:1.6rem;font-weight:600}.dashboard-stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.5rem;margin-bottom:2rem}.stat-card{background-color:var(--white);border-radius:var(--border-radius-md);box-shadow:var(--shadow-sm);padding:1.5rem;transition:var(--transition);position:relative;overflow:hidden}.stat-card:hover{box-shadow:var(--shadow-md);transform:translateY(-3px)}.stat-card::before{content:'';position:absolute;top:0;left:0;width:4px;height:100%}.stat-card.primary::before{background-color:var(--primary-color)}.stat-card.secondary::before{background-color:var(--secondary-color)}.stat-card.success::before{background-color:var(--success-color)}.stat-card.warning::before{background-color:var(--warning-color)}.stat-card .stat-icon{position:absolute;top:1.5rem;right:1.5rem;font-size:2rem;opacity:0.1}.stat-card .stat-title{font-size:0.9rem;color:var(--text-light);margin-bottom:0.5rem;font-weight:500}.stat-card .stat-value{font-size:1.75rem;font-weight:600;margin-bottom:1rem}.stat-card .stat-description{font-size:0.85rem;color:var(--text-light);margin-top:auto}.content-area{background-color:var(--white);border-radius:var(--border-radius-md);box-shadow:var(--shadow-sm);padding:1.5rem;margin-bottom:2rem}.content-area h2{margin-bottom:1.5rem;font-size:1.2rem;font-weight:600;border-bottom:1px solid var(--gray-color);padding-bottom:0.75rem}.data-table{width:100%;border-collapse:collapse}.data-table th,.data-table td{padding:1rem;text-align:left;border-bottom:1px solid var(--gray-color);vertical-align:middle}.data-table th{font-weight:500;color:var(--text-light);font-size:0.9rem}.data-table tbody tr:hover{background-color:var(--light-color)}.badge{padding:0.4rem 0.85rem;border-radius:4px;font-size:0.75rem;font-weight:500;display:inline-block}.badge-success{background-color:rgba(46,204,113,0.15);color:#27ae60;border:1px solid rgba(46,204,113,0.3)}.badge-warning{background-color:rgba(241,196,15,0.15);color:#f39c12;border:1px solid rgba(241,196,15,0.3)}.badge-danger{background-color:rgba(231,76,60,0.15);color:#c0392b;border:1px solid rgba(231,76,60,0.3)}.badge-primary{background-color:rgba(74,111,255,0.15);color:#4a6fff;border:1px solid rgba(74,111,255,0.3)}.badge-info{background-color:rgba(52,152,219,0.15);color:#2980b9;border:1px solid rgba(52,152,219,0.3)}.badge-disabled{background-color:rgba(149,165,166,0.15);color:#7f8c8d;border:1px solid rgba(149,165,166,0.3)}.actions{display:flex;gap:0.5rem;flex-wrap:wrap}.btn{padding:0.5rem 1rem;border-radius:var(--border-radius-sm);font-size:0.875rem;font-weight:500;cursor:pointer;border:none;transition:var(--transition);display:inline-flex;align-items:center;justify-content:center;line-height:1}.btn-sm{padding:0.35rem 0.75rem;font-size:0.75rem}.btn-primary{background-color:var(--primary-color);color:white}.btn-primary:hover{background-color:var(--primary-dark)}.btn-success{background-color:var(--success-color);color:white}.btn-danger{background-color:var(--danger-color);color:white}.btn-secondary{background-color:var(--secondary-color);color:white}.btn-outline{background-color:var(--white);border:1px solid var(--gray-color);color:var(--text-color)}.btn-outline:hover{background-color:var(--light-color)}.btn-outline.active{background-color:var(--primary-color);color:white;border-color:var(--primary-color)}.table-actions{display:flex;justify-content:space-between;margin-bottom:1rem;align-items:center;flex-wrap:wrap;gap:1rem}.form-control{padding:0.5rem 1rem;border:1px solid var(--gray-color);border-radius:var(--border-radius-sm);font-size:0.875rem;outline:none;transition:var(--transition);width:100%}.form-control:focus{border-color:var(--primary-color);box-shadow:0 0 0 3px var(--primary-light)}.modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background-color:rgba(0,0,0,0.5);z-index:1000;justify-content:center;align-items:center}.modal.active{display:flex}.modal-content{background-color:var(--white);border-radius:var(--border-radius-md);width:100%;padding:2rem;box-shadow:var(--shadow-md);position:relative;max-height:calc(100vh - 100px);overflow-y:auto}.modal-content.small{max-width:500px}.modal-content.medium{max-width:700px}.modal-content.large{max-width:900px}.modal-content.extra-large{max-width:1200px}.modal-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:1.5rem;padding-bottom:0.75rem;border-bottom:1px solid var(--gray-color)}.modal-header h3{margin:0;font-weight:600;font-size:1.2rem}.close-modal{background:none;border:none;font-size:1.5rem;cursor:pointer;color:var(--text-light)}.modal-body{margin-bottom:1.5rem}.modal-footer{display:flex;justify-content:flex-end;gap:1rem;padding-top:1rem;border-top:1px solid var(--gray-color)}.form-group{margin-bottom:1.25rem}.form-group label{display:block;margin-bottom:0.5rem;font-weight:500;font-size:0.875rem}select.form-control{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 1rem center;background-size:1rem}textarea.form-control{min-height:100px;resize:vertical}.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:1.5rem;margin-bottom:2rem}.pagination{display:flex;justify-content:center;align-items:center;gap:0.5rem;margin-top:2rem}.pagination button{padding:0.5rem 1rem;border:1px solid var(--gray-color);background:white;cursor:pointer;border-radius:var(--border-radius-sm)}.pagination button:hover{background:var(--light-color)}.pagination button.active{background:var(--primary-color);color:white;border-color:var(--primary-color)}.pagination button:disabled{opacity:0.5;cursor:not-allowed}.search-filter-bar{display:flex;gap:1rem;margin-bottom:2rem;flex-wrap:wrap;align-items:center}.search-filter-bar .form-control{min-width:200px}.alert{padding:1rem;border-radius:var(--border-radius-sm);margin-bottom:1rem;border:1px solid}.alert-success{background:rgba(46,204,113,0.1);border-color:var(--success-color);color:var(--success-color)}.alert-error{background:rgba(231,76,60,0.1);border-color:var(--danger-color);color:var(--danger-color)}.alert-info{background:var(--primary-light);border-color:var(--primary-color);color:var(--primary-color)}.menu-toggle{position:fixed;left:20px;top:15px;width:40px;height:40px;background:var(--white);border:none;border-radius:8px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:5px;cursor:pointer;z-index:1001;box-shadow:0 2px 8px rgba(0,0,0,0.1);transition:all 0.3s ease}.menu-toggle span{width:20px;height:2px;background:#333;border-radius:2px;transition:none}.settings-tabs{display:flex;gap:1rem;margin-bottom:2rem;border-bottom:1px solid var(--border);flex-wrap:wrap}.settings-tab{padding:1rem 1.5rem;background:transparent;border:none;border-bottom:3px solid transparent;cursor:pointer;font-weight:500;font-size:0.95rem;color:var(--text-secondary);transition:all 0.2s ease}.settings-tab:hover{color:var(--primary-color)}.settings-tab.active{color:var(--primary-color);border-bottom-color:var(--primary-color)}.settings-content{display:none}.settings-content.active{display:block}.analytics-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:1.5rem;margin-bottom:2rem}.checkbox-group{display:flex;align-items:center;gap:0.75rem;margin-bottom:1rem}.checkbox-group input[type="checkbox"]{width:18px;height:18px;cursor:pointer}.checkbox-group label{margin-bottom:0;cursor:pointer}.application-count{display:inline-flex;align-items:center;gap:0.5rem;padding:0.25rem 0.75rem;background:var(--primary-light);color:var(--primary-color);border-radius:12px;font-size:0.85rem;font-weight:600}.status-toggle{display:inline-flex;align-items:center;gap:0.5rem}.status-toggle input{width:40px;height:20px}.preview-container{background:var(--light-color);padding:2rem;border-radius:var(--border-radius-md);border:1px solid var(--border)}.preview-container h4{margin-bottom:1rem;color:var(--text-primary)}.preview-container .preview-field{margin-bottom:1rem}.preview-container .preview-label{font-weight:600;color:var(--text-secondary);font-size:0.85rem;margin-bottom:0.25rem}.preview-container .preview-value{color:var(--text-color);font-size:0.95rem}.info-card{background:var(--light-color);padding:1.5rem;border-radius:var(--border-radius-md);border-left:4px solid var(--primary-color);margin-bottom:1.5rem}.info-card h4{margin-bottom:0.5rem;color:var(--text-primary)}.info-card p{color:var(--text-secondary);font-size:0.9rem;line-height:1.6}@media (max-width:768px){.header-bar{padding:0 1rem 0 4.5rem}.logo-text{font-size:1.1rem}.sidebar{transform:translateX(-100%)}.sidebar.collapsed{transform:translateX(-100%)}.sidebar:not(.collapsed){transform:translateX(0)}.main-content{margin-left:0}.dashboard-stats{grid-template-columns:1fr}.table-actions{flex-direction:column;align-items:stretch}.search-filter-bar{flex-direction:column;align-items:stretch}.settings-tabs{overflow-x:auto}} </style> </head> <body> <header class="header-bar"> <button class="menu-toggle" id="menuToggle" onclick="toggleSidebar()"> <span></span> <span></span> <span></span> </button> <div class="logo-container"> <img src="LOGO.png" alt="TrackerPro Logo" class="logo" onerror="this.style.display='none'"> <h1 class="logo-text">TrackerPro</h1> </div> <div class="header-actions"> <div class="header-search"> <input type="text" placeholder="Search..." id="headerSearch"> </div> <div class="header-notifications" title="Notifications" id="notificationsBtn">🔔</div> <div class="user-profile" title="Admin Profile"> <div class="user-avatar">A</div> <div class="user-details"> <div class="user-name">Admin User</div> <div class="user-role">Administrator</div> </div> </div> </div> </header>
-    <div class="dashboard-container">
+<div class="dashboard-container">
     <aside class="sidebar" id="sidebar">
         <div class="nav-section">
             <div class="nav-item active" data-page="dashboard">
@@ -14,16 +14,17 @@
             <div class="nav-item" data-page="internship-management">
                 <span class="nav-item-text">Career Outcomes</span>
             </div>
+
             <div class="nav-item" data-page="complaints">
-                <span class="nav-item-text">Complaints Management</span>
+                <span class="nav-item-text">Manage Complaints</span>
             </div>
             <div class="nav-item" data-page="system-settings">
-                <span class="nav-item-text">System Settings</span>
+                <span class="nav-item-text">App Settings</span>
             </div>
         </div>
         <div class="sidebar-footer">
             <div class="logout-nav-item" onclick="logout()">
-                <span class="logout-icon-sidebar">【﻿⏻】</span>
+                <span class="logout-icon-sidebar">【⏻】</span>
                 <span>Logout</span>
             </div>
         </div>
@@ -31,8 +32,8 @@
 
     <main class="main-content">
         <div id="dashboard" class="page active-page">
-            <h1 class="page-title">Welcome to Workspace</h1>
-            
+            <h1 class="page-title">Welcome to Admin Workspace</h1>
+
             <div class="dashboard-stats">
                 <div class="stat-card primary">
                     <span class="stat-icon">🎓</span>
@@ -63,7 +64,7 @@
 
         <div id="registrations" class="page">
             <h1 class="page-title">All Registrations</h1>
-            
+
             <div class="search-filter-bar">
                 <input type="text" class="form-control" placeholder="Search students by name, email..." id="registrationSearch" oninput="filterRegistrations()">
                 <button class="btn btn-danger" onclick="deleteSelectedRegistrations()" id="deleteSelectedBtn" style="display:none;">Delete Selected</button>
@@ -79,28 +80,28 @@
                         <span>Showing <span id="registrationShowingCount">0</span> of <span id="registrationTotalCount">0</span> entries</span>
                     </div>
                 </div>
-                
+
                 <div style="overflow-x: auto;">
                     <table class="data-table" id="registrationsTable">
                         <thead>
-                            <tr>
-                                <th><input type="checkbox" id="selectAll" onchange="toggleSelectAll()"></th>
-                                <th>First Name</th>
-                                <th>Last Name</th>
-                                <th>Email</th>
-                                <th>Gender</th>
-                                <th>DOB</th>
-                                <th>City</th>
-                                <th>Mobile No</th>
-                                <th>Role</th>
-                                <th>Registered On</th>
-                                <th>Actions</th>
-                            </tr>
+                        <tr>
+                            <th><input type="checkbox" id="selectAll" onchange="toggleSelectAll()"></th>
+                            <th>First Name</th>
+                            <th>Last Name</th>
+                            <th>Email</th>
+                            <th>Gender</th>
+                            <th>DOB</th>
+                            <th>City</th>
+                            <th>Mobile No</th>
+                            <th>Role</th>
+                            <th>Registered On</th>
+                            <th>Actions</th>
+                        </tr>
                         </thead>
                         <tbody></tbody>
                     </table>
                 </div>
-                
+
                 <div class="pagination" id="registrationPagination"></div>
             </div>
         </div>
@@ -110,9 +111,9 @@
 
             <div class="content-area">
                 <div class="table-actions">
-                    <button class="btn btn-primary" onclick="openAddUserModal()">+ Add User (HR/Faculty Only)</button>
+                    <button class="btn btn-primary" onclick="openAddUserModal()">+ Add User</button>
                     <div>
-                        <button class="btn btn-outline active" onclick="filterUsers('all')" id="filterAll">All Users</button>
+                        <button class="btn btn-outline active" onclick="filterUsers('all')" id="filterAll">All</button>
                         <button class="btn btn-outline" onclick="filterUsers('faculty')" id="filterFaculty">Faculty</button>
                         <button class="btn btn-outline" onclick="filterUsers('hr')" id="filterHR">HR Staff</button>
                     </div>
@@ -121,14 +122,14 @@
                 <div style="overflow-x: auto;">
                     <table class="data-table" id="usersTable">
                         <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Role</th>
-                                <th>Status</th>
-                                <th>Last Login</th>
-                                <th>Actions</th>
-                            </tr>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Role</th>
+                            <th>Status</th>
+                            <th>Last Login</th>
+                            <th>Actions</th>
+                        </tr>
                         </thead>
                         <tbody></tbody>
                     </table>
@@ -140,7 +141,7 @@
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
                 <h1 class="page-title" style="margin-bottom: 0;">Career Outcomes</h1>
                 <button class="btn btn-primary" onclick="toggleInternshipForm()">
-                    <span id="internshipFormToggleText">Create New Post</span>
+                    <span id="internshipFormToggleText">Create Post</span>
                 </button>
             </div>
 
@@ -277,44 +278,44 @@
                 <div style="overflow-x: auto;">
                     <table class="data-table">
                         <thead>
-                            <tr>
-                                <th>ID</th>
-                                <th>Category</th>
-                                <th>Priority</th>
-                                <th>Date</th>
-                                <th>Status</th>
-                                <th>Assigned To</th>
-                                <th>Actions</th>
-                            </tr>
+                        <tr>
+                            <th>ID</th>
+                            <th>Category</th>
+                            <th>Priority</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th>Assigned To</th>
+                            <th>Actions</th>
+                        </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>#C001</td>
-                                <td>Course Quality</td>
-                                <td><span class="badge badge-danger">High</span></td>
-                                <td>2024-01-15</td>
-                                <td><span class="badge badge-warning">Open</span></td>
-                                <td>Unassigned</td>
-                                <td><div class="actions"><button class="btn btn-sm btn-outline" disabled>View</button><button class="btn btn-sm btn-primary" disabled>Assign</button><button class="btn btn-sm btn-success" disabled>Resolve</button></div></td>
-                            </tr>
-                            <tr>
-                                <td>#C002</td>
-                                <td>Faculty Behavior</td>
-                                <td><span class="badge badge-warning">Medium</span></td>
-                                <td>2024-01-14</td>
-                                <td><span class="badge badge-success">Resolved</span></td>
-                                <td>Admin User</td>
-                                <td><div class="actions"><button class="btn btn-sm btn-outline" disabled>View</button></div></td>
-                            </tr>
-                            <tr>
-                                <td>#C003</td>
-                                <td>Technical Issue</td>
-                                <td><span class="badge badge-primary">Low</span></td>
-                                <td>2024-01-13</td>
-                                <td><span class="badge badge-info">In Progress</span></td>
-                                <td>Tech Team</td>
-                                <td><div class="actions"><button class="btn btn-sm btn-outline" disabled>View</button><button class="btn btn-sm btn-success" disabled>Resolve</button></div></td>
-                            </tr>
+                        <tr>
+                            <td>#C001</td>
+                            <td>Course Quality</td>
+                            <td><span class="badge badge-danger">High</span></td>
+                            <td>2024-01-15</td>
+                            <td><span class="badge badge-warning">Open</span></td>
+                            <td>Unassigned</td>
+                            <td><div class="actions"><button class="btn btn-sm btn-outline" disabled>View</button><button class="btn btn-sm btn-primary" disabled>Assign</button><button class="btn btn-sm btn-success" disabled>Resolve</button></div></td>
+                        </tr>
+                        <tr>
+                            <td>#C002</td>
+                            <td>Faculty Behavior</td>
+                            <td><span class="badge badge-warning">Medium</span></td>
+                            <td>2024-01-14</td>
+                            <td><span class="badge badge-success">Resolved</span></td>
+                            <td>Admin User</td>
+                            <td><div class="actions"><button class="btn btn-sm btn-outline" disabled>View</button></div></td>
+                        </tr>
+                        <tr>
+                            <td>#C003</td>
+                            <td>Technical Issue</td>
+                            <td><span class="badge badge-primary">Low</span></td>
+                            <td>2024-01-13</td>
+                            <td><span class="badge badge-info">In Progress</span></td>
+                            <td>Tech Team</td>
+                            <td><div class="actions"><button class="btn btn-sm btn-outline" disabled>View</button><button class="btn btn-sm btn-success" disabled>Resolve</button></div></td>
+                        </tr>
                         </tbody>
                     </table>
                 </div>
@@ -432,29 +433,29 @@
                     <div style="overflow-x: auto;">
                         <table class="data-table">
                             <thead>
-                                <tr>
-                                    <th>Backup Date</th>
-                                    <th>Size</th>
-                                    <th>Type</th>
-                                    <th>Status</th>
-                                    <th>Actions</th>
-                                </tr>
+                            <tr>
+                                <th>Backup Date</th>
+                                <th>Size</th>
+                                <th>Type</th>
+                                <th>Status</th>
+                                <th>Actions</th>
+                            </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>2024-01-15 10:30 AM</td>
-                                    <td>2.5 MB</td>
-                                    <td>Automatic</td>
-                                    <td><span class="badge badge-success">Complete</span></td>
-                                    <td><button class="btn btn-sm btn-outline" disabled>Restore</button></td>
-                                </tr>
-                                <tr>
-                                    <td>2024-01-10 08:15 AM</td>
-                                    <td>2.3 MB</td>
-                                    <td>Manual</td>
-                                    <td><span class="badge badge-success">Complete</span></td>
-                                    <td><button class="btn btn-sm btn-outline" disabled>Restore</button></td>
-                                </tr>
+                            <tr>
+                                <td>2024-01-15 10:30 AM</td>
+                                <td>2.5 MB</td>
+                                <td>Automatic</td>
+                                <td><span class="badge badge-success">Complete</span></td>
+                                <td><button class="btn btn-sm btn-outline" disabled>Restore</button></td>
+                            </tr>
+                            <tr>
+                                <td>2024-01-10 08:15 AM</td>
+                                <td>2.3 MB</td>
+                                <td>Manual</td>
+                                <td><span class="badge badge-success">Complete</span></td>
+                                <td><button class="btn btn-sm btn-outline" disabled>Restore</button></td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>
@@ -469,36 +470,36 @@
                     <div style="overflow-x: auto;">
                         <table class="data-table">
                             <thead>
-                                <tr>
-                                    <th>Timestamp</th>
-                                    <th>User</th>
-                                    <th>Action</th>
-                                    <th>Details</th>
-                                    <th>IP Address</th>
-                                </tr>
+                            <tr>
+                                <th>Timestamp</th>
+                                <th>User</th>
+                                <th>Action</th>
+                                <th>Details</th>
+                                <th>IP Address</th>
+                            </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>2024-01-15 14:30:25</td>
-                                    <td>Admin User</td>
-                                    <td>User Created</td>
-                                    <td>Created new faculty account</td>
-                                    <td>192.168.1.100</td>
-                                </tr>
-                                <tr>
-                                    <td>2024-01-15 12:15:10</td>
-                                    <td>Admin User</td>
-                                    <td>Post Published</td>
-                                    <td>Published internship post #WD-001</td>
-                                    <td>192.168.1.100</td>
-                                </tr>
-                                <tr>
-                                    <td>2024-01-15 09:45:00</td>
-                                    <td>Admin User</td>
-                                    <td>Login</td>
-                                    <td>Successful login to admin dashboard</td>
-                                    <td>192.168.1.100</td>
-                                </tr>
+                            <tr>
+                                <td>2024-01-15 14:30:25</td>
+                                <td>Admin User</td>
+                                <td>User Created</td>
+                                <td>Created new faculty account</td>
+                                <td>192.168.1.100</td>
+                            </tr>
+                            <tr>
+                                <td>2024-01-15 12:15:10</td>
+                                <td>Admin User</td>
+                                <td>Post Published</td>
+                                <td>Published internship post #WD-001</td>
+                                <td>192.168.1.100</td>
+                            </tr>
+                            <tr>
+                                <td>2024-01-15 09:45:00</td>
+                                <td>Admin User</td>
+                                <td>Login</td>
+                                <td>Successful login to admin dashboard</td>
+                                <td>192.168.1.100</td>
+                            </tr>
                             </tbody>
                         </table>
                     </div>
@@ -587,873 +588,1089 @@
         </div>
     </div>
 </div>
+<!-- User Details Sheet -->
+<div id="userSheet" class="sheet">
+    <div class="sheet-header">
+        <h3>User Details</h3>
+        <button onclick="closeUserSheet()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: #666;">&times;</button>
+    </div>
+    <div class="sheet-body">
+        <div style="background: #f8f9fc; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem;">
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem;">
+                <div>
+                    <label style="font-size: 0.75rem; color: #64748b; text-transform: uppercase; font-weight: 600;">First Name</label>
+                    <p id="viewFirstName" style="margin: 0.5rem 0 0 0; font-size: 1rem; color: #1e293b; font-weight: 500;">-</p>
+                </div>
+                <div>
+                    <label style="font-size: 0.75rem; color: #64748b; text-transform: uppercase; font-weight: 600;">Last Name</label>
+                    <p id="viewLastName" style="margin: 0.5rem 0 0 0; font-size: 1rem; color: #1e293b; font-weight: 500;">-</p>
+                </div>
+                <div>
+                    <label style="font-size: 0.75rem; color: #64748b; text-transform: uppercase; font-weight: 600;">Email</label>
+                    <p id="viewEmail" style="margin: 0.5rem 0 0 0; font-size: 1rem; color: #1e293b; font-weight: 500;">-</p>
+                </div>
+                <div>
+                    <label style="font-size: 0.75rem; color: #64748b; text-transform: uppercase; font-weight: 600;">Role</label>
+                    <p id="viewRole" style="margin: 0.5rem 0 0 0; font-size: 1rem; color: #1e293b; font-weight: 500;">-</p>
+                </div>
+                <div>
+                    <label style="font-size: 0.75rem; color: #64748b; text-transform: uppercase; font-weight: 600;">Gender</label>
+                    <p id="viewGender" style="margin: 0.5rem 0 0 0; font-size: 1rem; color: #1e293b; font-weight: 500;">-</p>
+                </div>
+                <div>
+                    <label style="font-size: 0.75rem; color: #64748b; text-transform: uppercase; font-weight: 600;">Mobile</label>
+                    <p id="viewMobile" style="margin: 0.5rem 0 0 0; font-size: 1rem; color: #1e293b; font-weight: 500;">-</p>
+                </div>
+                <div>
+                    <label style="font-size: 0.75rem; color: #64748b; text-transform: uppercase; font-weight: 600;">City</label>
+                    <p id="viewCity" style="margin: 0.5rem 0 0 0; font-size: 1rem; color: #1e293b; font-weight: 500;">-</p>
+                </div>
+                <div>
+                    <label style="font-size: 0.75rem; color: #64748b; text-transform: uppercase; font-weight: 600;">Date of Birth</label>
+                    <p id="viewDOB" style="margin: 0.5rem 0 0 0; font-size: 1rem; color: #1e293b; font-weight: 500;">-</p>
+                </div>
+                <div>
+                    <label style="font-size: 0.75rem; color: #64748b; text-transform: uppercase; font-weight: 600;">Age</label>
+                    <p id="viewAge" style="margin: 0.5rem 0 0 0; font-size: 1rem; color: #1e293b; font-weight: 500;">-</p>
+                </div>
+                <div>
+                    <label style="font-size: 0.75rem; color: #64748b; text-transform: uppercase; font-weight: 600;">Last Login</label>
+                    <p id="viewLastLogin" style="margin: 0.5rem 0 0 0; font-size: 1rem; color: #1e293b; font-weight: 500;">-</p>
+                </div>
+            </div>
+        </div>
 
+        <!-- User Status Control -->
+        <div style="background: #ffffff; padding: 1.5rem; border: 1px solid #e2e8f0; border-radius: 8px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <label style="font-weight: 600; font-size: 1rem; color: #1e293b; display: block; margin-bottom: 0.25rem;">User Access Control</label>
+                    <p style="margin: 0; font-size: 0.875rem; color: #64748b;">Enable or disable user login access</p>
+                </div>
+                <div style="display: flex; align-items: center; gap: 1rem;">
+                    <span id="sheetStatusBadge" class="badge badge-success">Active</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="sheetUserToggle" onchange="onSheetToggleChange()" checked>
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="sheet-footer">
+        <button onclick="closeUserSheet()" class="btn btn-outline">Close</button>
+    </div>
+</div>
 <script src="admin-api.js"></script>
 <script>
-    // API Configuration (Backend Integration Ready)
-    const API_CONFIG = {
-        BASE_URL: '/api/v1',
-        ENDPOINTS: {
-            REGISTRATIONS: '/registrations',
-            USERS: '/users',
-            INTERNSHIPS: '/internships',
-            COMPLAINTS: '/complaints',
-            SETTINGS: '/settings'
-        }
-    };
-
-    class DataManager {
-        constructor() {
-            this.initializeData();
-        }
-
-        initializeData() {
-            if (!localStorage.getItem('trackerProData')) {
-                const initialData = {
-                    registrations: [
-                        {id: 1, firstName: "John", lastName: "Smith", email: "john.s@example.com", gender: "Male", dob: "17/10/2003", city: "Pune", mobile: "8940967403", role: "Student", registeredOn: "2023-10-26", status: "Active"},
-                        {id: 2, firstName: "Sarah", lastName: "Johnson", email: "sarah.j@example.com", gender: "Female", dob: "22/05/1995", city: "Mumbai", mobile: "9876543210", role: "Faculty", registeredOn: "2023-10-25", status: "Active", password: "faculty123"},
-                        {id: 3, firstName: "Mike", lastName: "Wilson", email: "mike.w@example.com", gender: "Male", dob: "15/08/1990", city: "Delhi", mobile: "7654321098", role: "HR", registeredOn: "2023-10-24", status: "Active", password: "hr123456"}
-                    ],
-                    internships: [
-                        {id: 1, code: "WD-001", title: "Full Stack Web Development Internship", duration: 6, workMode: "Hybrid", prerequisites: "Basic Programming Knowledge", description: "Complete full-stack web development internship covering frontend and backend technologies.", status: "Posted", applications: 25},
-                        {id: 2, code: "DS-001", title: "Data Science Fundamentals", duration: 4, workMode: "Online", prerequisites: "Mathematics, Statistics", description: "Introduction to data science concepts and tools including Python, SQL, and basic machine learning.", status: "Draft", applications: 0}
-                    ],
-                    complaints: [],
-                    settings: {systemName: "TrackerPro SPTS", supportEmail: "support@trackerpro.com", organizationName: "Educational Institute", maxAdminLogin: 5, registrationStatus: "open", studentAgeReq: "20-25 years"}
-                };
-                localStorage.setItem('trackerProData', JSON.stringify(initialData));
-            }
-        }
-
-        getData() {
-            return JSON.parse(localStorage.getItem('trackerProData'));
-        }
-
-        saveData(data) {
-            localStorage.setItem('trackerProData', JSON.stringify(data));
-        }
-
-        getRegistrations(filter = '', role = '') {
-            const data = this.getData();
-            let registrations = data.registrations;
-            if (filter) {
-                registrations = registrations.filter(reg => 
-                    reg.firstName.toLowerCase().includes(filter.toLowerCase()) ||
-                    reg.lastName.toLowerCase().includes(filter.toLowerCase()) ||
-                    reg.email.toLowerCase().includes(filter.toLowerCase())
-                );
-            }
-            if (role) {
-                registrations = registrations.filter(reg => reg.role === role);
-            }
-            return registrations;
-        }
-
-        addRegistration(registration) {
-            const data = this.getData();
-            registration.id = data.registrations.length + 1;
-            registration.registeredOn = new Date().toISOString().split('T');
-            registration.status = "Active";
-            data.registrations.push(registration);
-            this.saveData(data);
-            return registration;
-        }
-
-        updateRegistration(id, updatedData) {
-            const data = this.getData();
-            const index = data.registrations.findIndex(reg => reg.id == id);
-            if (index !== -1) {
-                data.registrations[index] = {...data.registrations[index], ...updatedData};
-                this.saveData(data);
-                return data.registrations[index];
-            }
-            return null;
-        }
-
-        deleteRegistration(id) {
-            const data = this.getData();
-            data.registrations = data.registrations.filter(reg => reg.id != id);
-            this.saveData(data);
-        }
-
-        deleteMultipleRegistrations(ids) {
-            const data = this.getData();
-            data.registrations = data.registrations.filter(reg => !ids.includes(reg.id));
-            this.saveData(data);
-        }
-
-        getInternships() {
-            return this.getData().internships;
-        }
-
-        addInternship(internship) {
-            const data = this.getData();
-            internship.id = data.internships.length + 1;
-            internship.applications = 0;
-            data.internships.push(internship);
-            this.saveData(data);
-            return internship;
-        }
-
-        updateInternship(id, updatedData) {
-            const data = this.getData();
-            const index = data.internships.findIndex(post => post.id == id);
-            if (index !== -1) {
-                data.internships[index] = {...data.internships[index], ...updatedData};
-                this.saveData(data);
-                return data.internships[index];
-            }
-            return null;
-        }
-
-        deleteInternship(id) {
-            const data = this.getData();
-            data.internships = data.internships.filter(post => post.id != id);
-            this.saveData(data);
-        }
-    }
-
-    const dataManager = new DataManager();
-    let currentPage = 'dashboard';
-    let editingUserId = null;
-    let editingInternshipId = null;
-    let selectedRegistrations = [];
-    let currentPageNumber = 1;
-    let currentFilter = 'all';
-    let cachedRegistrations = [];
-    const itemsPerPage = 10;
-
-    document.addEventListener('DOMContentLoaded', function() {
-        initializeApp();
-    });
-
-    function initializeApp() {
-        // Check if user is logged in
-        const token = apiManager.getToken();
-        if (!token) {
-            window.location.href = '/loginPage.html';
-            return;
-        }
-        
-        setupEventListeners();
-        updateDashboardStats();
-        showStatusMessage('Dashboard loaded successfully', 'success');
-    }
-
-    function setupEventListeners() {
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.addEventListener('click', function() {
-                const page = this.getAttribute('data-page');
-                if (page) {
-                    navigateToPage(page);
-                }
-            });
-        });
-
-        document.getElementById('headerSearch').addEventListener('input', function() {
-            if (currentPage === 'registrations') {
-                filterRegistrations();
-            }
-        });
-
-        document.querySelectorAll('.modal').forEach(modal => {
-            modal.addEventListener('click', function(e) {
-                if (e.target === modal) {
-                    closeModal(modal.id);
-                }
-            });
-        });
-    }
-
-    function navigateToPage(page) {
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.classList.remove('active');
-        });
-        document.querySelector(`[data-page="${page}"]`).classList.add('active');
-        document.querySelectorAll('.page').forEach(pageElement => {
-            pageElement.classList.remove('active-page');
-        });
-        const targetPage = document.getElementById(page);
-        if (targetPage) {
-            targetPage.classList.add('active-page');
-            currentPage = page;
-            switch(page) {
-                case 'dashboard':
-                    updateDashboardStats();
-                    break;
-                case 'registrations':
-                    loadRegistrationsData();
-                    break;
-                case 'user-management':
-                    currentFilter = 'all';
-                    loadUsersData();
-                    break;
-                case 'internship-management':
-                    loadInternshipsData();
-                    break;
-            }
-        }
-    }
-
-    async function updateDashboardStats() {
-        try {
-            const stats = await apiManager.getDashboardStats();
-            document.getElementById('totalRegistrations').textContent = stats.totalStudents || 0;
-            document.getElementById('totalUsers').textContent = stats.totalFacultyHR || 0;
-            document.getElementById('totalPosts').textContent = stats.publishedPosts || 0;
-            document.getElementById('newUsers').textContent = stats.newStudentsThisWeek || 0;
-        } catch (error) {
-            console.error('Error loading dashboard stats:', error);
-            showStatusMessage('Failed to load dashboard statistics', 'error');
-        }
-    }
-
-    async function loadRegistrationsData() {
-        try {
-            const response = await apiManager.getAllRegistrations('', 'STUDENT');
-            cachedRegistrations = response.data || [];
-            renderRegistrationsTable(cachedRegistrations);
-        } catch (error) {
-            console.error('Error loading registrations:', error);
-            showStatusMessage('Failed to load registrations', 'error');
-        }
-    }
-
-    function renderRegistrationsTable(registrations) {
-        const tbody = document.querySelector('#registrationsTable tbody');
-        const start = (currentPageNumber - 1) * itemsPerPage;
-        const end = start + itemsPerPage;
-        const paginatedData = registrations.slice(start, end);
-        
-        tbody.innerHTML = paginatedData.map(reg => `
-            <tr>
-                <td><input type="checkbox" class="reg-checkbox" value="${reg.id}" onchange="updateSelectedRegistrations()"></td>
-                <td>${reg.firstName || '-'}</td>
-                <td>${reg.lastName || '-'}</td>
-                <td>${reg.email}</td>
-                <td>${reg.gender || '-'}</td>
-                <td>${reg.dob || '-'}</td>
-                <td>${reg.location || '-'}</td>
-                <td>${reg.mobileNo || '-'}</td>
-                <td><span class="badge badge-primary">${reg.userType}</span></td>
-                <td>${reg.createdAt ? new Date(reg.createdAt).toLocaleDateString() : '-'}</td>
-                <td>
-                    <div class="actions">
-                        <button class="btn btn-sm btn-outline" onclick="viewRegistration(${reg.id})">View</button>
-                        <button class="btn btn-sm btn-danger" onclick="deleteRegistration(${reg.id})">Delete</button>
-                    </div>
-                </td>
-            </tr>
-        `).join('');
-
-        document.getElementById('registrationShowingCount').textContent = paginatedData.length;
-        document.getElementById('registrationTotalCount').textContent = registrations.length;
-        renderPagination(registrations.length);
-        document.getElementById('selectAll').checked = false;
-        selectedRegistrations = [];
-    }
-
-    function renderPagination(totalItems) {
-        const totalPages = Math.ceil(totalItems / itemsPerPage);
-        const paginationContainer = document.getElementById('registrationPagination');
-        let paginationHTML = '';
-        
-        paginationHTML += `<button onclick="changePage(${currentPageNumber - 1})" ${currentPageNumber === 1 ? 'disabled' : ''}>Previous</button>`;
-        
-        for (let i = 1; i <= totalPages; i++) {
-            paginationHTML += `<button class="${i === currentPageNumber ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
-        }
-        
-        paginationHTML += `<button onclick="changePage(${currentPageNumber + 1})" ${currentPageNumber === totalPages ? 'disabled' : ''}>Next</button>`;
-        
-        paginationContainer.innerHTML = paginationHTML;
-    }
-
-    function changePage(page) {
-        const totalPages = Math.ceil(cachedRegistrations.length / itemsPerPage);
-        if (page < 1 || page > totalPages) return;
-        currentPageNumber = page;
-        renderRegistrationsTable(cachedRegistrations);
-    }
-
-    function toggleSelectAll() {
-        const checkboxes = document.querySelectorAll('.reg-checkbox');
-        const selectAll = document.getElementById('selectAll');
-        checkboxes.forEach(cb => {
-            cb.checked = selectAll.checked;
-        });
-        updateSelectedRegistrations();
-    }
-
-    function updateSelectedRegistrations() {
-        selectedRegistrations = Array.from(document.querySelectorAll('.reg-checkbox:checked')).map(cb => parseInt(cb.value));
-        const deleteBtn = document.getElementById('deleteSelectedBtn');
-        if (selectedRegistrations.length > 0) {
-            deleteBtn.style.display = 'inline-flex';
-        } else {
-            deleteBtn.style.display = 'none';
-        }
-    }
-
-    async function deleteSelectedRegistrations() {
-        if (selectedRegistrations.length === 0) {
-            showStatusMessage('Please select registrations to delete', 'error');
-            return;
-        }
-        if (confirm(`Are you sure you want to delete ${selectedRegistrations.length} selected registration(s)? This action cannot be undone.`)) {
-            try {
-                await apiManager.deleteMultipleRegistrations(selectedRegistrations);
-                selectedRegistrations = [];
-                loadRegistrationsData();
-                updateDashboardStats();
-                showStatusMessage('Selected registrations deleted successfully', 'success');
-            } catch (error) {
-                console.error('Error deleting registrations:', error);
-                showStatusMessage('Failed to delete registrations', 'error');
-            }
-        }
-    }
-
-    async function filterRegistrations() {
-        const searchTerm = document.getElementById('registrationSearch')?.value || '';
-        try {
-            const response = await apiManager.getAllRegistrations(searchTerm, 'STUDENT');
-            cachedRegistrations = response.data || [];
-            currentPageNumber = 1;
-            renderRegistrationsTable(cachedRegistrations);
-        } catch (error) {
-            console.error('Error filtering registrations:', error);
-            showStatusMessage('Failed to filter registrations', 'error');
-        }
-    }
-
-    function refreshRegistrations() {
-        currentPageNumber = 1;
-        loadRegistrationsData();
-        showStatusMessage('Registration data refreshed', 'success');
-    }
-
-    async function exportRegistrations() {
-        try {
-            const response = await apiManager.exportRegistrations();
-            const registrations = response.data || [];
-            const csvContent = convertToCSV(registrations);
-            downloadFile(csvContent, 'registrations.csv', 'text/csv');
-            showStatusMessage('Registration data exported successfully', 'success');
-        } catch (error) {
-            console.error('Error exporting registrations:', error);
-            showStatusMessage('Failed to export registrations', 'error');
-        }
-    }
-
-    async function viewRegistration(id) {
-        try {
-            const response = await apiManager.getAllRegistrations();
-            const users = response.data || [];
-            const user = users.find(u => u.id == id);
-            
-            if (user) {
-                const content = `
-                    <div class="preview-container">
-                        <div class="preview-field"><div class="preview-label">Full Name</div><div class="preview-value">${user.firstName} ${user.lastName || ''}</div></div>
-                        <div class="preview-field"><div class="preview-label">Email</div><div class="preview-value">${user.email}</div></div>
-                        <div class="preview-field"><div class="preview-label">Role</div><div class="preview-value"><span class="badge badge-primary">${user.userType}</span></div></div>
-                        <div class="preview-field"><div class="preview-label">Gender</div><div class="preview-value">${user.gender || 'N/A'}</div></div>
-                        <div class="preview-field"><div class="preview-label">Date of Birth</div><div class="preview-value">${user.dob || 'N/A'}</div></div>
-                        <div class="preview-field"><div class="preview-label">Mobile</div><div class="preview-value">${user.mobileNo || 'N/A'}</div></div>
-                        <div class="preview-field"><div class="preview-label">City</div><div class="preview-value">${user.location || 'N/A'}</div></div>
-                        <div class="preview-field"><div class="preview-label">Registered On</div><div class="preview-value">${user.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}</div></div>
-                        <div class="preview-field"><div class="preview-label">Status</div><div class="preview-value"><span class="badge badge-${user.isActive ? 'success' : 'disabled'}">${user.isActive ? 'Active' : 'Inactive'}</span></div></div>
-                    </div>
-                `;
-                document.getElementById('viewUserContent').innerHTML = content;
-                document.getElementById('viewUserModal').classList.add('active');
-            }
-        } catch (error) {
-            console.error('Error viewing registration:', error);
-            showStatusMessage('Failed to load registration details', 'error');
-        }
-    }
-
-    async function loadUsersData() {
-        try {
-            const filterMap = {
-                'all': '',
-                'faculty': 'faculty',
-                'hr': 'hr'
-            };
-            const response = await apiManager.getUsers(filterMap[currentFilter] || '');
-            const users = response.data || [];
-            renderUsersTable(users);
-        } catch (error) {
-            console.error('Error loading users:', error);
-            showStatusMessage('Failed to load users', 'error');
-        }
-    }
-
-    function renderUsersTable(users) {
-        const tbody = document.querySelector('#usersTable tbody');
-        tbody.innerHTML = users.map(user => `
-            <tr>
-                <td>${user.firstName} ${user.lastName || ''}</td>
-                <td>${user.email}</td>
-                <td><span class="badge badge-primary">${user.userType}</span></td>
-                <td><span class="badge badge-${user.isActive ? 'success' : 'disabled'}">${user.isActive ? 'Active' : 'Inactive'}</span></td>
-                <td>${user.updatedAt ? new Date(user.updatedAt).toLocaleDateString() : 'Never'}</td>
-                <td>
-                    <div class="actions">
-                        <button class="btn btn-sm btn-outline" onclick="editUser(${user.id})">Modify</button>
-                        <button class="btn btn-sm btn-${user.isActive ? 'danger' : 'success'}" onclick="toggleUserStatus(${user.id})">
-                            ${user.isActive ? 'Disable' : 'Enable'}
-                        </button>
-                    </div>
-                </td>
-            </tr>
-        `).join('');
-    }
-
-    function filterUsers(type) {
-        currentFilter = type;
-        
-        document.querySelectorAll('#user-management .table-actions .btn-outline').forEach(btn => {
-            btn.classList.remove('active');
-        });
-        
-        const buttonId = type === 'all' ? 'filterAll' : type === 'faculty' ? 'filterFaculty' : 'filterHR';
-        document.getElementById(buttonId).classList.add('active');
-        
-        loadUsersData();
-    }
-
-    function openAddUserModal() {
-        editingUserId = null;
-        document.getElementById('userModalTitle').textContent = 'Add New User';
-        clearUserForm();
-        document.getElementById('userModal').classList.add('active');
-    }
-
-    async function editUser(id) {
-        try {
-            const response = await apiManager.getUserById(id);
-            const user = response.data;
-            if (user) {
-                editingUserId = id;
-                document.getElementById('userModalTitle').textContent = 'Edit User';
-                populateUserForm(user);
-                document.getElementById('userModal').classList.add('active');
-            }
-        } catch (error) {
-            console.error('Error loading user:', error);
-            showStatusMessage('Failed to load user details', 'error');
-        }
-    }
-
-    async function deleteUser(id) {
-        if (confirm('Are you sure you want to delete this user? This action cannot be undone.')) {
-            try {
-                await apiManager.deleteUser(id);
-                loadUsersData();
-                updateDashboardStats();
-                showStatusMessage('User deleted successfully', 'success');
-            } catch (error) {
-                console.error('Error deleting user:', error);
-                showStatusMessage('Failed to delete user', 'error');
-            }
-        }
-    }
-    
-    async function deleteRegistration(id) {
-        if (confirm('Are you sure you want to delete this registration? This action cannot be undone.')) {
-            try {
-                await apiManager.deleteRegistration(id);
-                loadRegistrationsData();
-                updateDashboardStats();
-                showStatusMessage('Registration deleted successfully', 'success');
-            } catch (error) {
-                console.error('Error deleting registration:', error);
-                showStatusMessage('Failed to delete registration', 'error');
-            }
-        }
-    }
-
-    async function toggleUserStatus(id) {
-        try {
-            const response = await apiManager.getUserById(id);
-            const user = response.data;
-            if (user) {
-                const updatedData = {
-                    ...user,
-                    isActive: !user.isActive
-                };
-                await apiManager.updateUser(id, updatedData);
-                loadUsersData();
-                showStatusMessage(`User ${updatedData.isActive ? 'enabled' : 'disabled'} successfully`, 'success');
-            }
-        } catch (error) {
-            console.error('Error toggling user status:', error);
-            showStatusMessage('Failed to update user status', 'error');
-        }
-    }
-
-    async function saveUser(event) {
-        if (event) event.preventDefault();
-        
-        const formData = {
-            firstName: document.getElementById('userFirstName').value,
-            lastName: document.getElementById('userLastName').value,
-            email: document.getElementById('userEmail').value,
-            password: document.getElementById('userPassword').value,
-            userType: document.getElementById('userRole').value,
-            gender: document.getElementById('userGender').value || 'Other',
-            mobileNo: document.getElementById('userMobile').value || '0000000000',
-            location: document.getElementById('userCity').value || 'Not specified',
-            dob: document.getElementById('userDOB').value || '01/01/1990',
-            age: parseInt(document.getElementById('userAge').value) || 30
-        };
-
-        if (!formData.firstName || !formData.email || !formData.userType) {
-            showStatusMessage('Please fill in all required fields', 'error');
-            return;
-        }
-
-        if (!editingUserId && (!formData.password || formData.password.length < 6)) {
-            showStatusMessage('Password must be at least 6 characters', 'error');
-            return;
-        }
-
-        try {
-            if (editingUserId) {
-                if (formData.password && formData.password.length < 6) {
-                    showStatusMessage('Password must be at least 6 characters', 'error');
-                    return;
-                }
-                if (!formData.password) {
-                    delete formData.password;
-                }
-                await apiManager.updateUser(editingUserId, formData);
-                showStatusMessage('User updated successfully', 'success');
-            } else {
-                await apiManager.createUser(formData);
-                showStatusMessage('User added successfully', 'success');
-            }
-            
-            closeModal('userModal');
-            // Only reload users table, not registrations
-            await loadUsersData();
-            await updateDashboardStats();
-        } catch (error) {
-            console.error('Error saving user:', error);
-            showStatusMessage('Error saving user: ' + (error.message || 'Unknown error'), 'error');
-        }
-    }
-
-    function populateUserForm(user) {
-        document.getElementById('userFirstName').value = user.firstName || '';
-        document.getElementById('userLastName').value = user.lastName || '';
-        document.getElementById('userEmail').value = user.email || '';
-        document.getElementById('userPassword').value = '';
-        document.getElementById('userPassword').placeholder = 'Leave empty to keep current password';
-        document.getElementById('userPassword').required = false;
-        document.getElementById('userRole').value = user.userType || '';
-        document.getElementById('userGender').value = user.gender || '';
-        document.getElementById('userMobile').value = user.mobileNo || '';
-        document.getElementById('userCity').value = user.location || '';
-        document.getElementById('userDOB').value = user.dob || '';
-        document.getElementById('userAge').value = user.age || '';
-    }
-
-    function clearUserForm() {
-        document.getElementById('userForm').reset();
-        document.getElementById('userPassword').placeholder = 'Minimum 8 characters';
-        document.getElementById('userPassword').required = true;
-    }
-
-    function loadInternshipsData() {
-        const internships = dataManager.getInternships();
-        renderInternshipsGrid(internships);
-    }
-
-    function renderInternshipsGrid(internships) {
-        const container = document.getElementById('internshipsList');
-        if (internships.length === 0) {
-            container.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--text-light)">No posts found. Create your first post!</div>';
-            return;
-        }
-        
-        container.innerHTML = `
-            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(350px,1fr));gap:1.5rem;">
-                ${internships.map(post => `
-                    <div style="background:var(--white);border:1px solid var(--border);border-radius:var(--border-radius-md);padding:1.5rem;transition:var(--transition);cursor:pointer;" onclick="previewPostById(${post.id})">
-                        <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:1rem;">
-                            <div>
-                                <h3 style="margin:0 0 0.5rem 0;font-size:1.1rem;">${post.title}</h3>
-                                <p style="margin:0;color:var(--text-light);font-size:0.85rem;">${post.code}</p>
-                            </div>
-                            <span class="badge badge-${post.status === 'Posted' ? 'success' : 'warning'}">${post.status}</span>
-                        </div>
-                        <div style="margin-bottom:1rem;">
-                            <span class="badge badge-primary">${post.workMode}</span>
-                            <span style="margin-left:0.5rem;color:var(--text-light);font-size:0.85rem;">${post.duration} months</span>
-                        </div>
-                        <div class="application-count">📄 ${post.applications || 0} Applications</div>
-                        <p style="margin:1rem 0;color:var(--text-secondary);font-size:0.9rem;">${post.description}</p>
-                        <div class="actions" style="margin-top:1rem;gap:0.5rem;">
-                            <button class="btn btn-sm btn-${post.status === 'Draft' ? 'success' : 'outline'}" onclick="event.stopPropagation();togglePostStatus(${post.id})">
-                                ${post.status === 'Draft' ? 'Publish' : 'Unpublish'}
-                            </button>
-                            <button class="btn btn-sm btn-danger" onclick="event.stopPropagation();deleteInternship(${post.id})">Delete</button>
-                        </div>
-                    </div>
-                `).join('')}
-            </div>
-        `;
-    }
-
-    function saveInternship(event) {
-        if (event) event.preventDefault();
-        
-        const formData = {
-            code: document.getElementById('internshipCode').value,
-            title: document.getElementById('internshipTitle').value,
-            duration: parseInt(document.getElementById('internshipDuration').value),
-            workMode: document.getElementById('internshipWorkMode').value,
-            prerequisites: document.getElementById('internshipPrerequisites').value,
-            description: document.getElementById('internshipDescription').value,
-            status: document.getElementById('internshipStatus').value
-        };
-
-        if (!formData.code || !formData.title || !formData.workMode || !formData.duration) {
-            showStatusMessage('Please fill in all required fields', 'error');
-            return;
-        }
-
-        try {
-            if (editingInternshipId) {
-                dataManager.updateInternship(editingInternshipId, formData);
-                showStatusMessage('Post updated successfully', 'success');
-                editingInternshipId = null;
-            } else {
-                dataManager.addInternship(formData);
-                showStatusMessage('Post created successfully', 'success');
-            }
-            
-            document.getElementById('internshipForm').reset();
-            toggleInternshipForm();
-            loadInternshipsData();
-            updateDashboardStats();
-        } catch (error) {
-            console.error('Error saving internship:', error);
-            showStatusMessage('Error saving post', 'error');
-        }
-    }
-
-    function toggleInternshipForm() {
-        const formSheet = document.getElementById('internshipFormSheet');
-        const toggleText = document.getElementById('internshipFormToggleText');
-        
-        if (formSheet.classList.contains('active')) {
-            formSheet.classList.remove('active');
-            toggleText.textContent = 'Create New Post';
-            editingInternshipId = null;
-            document.getElementById('internshipForm').reset();
-            document.getElementById('internshipModalTitle').textContent = 'Create New Post';
-        } else {
-            formSheet.classList.add('active');
-            toggleText.textContent = 'Close Form';
-            editingInternshipId = null;
-            document.getElementById('internshipForm').reset();
-            document.getElementById('internshipModalTitle').textContent = 'Create New Post';
-        }
-    }
-
-    function editInternship(id) {
-        const post = dataManager.getInternships().find(p => p.id == id);
-        if (post) {
-            editingInternshipId = id;
-            document.getElementById('internshipCode').value = post.code;
-            document.getElementById('internshipTitle').value = post.title;
-            document.getElementById('internshipDuration').value = post.duration;
-            document.getElementById('internshipWorkMode').value = post.workMode;
-            document.getElementById('internshipPrerequisites').value = post.prerequisites;
-            document.getElementById('internshipDescription').value = post.description;
-            document.getElementById('internshipStatus').value = post.status;
-            document.getElementById('internshipFormSheet').classList.add('active');
-            document.getElementById('internshipFormToggleText').textContent = 'Close Form';
-            document.getElementById('internshipModalTitle').textContent = 'Edit Post';
-        }
-    }
-
-    function deleteInternship(id) {
-        if (confirm('Are you sure you want to delete this post? This action cannot be undone.')) {
-            dataManager.deleteInternship(id);
-            loadInternshipsData();
-            updateDashboardStats();
-            showStatusMessage('Post deleted successfully', 'success');
-        }
-    }
-
-    function togglePostStatus(id) {
-        const post = dataManager.getInternships().find(p => p.id === id);
-        if (post) {
-            post.status = post.status === 'Draft' ? 'Posted' : 'Draft';
-            dataManager.updateInternship(id, {status: post.status});
-            loadInternshipsData();
-            updateDashboardStats();
-            showStatusMessage(`Post ${post.status.toLowerCase()} successfully`, 'success');
-        }
-    }
-
-    function previewPost() {
-        const data = {
-            code: document.getElementById('internshipCode').value,
-            title: document.getElementById('internshipTitle').value,
-            duration: document.getElementById('internshipDuration').value,
-            workMode: document.getElementById('internshipWorkMode').value,
-            prerequisites: document.getElementById('internshipPrerequisites').value,
-            description: document.getElementById('internshipDescription').value,
-            status: document.getElementById('internshipStatus').value
-        };
-        showPreview(data, null);
-    }
-
-    function previewPostById(id) {
-        const post = dataManager.getInternships().find(p => p.id === id);
-        if (post) showPreview(post, id);
-    }
-
-    function showPreview(data, postId) {
-        const content = `
-            <div class="preview-container">
-                <h4>📋 Post Preview</h4>
-                <div class="preview-field"><div class="preview-label">Internship ID</div><div class="preview-value">${data.code}</div></div>
-                <div class="preview-field"><div class="preview-label">Title</div><div class="preview-value">${data.title}</div></div>
-                <div class="preview-field"><div class="preview-label">Work Mode</div><div class="preview-value"><span class="badge badge-primary">${data.workMode}</span></div></div>
-                <div class="preview-field"><div class="preview-label">Duration</div><div class="preview-value">${data.duration || 'Not specified'} months</div></div>
-                <div class="preview-field"><div class="preview-label">Required Skills</div><div class="preview-value">${data.prerequisites || 'None'}</div></div>
-                <div class="preview-field"><div class="preview-label">Status</div><div class="preview-value"><span class="badge badge-${data.status === 'Posted' ? 'success' : 'warning'}">${data.status || 'Draft'}</span></div></div>
-                <div class="preview-field"><div class="preview-label">Applications</div><div class="preview-value">${data.applications || 0} received</div></div>
-                <div class="preview-field"><div class="preview-label">Description</div><div class="preview-value">${data.description}</div></div>
-            </div>
-        `;
-        document.getElementById('previewContent').innerHTML = content;
-        
-        const footer = document.getElementById('previewModalFooter');
-        if (postId) {
-            footer.innerHTML = `
-                <button class="btn btn-outline" onclick="closeModal('previewModal')">Close</button>
-                <button class="btn btn-primary" onclick="closeModal('previewModal');editInternship(${postId})">Edit Post</button>
-            `;
-        } else {
-            footer.innerHTML = `<button class="btn btn-outline" onclick="closeModal('previewModal')">Close</button>`;
-        }
-        
-        document.getElementById('previewModal').classList.add('active');
-    }
-
-    function showSettingsTab(tab) {
-        document.querySelectorAll('.settings-tab').forEach(btn => {
-            btn.classList.remove('active');
-        });
-        event.target.classList.add('active');
-        
-        document.querySelectorAll('.settings-content').forEach(content => {
-            content.classList.remove('active');
-        });
-        
-        const contentMap = {
-            'general': 'generalSettings',
-            'registration': 'registrationSettings',
-            'notifications': 'notificationSettings',
-            'email': 'emailSettings',
-            'backup': 'backupSettings',
-            'audit': 'auditSettings'
-        };
-        
-        const targetContent = document.getElementById(contentMap[tab]);
-        if (targetContent) {
-            targetContent.classList.add('active');
-        }
-    }
-
-    function closeModal(modalId) {
-        document.getElementById(modalId).classList.remove('active');
-    }
-
-    function showStatusMessage(message, type = 'info') {
-        const alertDiv = document.createElement('div');
-        alertDiv.className = `alert alert-${type === 'success' ? 'success' : type === 'error' ? 'error' : 'info'}`;
-        alertDiv.textContent = message;
-        alertDiv.style.position = 'fixed';
-        alertDiv.style.top = '80px';
-        alertDiv.style.right = '20px';
-        alertDiv.style.zIndex = '9999';
-        alertDiv.style.minWidth = '300px';
-        document.body.appendChild(alertDiv);
-        setTimeout(() => {
-            alertDiv.remove();
-        }, 3000);
-    }
-
-    function convertToCSV(data) {
-        if (!data || data.length === 0) return '';
-        const headers = Object.keys(data);
-        const csvRows = [
-            headers.join(','),
-            ...data.map(row => 
-                headers.map(header => {
-                    const value = row[header];
-                    return typeof value === 'string' && value.includes(',') ? `"${value}"` : value;
-                }).join(',')
-            )
-        ];
-        return csvRows.join('\n');
-    }
-
-    function downloadFile(content, filename, mimeType) {
-        const blob = new Blob([content], {type: mimeType});
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = filename;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        window.URL.revokeObjectURL(url);
-    }
-
-    function toggleSidebar() {
-        const sidebar = document.getElementById('sidebar');
-        sidebar.classList.toggle('collapsed');
-    }
-
-    document.addEventListener('DOMContentLoaded', function() {
-        document.querySelectorAll('.nav-item').forEach(item => {
-            item.addEventListener('click', function() {
-                if (window.innerWidth <= 768) {
-                    const sidebar = document.getElementById('sidebar');
-                    sidebar.classList.add('collapsed');
-                }
-            });
-        });
-    });
-
-    function logout() {
-        if (confirm('Are you sure you want to logout?')) {
-            apiManager.clearToken();
-            window.location.href = 'loginPage.html';
-        }
-    }
-
-    window.addEventListener('error', function(e) {
-        console.error('Application error:', e.error);
-        showStatusMessage('An unexpected error occurred', 'error');
-    });
-
-    window.addEventListener('unhandledrejection', function(e) {
-        console.error('Unhandled promise rejection:', e.reason);
-        showStatusMessage('Server error occurred', 'error');
-    });
+    // CLEAR OLD LOCALSTORAGE ON FIRST LOAD
+      (function() {
+          const isFirstLoad = !sessionStorage.getItem('adminPageLoaded');
+          if (isFirstLoad) {
+              localStorage.removeItem('trackerProData');
+              sessionStorage.setItem('adminPageLoaded', 'true');
+              console.log('🗑️ Cleared old localStorage data');
+          }
+      })();
+  class DataManager {
+      constructor() {
+          this.STORAGE_KEY = 'trackerProData';
+          this.initializeData();
+      }
+
+      initializeData() {
+          const existingData = localStorage.getItem(this.STORAGE_KEY);
+
+          if (!existingData) {
+              const initialData = {
+                  registrations: Array.from({length: 22}, (_, i) => ({
+                      id: i + 1,
+                      candidateId: `STU-${String(i + 1).padStart(3, '0')}`,
+                      firstName: `Student${i + 1}`,
+                      lastName: `LastName${i + 1}`,
+                      email: `student${i + 1}@example.com`,
+                      password: "password123",
+                      mobileNo: `98${String(i).padStart(8, '0')}`,
+                      gender: i % 2 === 0 ? "Male" : "Female",
+                      dob: "01/01/2000",
+                      city: "City" + (i % 5),
+                      address: `Address ${i}`,
+                      role: "Student",
+                      isActive: true,
+                      createdAt: "2023-11-10",
+                      lastLogin: null
+                  })),
+
+                  users: [
+
+                      {
+                          id: 1,
+                          firstName: "Priya",
+                          lastName: "Patel",
+                          name: "Ms. Priya Patel",
+                          email: "priya.patel@trackerpro.com",
+                          password: "hr123456",
+                          role: "HR",
+                          gender: "Female",
+                          mobile: "9123456789",
+                          city: "Mumbai",
+                          dob: "1990-07-22",
+                          age: 34,
+                          status: "Active",
+                          isEnabled: true,
+                          lastLogin: "2024-11-21"
+                      },
+                      {
+                          id: 2,
+                          firstName: "Rajesh",
+                          lastName: "Kumar",
+                          name: "Prof. Rajesh Kumar",
+                          email: "rajesh.kumar@trackerpro.com",
+                          password: "faculty456",
+                          role: "Faculty",
+                          gender: "Male",
+                          mobile: "9988776655",
+                          city: "Bangalore",
+                          dob: "1980-05-10",
+                          age: 44,
+                          status: "Inactive",
+                          isEnabled: false,
+                          lastLogin: "2024-10-15"
+                      }
+                  ],
+
+                  internships: [
+                      {
+                          id: 1,
+                          internshipId: "WD-001",
+                          internshipTitle: "Full Stack Web Development Internship",
+                          duration: "6 Months",
+                          workMode: "Hybrid",
+                          skills: "HTML, CSS, JavaScript, React, Node.js, MongoDB, REST APIs",
+                          description: "Complete full-stack web development internship program covering frontend and backend technologies with hands-on project experience.",
+                          status: "PUBLISHED",
+                          postedDate: "2024-11-15",
+                          createdBy: "HR-ADMIN-001",
+                          applicationsReceived: 25
+                      },
+                      {
+                          id: 2,
+                          internshipId: "DS-002",
+                          internshipTitle: "Data Science Fundamentals",
+                          duration: "4 Months",
+                          workMode: "Online",
+                          skills: "Python, SQL, Statistics, Machine Learning, Pandas, NumPy",
+                          description: "Introduction to data science with focus on statistical analysis, machine learning algorithms, and data visualization techniques.",
+                          status: "PUBLISHED",
+                          postedDate: "2024-11-14",
+                          createdBy: "HR-ADMIN-001",
+                          applicationsReceived: 18
+                      },
+                  ],
+
+                  applications: [],
+                  interviews: [],
+                  complaints: [],
+                  settings: {
+                      systemName: "Student Progress Tracking System",
+                      supportEmail: "contactus@trackerpro.com",
+                      organizationName: "Educational Institute",
+                      academicYear: "2024-2025"
+                  }
+              };
+
+              localStorage.setItem(this.STORAGE_KEY, JSON.stringify(initialData));
+          } else {
+              try {
+                  const data = JSON.parse(existingData);
+                  if (!data.users || !Array.isArray(data.users)) {
+                      data.users = [];
+                      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(data));
+                  }
+                  if (!data.registrations || !Array.isArray(data.registrations)) {
+                      data.registrations = [];
+                      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(data));
+                  }
+                  if (!data.internships || !Array.isArray(data.internships)) {
+                      data.internships = [];
+                      localStorage.setItem(this.STORAGE_KEY, JSON.stringify(data));
+                  }
+              } catch (e) {
+                  localStorage.removeItem(this.STORAGE_KEY);
+                  this.initializeData();
+              }
+          }
+      }
+
+      getData() {
+          const data = JSON.parse(localStorage.getItem(this.STORAGE_KEY));
+          if (!data.users) data.users = [];
+          if (!data.registrations) data.registrations = [];
+          if (!data.internships) data.internships = [];
+          return data;
+      }
+
+      saveData(data) {
+          localStorage.setItem(this.STORAGE_KEY, JSON.stringify(data));
+      }
+
+      getRegistrations() {
+          return this.getData().registrations || [];
+      }
+
+      deleteRegistration(id) {
+          const data = this.getData();
+          data.registrations = data.registrations.filter(r => r.id !== id);
+          this.saveData(data);
+      }
+
+      getUsers() {
+          return this.getData().users || [];
+      }
+
+      addUser(userData) {
+          const data = this.getData();
+          if (!data.users || !Array.isArray(data.users)) {
+              data.users = [];
+          }
+
+          const newId = (data.users.length > 0 ? Math.max(...data.users.map(u => u.id)) : 0) + 1;
+
+          const newUser = {
+              id: newId,
+              firstName: userData.firstName,
+              lastName: userData.lastName || '',
+              name: `${userData.firstName} ${userData.lastName || ''}`.trim(),
+              email: userData.email,
+              password: userData.password,
+              role: userData.role,
+              gender: userData.gender || '',
+              mobile: userData.mobile || '',
+              city: userData.city || '',
+              dob: userData.dob || '',
+              age: userData.age || null,
+              status: 'Active',
+              isEnabled: true,
+              lastLogin: null
+          };
+
+          data.users.push(newUser);
+          this.saveData(data);
+          return newUser;
+      }
+
+      updateUser(id, userData) {
+          const data = this.getData();
+          const index = data.users.findIndex(u => u.id === id);
+          if (index !== -1) {
+              data.users[index] = {
+                  ...data.users[index],
+                  firstName: userData.firstName,
+                  lastName: userData.lastName || '',
+                  name: `${userData.firstName} ${userData.lastName || ''}`.trim(),
+                  email: userData.email,
+                  password: userData.password,
+                  role: userData.role,
+                  gender: userData.gender || '',
+                  mobile: userData.mobile || '',
+                  city: userData.city || '',
+                  dob: userData.dob || '',
+                  age: userData.age || null
+              };
+              this.saveData(data);
+              return data.users[index];
+          }
+          return null;
+      }
+
+      deleteUser(id) {
+          const data = this.getData();
+          data.users = data.users.filter(u => u.id !== id);
+          this.saveData(data);
+      }
+
+      toggleUserStatus(id) {
+          const data = this.getData();
+          const index = data.users.findIndex(u => u.id === id);
+          if (index !== -1) {
+              data.users[index].isEnabled = !data.users[index].isEnabled;
+              data.users[index].status = data.users[index].isEnabled ? 'Active' : 'Inactive';
+              this.saveData(data);
+              return data.users[index];
+          }
+          return null;
+      }
+
+      getInternships() {
+          return this.getData().internships || [];
+      }
+
+      addInternship(internship) {
+          const data = this.getData();
+          internship.id = (data.internships.length > 0 ? Math.max(...data.internships.map(i => i.id)) : 0) + 1;
+          internship.applicationsReceived = 0;
+          internship.postedDate = internship.status === 'PUBLISHED' ? new Date().toISOString().split('T')[0] : null;
+          internship.createdBy = 'HR-ADMIN-001';
+          data.internships.push(internship);
+          this.saveData(data);
+          return internship;
+      }
+
+      updateInternship(id, updates) {
+          const data = this.getData();
+          const index = data.internships.findIndex(i => i.id === id);
+          if (index !== -1) {
+              const oldStatus = data.internships[index].status;
+              data.internships[index] = { ...data.internships[index], ...updates };
+
+              if (oldStatus !== 'PUBLISHED' && updates.status === 'PUBLISHED') {
+                  data.internships[index].postedDate = new Date().toISOString().split('T')[0];
+              }
+
+              this.saveData(data);
+              return data.internships[index];
+          }
+          return null;
+      }
+
+      deleteInternship(id) {
+          const data = this.getData();
+          data.internships = data.internships.filter(i => i.id !== id);
+          this.saveData(data);
+      }
+
+  }
+
+  const dataManager = new DataManager();
+  let editingInternshipId = null;
+  let editingUserId = null;
+  let currentViewUserId = null;
+  let currentPage = 1;
+  let currentUserFilter = 'all';
+  const itemsPerPage = 10;
+
+  function showPage(pageId) {
+      document.querySelectorAll('.page').forEach(page => {
+          page.classList.remove('active-page');
+      });
+
+      const targetPage = document.getElementById(pageId);
+      if (targetPage) {
+          targetPage.classList.add('active-page');
+      }
+
+      document.querySelectorAll('.nav-item').forEach(nav => {
+          nav.classList.remove('active');
+      });
+
+      const activeNav = document.querySelector(`[data-page="${pageId}"]`);
+      if (activeNav) activeNav.classList.add('active');
+
+      if (pageId === 'registrations') loadRegistrationsData();
+      else if (pageId === 'user-management') loadUsersData();
+      else if (pageId === 'internship-management') loadInternshipsData();
+      else if (pageId === 'dashboard') updateDashboardStats();
+  }
+
+  function toggleSidebar() {
+      const sidebar = document.getElementById('sidebar');
+      if (sidebar) sidebar.classList.toggle('collapsed');
+  }
+
+  function logout() {
+      if (confirm('Are you sure you want to logout?')) {
+          alert('Logged out successfully');
+      }
+  }
+
+  function updateDashboardStats() {
+      const registrations = dataManager.getRegistrations();
+      const users = dataManager.getUsers();
+      const internships = dataManager.getInternships();
+
+      const totalRegsEl = document.getElementById('totalRegistrations');
+      const totalUsersEl = document.getElementById('totalUsers');
+      const totalPostsEl = document.getElementById('totalPosts');
+      const newUsersEl = document.getElementById('newUsers');
+
+      if (totalRegsEl) totalRegsEl.textContent = registrations.length;
+      if (totalUsersEl) totalUsersEl.textContent = users.length;
+      if (totalPostsEl) totalPostsEl.textContent = internships.filter(i => i.status === 'PUBLISHED').length;
+      if (newUsersEl) newUsersEl.textContent = registrations.filter(r => {
+          const regDate = new Date(r.createdAt);
+          const weekAgo = new Date();
+          weekAgo.setDate(weekAgo.getDate() - 7);
+          return regDate >= weekAgo;
+      }).length;
+  }
+
+  // REGISTRATIONS
+  function loadRegistrationsData(page = 1) {
+      const registrations = dataManager.getRegistrations();
+      const tbody = document.querySelector('#registrationsTable tbody');
+
+      if (!tbody) return;
+
+      currentPage = page;
+      const startIndex = (page - 1) * itemsPerPage;
+      const endIndex = startIndex + itemsPerPage;
+      const paginatedData = registrations.slice(startIndex, endIndex);
+
+      tbody.innerHTML = paginatedData.map(reg => `
+          <tr>
+              <td><input type="checkbox" data-id="${reg.id}"></td>
+              <td>${reg.firstName}</td>
+              <td>${reg.lastName}</td>
+              <td>${reg.email}</td>
+              <td>${reg.gender || 'N/A'}</td>
+              <td>${reg.dob || 'N/A'}</td>
+              <td>${reg.city || 'N/A'}</td>
+              <td>${reg.mobileNo}</td>
+              <td><span class="badge badge-${reg.role === 'Student' ? 'primary' : 'info'}">${reg.role}</span></td>
+              <td>${reg.createdAt}</td>
+              <td>
+                  <div class="actions">
+                      <button onclick="viewRegistration(${reg.id})" class="btn btn-sm btn-outline">View</button>
+                      <button onclick="deleteRegistration(${reg.id})" class="btn btn-sm btn-danger">Delete</button>
+                  </div>
+              </td>
+          </tr>
+      `).join('');
+
+      updateRegistrationCounts(registrations.length, paginatedData.length);
+      renderPagination(registrations.length);
+  }
+
+  function updateRegistrationCounts(total, showing) {
+      const showingEl = document.getElementById('registrationShowingCount');
+      const totalEl = document.getElementById('registrationTotalCount');
+
+      if (showingEl) showingEl.textContent = showing;
+      if (totalEl) totalEl.textContent = total;
+  }
+
+  function renderPagination(totalItems) {
+      const paginationEl = document.getElementById('registrationPagination');
+      if (!paginationEl) return;
+
+      const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+      let paginationHTML = `
+          <button onclick="loadRegistrationsData(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>Previous</button>
+      `;
+
+      for (let i = 1; i <= totalPages; i++) {
+          paginationHTML += `<button onclick="loadRegistrationsData(${i})" class="${i === currentPage ? 'active' : ''}">${i}</button>`;
+      }
+
+      paginationHTML += `
+          <button onclick="loadRegistrationsData(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>Next</button>
+      `;
+
+      paginationEl.innerHTML = paginationHTML;
+  }
+
+  function viewRegistration(id) {
+      const registration = dataManager.getRegistrations().find(r => r.id === id);
+      if (registration) {
+          alert(`Student Details:\n\nCandidate ID: ${registration.candidateId}\nName: ${registration.firstName} ${registration.lastName}\nEmail: ${registration.email}\nMobile: ${registration.mobileNo}\nGender: ${registration.gender}\nDOB: ${registration.dob}\nCity: ${registration.city}`);
+      }
+  }
+
+  function deleteRegistration(id) {
+      if (confirm('Are you sure you want to delete this registration?')) {
+          dataManager.deleteRegistration(id);
+          loadRegistrationsData(currentPage);
+          updateDashboardStats();
+          showStatusMessage('Registration deleted successfully', 'success');
+      }
+  }
+
+  function filterRegistrations() {
+      const searchInput = document.getElementById('registrationSearch');
+      if (!searchInput) return;
+
+      const searchTerm = searchInput.value.toLowerCase();
+      const rows = document.querySelectorAll('#registrationsTable tbody tr');
+
+      let visibleCount = 0;
+      rows.forEach(row => {
+          const text = row.textContent.toLowerCase();
+          const isVisible = text.includes(searchTerm);
+          row.style.display = isVisible ? '' : 'none';
+          if (isVisible) visibleCount++;
+      });
+
+      const showingEl = document.getElementById('registrationShowingCount');
+      if (showingEl) showingEl.textContent = visibleCount;
+  }
+
+  function refreshRegistrations() {
+      loadRegistrationsData(1);
+      showStatusMessage('Registrations refreshed', 'success');
+  }
+
+  function toggleSelectAll() {
+      const selectAll = document.getElementById('selectAll');
+      const checkboxes = document.querySelectorAll('#registrationsTable tbody input[type="checkbox"]');
+      checkboxes.forEach(cb => cb.checked = selectAll.checked);
+  }
+
+  function deleteSelectedRegistrations() {
+      const checkboxes = document.querySelectorAll('#registrationsTable tbody input[type="checkbox"]:checked');
+      if (checkboxes.length === 0) {
+          alert('No registrations selected');
+          return;
+      }
+
+      if (confirm(`Delete ${checkboxes.length} selected registration(s)?`)) {
+          checkboxes.forEach(cb => {
+              const id = parseInt(cb.getAttribute('data-id'));
+              dataManager.deleteRegistration(id);
+          });
+          loadRegistrationsData(currentPage);
+          updateDashboardStats();
+          showStatusMessage(`${checkboxes.length} registration(s) deleted`, 'success');
+      }
+  }
+
+  function exportRegistrations() {
+      const registrations = dataManager.getRegistrations();
+      const csv = 'Candidate ID,First Name,Last Name,Email,Mobile,Gender,DOB,City,Role,Registered On\n' +
+                  registrations.map(r =>
+                      `${r.candidateId},"${r.firstName}","${r.lastName}",${r.email},${r.mobileNo},${r.gender || ''},${r.dob || ''},${r.city || ''},${r.role},${r.createdAt}`
+                  ).join('\n');
+
+      const blob = new Blob([csv], { type: 'text/csv' });
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'registrations.csv';
+      a.click();
+      window.URL.revokeObjectURL(url);
+  }
+
+
+  // USER MANAGEMENT - VIEW & EDIT BUTTONS
+  function loadUsersData(filterType = null) {
+      if (filterType !== null) {
+          currentUserFilter = filterType;
+      }
+
+      const allUsers = dataManager.getUsers();
+      let users = allUsers;
+
+      if (currentUserFilter === 'faculty') {
+          users = allUsers.filter(u => u.role.toLowerCase() === 'faculty');
+      } else if (currentUserFilter === 'hr') {
+          users = allUsers.filter(u => u.role.toLowerCase() === 'hr');
+      }
+
+      const tbody = document.querySelector('#usersTable tbody');
+      if (!tbody) return;
+
+      tbody.innerHTML = users.map(user => `
+          <tr>
+              <td>${user.name || (user.firstName + ' ' + user.lastName).trim()}</td>
+              <td>${user.email}</td>
+              <td><span class="badge badge-${user.role === 'Faculty' ? 'primary' : 'info'}">${user.role}</span></td>
+              <td><span class="badge badge-${user.status === 'Active' ? 'success' : 'disabled'}">${user.status}</span></td>
+              <td>${user.lastLogin || 'Never'}</td>
+              <td>
+                  <div class="actions">
+                      <button onclick="viewUser(${user.id})" class="btn btn-sm btn-outline">View</button>
+                      <button onclick="editUser(${user.id})" class="btn btn-sm btn-primary">Edit</button>
+                  </div>
+              </td>
+          </tr>
+      `).join('');
+
+      updateFilterButtonStates();
+  }
+
+  function updateFilterButtonStates() {
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+          btn.classList.remove('active');
+      });
+
+      const activeBtn = document.querySelector(`.filter-btn[onclick*="'${currentUserFilter}'"]`);
+      if (activeBtn) {
+          activeBtn.classList.add('active');
+      }
+  }
+
+  function filterUsers(type) {
+      loadUsersData(type);
+  }
+
+  function openAddUserModal() {
+      const modal = document.getElementById('userModal');
+      const form = document.getElementById('userForm');
+      const title = document.getElementById('userModalTitle');
+
+      if (form) form.reset();
+      if (title) title.textContent = 'Add New User';
+      if (modal) modal.classList.add('active');
+
+      editingUserId = null;
+  }
+
+  // VIEW USER - Opens Sheet with Details + Toggle
+  function viewUser(id) {
+      const user = dataManager.getUsers().find(u => u.id === id);
+      if (!user) return;
+
+      currentViewUserId = id;
+
+      // Populate view fields
+      document.getElementById('viewFirstName').textContent = user.firstName || '-';
+      document.getElementById('viewLastName').textContent = user.lastName || '-';
+      document.getElementById('viewEmail').textContent = user.email || '-';
+      document.getElementById('viewRole').textContent = user.role || '-';
+      document.getElementById('viewGender').textContent = user.gender || '-';
+      document.getElementById('viewMobile').textContent = user.mobile || '-';
+      document.getElementById('viewCity').textContent = user.city || '-';
+      document.getElementById('viewDOB').textContent = user.dob || '-';
+      document.getElementById('viewAge').textContent = user.age || '-';
+      document.getElementById('viewLastLogin').textContent = user.lastLogin || 'Never';
+
+      // Set toggle
+      const toggleInput = document.getElementById('sheetUserToggle');
+      if (toggleInput) {
+          toggleInput.checked = user.isEnabled !== false;
+      }
+
+      // Update status badge
+      updateSheetStatusDisplay(user.isEnabled !== false);
+
+      // Show sheet
+      document.getElementById('userSheet').classList.add('active');
+  }
+
+  // EDIT USER - Opens Add User Modal with Populated Fields
+  function editUser(id) {
+      const user = dataManager.getUsers().find(u => u.id === id);
+      if (!user) return;
+
+      editingUserId = id;
+
+      // Populate form fields
+      document.getElementById('userFirstName').value = user.firstName || '';
+      document.getElementById('userLastName').value = user.lastName || '';
+      document.getElementById('userEmail').value = user.email || '';
+      document.getElementById('userPassword').value = user.password || '';
+      document.getElementById('userRole').value = user.role || '';
+      document.getElementById('userGender').value = user.gender || '';
+      document.getElementById('userMobile').value = user.mobile || '';
+      document.getElementById('userCity').value = user.city || '';
+      document.getElementById('userDOB').value = user.dob || '';
+      document.getElementById('userAge').value = user.age || '';
+
+      // Update modal title
+      document.getElementById('userModalTitle').textContent = 'Edit User';
+
+      // Show modal
+      document.getElementById('userModal').classList.add('active');
+  }
+
+  function updateSheetStatusDisplay(isEnabled) {
+      const statusBadge = document.getElementById('sheetStatusBadge');
+      if (statusBadge) {
+          statusBadge.textContent = isEnabled ? 'Active' : 'Inactive';
+          statusBadge.className = `badge badge-${isEnabled ? 'success' : 'disabled'}`;
+      }
+  }
+
+  function onSheetToggleChange() {
+      if (!currentViewUserId) return;
+
+      const toggleInput = document.getElementById('sheetUserToggle');
+      if (!toggleInput) return;
+
+      const isEnabled = toggleInput.checked;
+
+      // Update status in database
+      const data = dataManager.getData();
+      const index = data.users.findIndex(u => u.id === currentViewUserId);
+      if (index !== -1) {
+          data.users[index].isEnabled = isEnabled;
+          data.users[index].status = isEnabled ? 'Active' : 'Inactive';
+          dataManager.saveData(data);
+
+          // Update display
+          updateSheetStatusDisplay(isEnabled);
+
+          // Refresh table
+          loadUsersData();
+
+          showStatusMessage(`User ${isEnabled ? 'enabled' : 'disabled'} successfully`, 'success');
+      }
+  }
+
+  function closeUserSheet() {
+      document.getElementById('userSheet').classList.remove('active');
+      currentViewUserId = null;
+  }
+
+  function saveUser(event) {
+      if (event) {
+          event.preventDefault();
+          event.stopPropagation();
+      }
+
+      try {
+          const firstName = document.getElementById('userFirstName').value.trim();
+          const lastName = document.getElementById('userLastName').value.trim();
+          const email = document.getElementById('userEmail').value.trim();
+          const password = document.getElementById('userPassword').value.trim();
+          const role = document.getElementById('userRole').value;
+          const gender = document.getElementById('userGender').value;
+          const mobile = document.getElementById('userMobile').value.trim();
+          const city = document.getElementById('userCity').value.trim();
+          const dob = document.getElementById('userDOB').value.trim();
+          const age = parseInt(document.getElementById('userAge').value) || null;
+
+          if (!firstName || !email || !password || !role) {
+              showStatusMessage('Please fill all required fields', 'error');
+              return false;
+          }
+
+          if (password.length < 8) {
+              showStatusMessage('Password must be at least 8 characters', 'error');
+              return false;
+          }
+
+          const formData = {
+              firstName, lastName, email, password, role,
+              gender, mobile, city, dob, age
+          };
+
+          if (editingUserId) {
+              // Update existing user
+              dataManager.updateUser(editingUserId, formData);
+              showStatusMessage('User updated!', 'success');
+          } else {
+              // Add new user
+              dataManager.addUser(formData);
+              showStatusMessage('User added!', 'success');
+          }
+
+          closeModal('userModal');
+          loadUsersData();
+          updateDashboardStats();
+          editingUserId = null;
+
+          return false;
+
+      } catch (error) {
+          console.error('Error:', error);
+          showStatusMessage('Error: ' + error.message, 'error');
+          return false;
+      }
+  }
+
+  // INTERNSHIPS
+  function loadInternshipsData() {
+      const internships = dataManager.getInternships();
+      const container = document.getElementById('internshipsList');
+
+      if (!container) return;
+
+      if (internships.length === 0) {
+          container.innerHTML = '<div class="alert alert-info">No internship posts yet. Create your first post!</div>';
+          return;
+      }
+
+      container.innerHTML = `
+          <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;">
+              ${internships.map(internship => `
+                  <div onclick="showPostPreview(${internship.id})" style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: all 0.3s ease; cursor: pointer;" onmouseover="this.style.boxShadow='0 8px 24px rgba(0,0,0,0.12)'" onmouseout="this.style.boxShadow='0 2px 8px rgba(0,0,0,0.08)'">
+                      <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                          <div style="flex: 1;">
+                              <h3 style="margin: 0 0 0.5rem 0; font-size: 1.1rem; color: #1e293b; font-weight: 600;">${internship.internshipTitle}</h3>
+                              <span style="display: inline-block; padding: 0.25rem 0.75rem; background: #e5eaff; color: #4a6fff; border-radius: 20px; font-size: 0.75rem; font-weight: 600;">${internship.internshipId}</span>
+                          </div>
+                          <span class="badge badge-${internship.status === 'PUBLISHED' ? 'success' : 'warning'}" style="font-size: 0.7rem; padding: 0.35rem 0.75rem;">${internship.status}</span>
+                      </div>
+
+                      <div style="margin-bottom: 1rem;">
+                          <div style="display: flex; gap: 1.5rem; margin-bottom: 0.75rem; flex-wrap: wrap;">
+                              <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: #475569;">
+                                  <span>🧾</span>
+                                  <span style="font-weight: 500;">${internship.duration}</span>
+                              </div>
+                              <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: #475569;">
+                                  <span>📍</span>
+                                  <span style="font-weight: 500;">${internship.workMode}</span>
+                              </div>
+                          </div>
+
+                          <p style="font-size: 0.875rem; color: #475569; line-height: 1.6; margin: 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${internship.description}</p>
+                      </div>
+
+                      <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
+                          ${internship.skills.split(',').slice(0, 3).map(skill =>
+                              `<span style="padding: 0.25rem 0.6rem; background: #f0f0f0; color: #555; border-radius: 4px; font-size: 0.75rem;">${skill.trim()}</span>`
+                          ).join('')}
+                          ${internship.skills.split(',').length > 3 ? `<span style="padding: 0.25rem 0.6rem; background: #f0f0f0; color: #555; border-radius: 4px; font-size: 0.75rem;">+${internship.skills.split(',').length - 3}</span>` : ''}
+                      </div>
+
+                      <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; border-top: 1px solid #e2e8f0;">
+                          <div style="display: flex; align-items: center; gap: 0.5rem;">
+                              <span style="font-size: 0.9rem; font-weight: 600; color: #4a6fff;">${internship.applicationsReceived} Applications</span>
+                          </div>
+
+                          <div style="display: flex; gap: 0.5rem;" onclick="event.stopPropagation()">
+                              <button onclick="togglePostStatus(${internship.id})" class="btn btn-sm btn-${internship.status === 'PUBLISHED' ? 'warning' : 'success'}" style="font-size: 0.75rem; padding: 0.4rem 0.7rem;">
+                                  ${internship.status === 'PUBLISHED' ? 'Unpublish' : 'Publish'}
+                              </button>
+                              <button onclick="deleteInternship(${internship.id})" class="btn btn-sm btn-danger" style="font-size: 0.75rem; padding: 0.4rem 0.7rem;">Delete</button>
+                          </div>
+                      </div>
+
+                      ${internship.postedDate ? `<div style="font-size: 0.75rem; color: #64748b; margin-top: 0.75rem; text-align: right;">Posted : ${internship.postedDate}</div>` : ''}
+                  </div>
+              `).join('')}
+          </div>
+      `;
+  }
+
+  function showPostPreview(postId) {
+      const internship = dataManager.getInternships().find(i => i.id === postId);
+      if (!internship) return;
+
+      const previewHTML = `
+          <div class="preview-container">
+              <div class="preview-field"><div class="preview-label">Internship ID</div><div class="preview-value">${internship.internshipId}</div></div>
+              <div class="preview-field"><div class="preview-label">Title</div><div class="preview-value"><strong>${internship.internshipTitle}</strong></div></div>
+              <div class="preview-field"><div class="preview-label">Duration</div><div class="preview-value">${internship.duration}</div></div>
+              <div class="preview-field"><div class="preview-label">Work Mode</div><div class="preview-value">${internship.workMode}</div></div>
+              <div class="preview-field"><div class="preview-label">Required Skills</div><div class="preview-value">${internship.skills}</div></div>
+              <div class="preview-field"><div class="preview-label">Status</div><div class="preview-value"><span class="badge badge-${internship.status === 'PUBLISHED' ? 'success' : 'warning'}">${internship.status}</span></div></div>
+              <div class="preview-field"><div class="preview-label">Applications Received</div><div class="preview-value">${internship.applicationsReceived}</div></div>
+              ${internship.postedDate ? `<div class="preview-field"><div class="preview-label">Posted Date</div><div class="preview-value">${internship.postedDate}</div></div>` : ''}
+              <div class="preview-field"><div class="preview-label">Description</div><div class="preview-value">${internship.description}</div></div>
+          </div>
+      `;
+
+      document.getElementById('previewContent').innerHTML = previewHTML;
+
+      const footer = document.getElementById('previewModalFooter');
+      if (footer) {
+          footer.innerHTML = `
+              <button class="btn btn-outline" onclick="closeModal('previewModal')">Close</button>
+              <button class="btn btn-primary" onclick="closeModal('previewModal');editInternship(${postId})">✏️ Edit</button>
+          `;
+      }
+
+      document.getElementById('previewModal').classList.add('active');
+  }
+
+  function toggleInternshipForm() {
+      const modal = document.getElementById('internshipFormSheet');
+      if (modal) {
+          modal.classList.toggle('active');
+          if (!modal.classList.contains('active')) {
+              document.getElementById('internshipForm').reset();
+              editingInternshipId = null;
+              document.getElementById('internshipModalTitle').textContent = 'Create New Post';
+          }
+      }
+  }
+
+  function saveInternship(event) {
+      if (event) event.preventDefault();
+
+      const durationValue = document.getElementById('internshipDuration').value;
+      const formData = {
+          internshipId: document.getElementById('internshipCode').value,
+          internshipTitle: document.getElementById('internshipTitle').value,
+          duration: `${durationValue} Months`,
+          workMode: document.getElementById('internshipWorkMode').value,
+          skills: document.getElementById('internshipPrerequisites').value,
+          description: document.getElementById('internshipDescription').value,
+          status: document.getElementById('internshipStatus').value === 'Posted' ? 'PUBLISHED' : 'DRAFT'
+      };
+
+      if (!formData.internshipId || !formData.internshipTitle || !durationValue) {
+          showStatusMessage('Please fill all required fields', 'error');
+          return;
+      }
+
+      try {
+          if (editingInternshipId) {
+              dataManager.updateInternship(editingInternshipId, formData);
+              showStatusMessage('Internship updated successfully', 'success');
+          } else {
+              const existing = dataManager.getInternships().find(i => i.internshipId === formData.internshipId);
+              if (existing) {
+                  showStatusMessage('Internship ID already exists', 'error');
+                  return;
+              }
+              dataManager.addInternship(formData);
+              showStatusMessage('Internship created successfully', 'success');
+          }
+          toggleInternshipForm();
+          loadInternshipsData();
+          updateDashboardStats();
+      } catch (error) {
+          console.error('Error saving internship:', error);
+          showStatusMessage('Error saving internship', 'error');
+      }
+  }
+
+  function editInternship(id) {
+      const internship = dataManager.getInternships().find(i => i.id === id);
+      if (internship) {
+          editingInternshipId = id;
+          document.getElementById('internshipCode').value = internship.internshipId;
+          document.getElementById('internshipTitle').value = internship.internshipTitle;
+          document.getElementById('internshipDuration').value = parseInt(internship.duration.split(' ')[0]) || '';
+          document.getElementById('internshipWorkMode').value = internship.workMode;
+          document.getElementById('internshipPrerequisites').value = internship.skills;
+          document.getElementById('internshipDescription').value = internship.description;
+          document.getElementById('internshipStatus').value = internship.status === 'PUBLISHED' ? 'Posted' : 'Draft';
+          document.getElementById('internshipModalTitle').textContent = 'Edit Internship Post';
+          document.getElementById('internshipFormSheet').classList.add('active');
+      }
+  }
+
+  function togglePostStatus(id) {
+      const internship = dataManager.getInternships().find(i => i.id === id);
+      if (internship) {
+          const newStatus = internship.status === 'DRAFT' ? 'PUBLISHED' : 'DRAFT';
+          dataManager.updateInternship(id, { status: newStatus });
+          loadInternshipsData();
+          updateDashboardStats();
+          showStatusMessage(`Internship ${newStatus.toLowerCase()} successfully`, 'success');
+      }
+  }
+
+  function deleteInternship(id) {
+      const internship = dataManager.getInternships().find(i => i.id === id);
+      if (confirm(`Are you sure you want to delete "${internship.internshipTitle}"?`)) {
+          dataManager.deleteInternship(id);
+          loadInternshipsData();
+          updateDashboardStats();
+          showStatusMessage('Internship deleted successfully', 'success');
+      }
+  }
+
+  function previewPost() {
+      const code = document.getElementById('internshipCode').value;
+      const title = document.getElementById('internshipTitle').value;
+      const duration = document.getElementById('internshipDuration').value;
+      const workMode = document.getElementById('internshipWorkMode').value;
+      const skills = document.getElementById('internshipPrerequisites').value;
+      const description = document.getElementById('internshipDescription').value;
+      const status = document.getElementById('internshipStatus').value;
+
+      const previewHTML = `
+          <div class="preview-container">
+              <div class="preview-field"><div class="preview-label">Internship ID</div><div class="preview-value">${code}</div></div>
+              <div class="preview-field"><div class="preview-label">Title</div><div class="preview-value"><strong>${title}</strong></div></div>
+              <div class="preview-field"><div class="preview-label">Duration</div><div class="preview-value">${duration} Months</div></div>
+              <div class="preview-field"><div class="preview-label">Work Mode</div><div class="preview-value">${workMode}</div></div>
+              <div class="preview-field"><div class="preview-label">Required Skills</div><div class="preview-value">${skills}</div></div>
+              <div class="preview-field"><div class="preview-label">Status</div><div class="preview-value"><span class="badge badge-${status === 'Posted' ? 'success' : 'warning'}">${status}</span></div></div>
+              <div class="preview-field"><div class="preview-label">Description</div><div class="preview-value">${description}</div></div>
+          </div>
+      `;
+      document.getElementById('previewContent').innerHTML = previewHTML;
+
+      const footer = document.getElementById('previewModalFooter');
+      if (footer) {
+          footer.innerHTML = `<button class="btn btn-outline" onclick="closeModal('previewModal')">Close</button>`;
+      }
+
+      document.getElementById('previewModal').classList.add('active');
+  }
+
+  function showSettingsTab(tabName) {
+      document.querySelectorAll('.settings-content').forEach(content => content.classList.remove('active'));
+      document.querySelectorAll('.settings-tab').forEach(tab => tab.classList.remove('active'));
+      const targetContent = document.getElementById(tabName + 'Settings');
+      if (targetContent) targetContent.classList.add('active');
+      if (event && event.target) event.target.classList.add('active');
+  }
+
+  function closeModal(modalId) {
+      const modal = document.getElementById(modalId);
+      if (modal) {
+          modal.classList.remove('active');
+      }
+  }
+
+  function showStatusMessage(message, type = 'success') {
+      let container = document.getElementById('statusMessageContainer');
+      if (!container) {
+          container = document.createElement('div');
+          container.id = 'statusMessageContainer';
+          container.style.cssText = 'position: fixed; top: 90px; right: 20px; z-index: 10000;';
+          document.body.appendChild(container);
+      }
+
+      const messageDiv = document.createElement('div');
+      messageDiv.className = `alert alert-${type === 'success' ? 'success' : 'error'}`;
+      messageDiv.textContent = message;
+      messageDiv.style.cssText = `padding: 12px 24px; margin-bottom: 10px; border-radius: 8px; font-weight: 500; box-shadow: 0 4px 12px rgba(0,0,0,0.15); animation: slideIn 0.3s ease;`;
+      container.appendChild(messageDiv);
+      setTimeout(() => {
+          messageDiv.style.animation = 'slideOut 0.3s ease';
+          setTimeout(() => messageDiv.remove(), 300);
+      }, 3000);
+  }
+
+  document.addEventListener('DOMContentLoaded', function() {
+      console.log('🚀 TrackerPro - Production Ready v7.0 - VIEW & EDIT WORKING');
+      dataManager.initializeData();
+      updateDashboardStats();
+      loadRegistrationsData(1);
+      loadUsersData('all');
+
+      document.querySelectorAll('.nav-item').forEach(item => {
+          item.addEventListener('click', function() {
+              const pageId = this.getAttribute('data-page');
+              if (pageId) showPage(pageId);
+          });
+      });
+
+      window.onclick = function(event) {
+          if (event.target.classList.contains('modal') || event.target.classList.contains('sheet')) {
+              if (event.target.id === 'userSheet') {
+                  closeUserSheet();
+              } else {
+                  event.target.classList.remove('active');
+              }
+          }
+      };
+  });
+
+  const style = document.createElement('style');
+  style.textContent = `
+      @keyframes slideIn { from { transform: translateX(400px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+      @keyframes slideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(400px); opacity: 0; } }
+      .preview-container { padding: 1rem; }
+      .preview-field { margin-bottom: 1rem; }
+      .preview-label { font-weight: 600; color: #475569; margin-bottom: 0.25rem; font-size: 0.875rem; }
+      .preview-value { color: #1e293b; line-height: 1.6; }
+
+      .toggle-switch { position: relative; display: inline-block; width: 50px; height: 26px; }
+      .toggle-switch input { opacity: 0; width: 0; height: 0; }
+      .toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .3s; border-radius: 26px; }
+      .toggle-slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
+      .toggle-switch input:checked + .toggle-slider { background-color: #2ecc71; }
+      .toggle-switch input:checked + .toggle-slider:before { transform: translateX(24px); }
+
+      .sheet { display: none; position: fixed; top: 0; right: -100%; width: 500px; height: 100%; background: white; box-shadow: -4px 0 12px rgba(0,0,0,0.15); z-index: 9999; transition: right 0.3s ease; overflow-y: auto; }
+      .sheet.active { display: block; right: 0; }
+      .sheet-header { padding: 1.5rem; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; background: #f8f9fc; }
+      .sheet-body { padding: 1.5rem; }
+      .sheet-footer { padding: 1.5rem; border-top: 1px solid #e2e8f0; display: flex; justify-content: flex-end; gap: 0.75rem; position: sticky; bottom: 0; background: white; box-shadow: 0 -2px 8px rgba(0,0,0,0.05); }
+
+      .filter-btn.active { background-color: var(--primary-color); color: white; }
+  `;
+  document.head.appendChild(style);
 </script>
 </body>
 </html>
