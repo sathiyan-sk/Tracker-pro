@@ -9,9 +9,20 @@ import java.time.LocalDateTime;
 
 /**
  * CareerPost Entity representing career outcomes/internship posts in the system.
+ * Enhanced with indexes for better query performance
  */
 @Entity
-@Table(name = "career_posts")
+@Table(name = "career_posts",
+    uniqueConstraints = {
+        @UniqueConstraint(columnNames = "code")
+    },
+    indexes = {
+        @Index(name = "idx_career_post_code", columnList = "code"),
+        @Index(name = "idx_career_post_status", columnList = "status"),
+        @Index(name = "idx_career_post_created_at", columnList = "created_at"),
+        @Index(name = "idx_career_post_created_by", columnList = "created_by")
+    }
+)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
