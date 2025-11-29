@@ -366,23 +366,23 @@ const RegistrationAPI = {
     },
 
     /**
+     * Delete multiple registrations
+     * @param {Array<number>} ids - Array of registration IDs to delete
+     */
+    async deleteMultiple(ids) {
+        return await makeRequest(API_CONFIG.endpoints.registrations.getAll + '/delete-multiple', {
+            method: 'POST',
+            body: { ids }
+        });
+    },
+
+    /**
      * Export registrations as CSV
      */
-    async exportCSV() {
-        const blob = await makeRequest(API_CONFIG.endpoints.registrations.export, {
-            method: 'GET',
-            isFileDownload: true
+    async exportData() {
+        return await makeRequest(API_CONFIG.endpoints.registrations.export, {
+            method: 'GET'
         });
-
-        // Create download link
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `registrations_${new Date().toISOString().split('T')[0]}.csv`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        window.URL.revokeObjectURL(url);
     }
 };
 
