@@ -15,7 +15,7 @@ import java.util.Map;
 
 /**
  * Production-Ready REST Controller for Admin Operations
- * Version 2.0 - Refactored for normalized database tables
+ * Refactored for normalized database tables (admins, students, hr_faculty_users)
  * 
  * Features:
  * - Clean separation of concerns
@@ -25,16 +25,16 @@ import java.util.Map;
  * - Proper logging
  * 
  * @author TrackerPro Team
- * @version 2.0
+ * @version 1.0 Production
  */
 @RestController
 @RequestMapping("/api")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*", maxAge = 3600)
 @Slf4j
-public class AdminControllerV2 {
+public class AdminController {
 
-    private final AdminServiceV2 adminService;
+    private final AdminService adminService;
     private final CareerPostService careerPostService;
 
     // ==================== Dashboard Endpoints ====================
