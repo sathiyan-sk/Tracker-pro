@@ -15,8 +15,10 @@ import java.util.Map;
 
 /**
  * REST Controller for admin operations
+ * DEPRECATED: Replaced by AdminControllerV2 with normalized database structure
+ * Keeping this file for reference only
  */
-@RestController
+// @RestController - DISABLED: Using AdminControllerV2 instead
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
 @CrossOrigin(origins = "*")
