@@ -1016,7 +1016,7 @@
                 <tr>
                     <td>${user.firstName} ${user.lastName || ''}</td>
                     <td>${user.email}</td>
-                    <td><span class="badge badge-${user.role === 'FACULTY' ? 'primary' : 'info'}">${user.role}</span></td>
+                    <td><span class="badge badge-${user.userType === 'FACULTY' ? 'primary' : 'info'}">${user.userType}</span></td>
                     <td><span class="badge badge-${user.isActive ? 'success' : 'disabled'}">${user.isActive ? 'Active' : 'Inactive'}</span></td>
                     <td>${user.updatedAt ? new Date(user.updatedAt).toLocaleDateString() : 'Never'}</td>
                     <td>
@@ -1074,7 +1074,7 @@
             document.getElementById('viewFirstName').textContent = user.firstName || '-';
             document.getElementById('viewLastName').textContent = user.lastName || '-';
             document.getElementById('viewEmail').textContent = user.email || '-';
-            document.getElementById('viewRole').textContent = user.role || '-';
+            document.getElementById('viewRole').textContent = user.userType || '-';
             document.getElementById('viewGender').textContent = user.gender || '-';
             document.getElementById('viewMobile').textContent = user.mobileNo || '-';
             document.getElementById('viewCity').textContent = user.location || '-';
@@ -1112,7 +1112,7 @@
             document.getElementById('userLastName').value = user.lastName || '';
             document.getElementById('userEmail').value = user.email || '';
             document.getElementById('userPassword').value = '';  // Don't show password
-            document.getElementById('userRole').value = user.role || '';
+            document.getElementById('userRole').value = user.userType || '';
             document.getElementById('userGender').value = user.gender || '';
             document.getElementById('userMobile').value = user.mobileNo || '';
             document.getElementById('userCity').value = user.location || '';
