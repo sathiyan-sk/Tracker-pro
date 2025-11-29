@@ -96,7 +96,7 @@ public class AuthService {
 
     /**
      * Authenticate user and generate JWT token
-     * Handles both Admin and User authentication
+     * Handles Admin, Student, HR, and Faculty authentication across normalized tables
      * @param request Login request containing email and password
      * @return AuthResponse with JWT token and user information
      */
@@ -104,20 +104,14 @@ public class AuthService {
         String email = request.getEmail().trim().toLowerCase();
         String password = request.getPassword();
 
-        // First, try to find Admin
+        // Try Admin table first
         Optional<Admin> adminOptional = adminRepository.findByEmail(email);
         if (adminOptional.isPresent()) {
             Admin admin = adminOptional.get();
-            
-            // Verify admin password
             if (!passwordEncoder.matches(password, admin.getPassword())) {
                 throw new InvalidCredentialsException("Invalid email or password");
             }
-
-            // Generate JWT token for admin
             String jwtToken = jwtService.generateToken(admin);
-
-            // Build and return response for admin
             return AuthResponse.builder()
                     .success(true)
                     .message("Login successful")
@@ -133,34 +127,53 @@ public class AuthService {
                     .build();
         }
 
-        // If not admin, try regular user authentication
-        try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(email, password)
-            );
-        } catch (Exception e) {
-            throw new InvalidCredentialsException("Invalid email or password");
+        // Try Student table
+        Optional<Student> studentOptional = studentRepository.findByEmail(email);
+        if (studentOptional.isPresent()) {
+            Student student = studentOptional.get();
+            if (!passwordEncoder.matches(password, student.getPassword())) {
+                throw new InvalidCredentialsException("Invalid email or password");
+            }
+            String jwtToken = jwtService.generateToken(student);
+            return AuthResponse.builder()
+                    .success(true)
+                    .message("Login successful")
+                    .token(jwtToken)
+                    .user(AuthResponse.UserInfo.builder()
+                            .id(student.getId())
+                            .firstName(student.getFirstName())
+                            .lastName(student.getLastName())
+                            .email(student.getEmail())
+                            .userType(UserType.STUDENT)
+                            .mobileNo(student.getMobileNo())
+                            .build())
+                    .build();
         }
 
-        // Load user details
-        User user = userService.findByEmail(email);
+        // Try HR/Faculty table
+        Optional<HRFacultyUser> hrFacultyOptional = hrFacultyUserRepository.findByEmail(email);
+        if (hrFacultyOptional.isPresent()) {
+            HRFacultyUser hrFacultyUser = hrFacultyOptional.get();
+            if (!passwordEncoder.matches(password, hrFacultyUser.getPassword())) {
+                throw new InvalidCredentialsException("Invalid email or password");
+            }
+            String jwtToken = jwtService.generateToken(hrFacultyUser);
+            return AuthResponse.builder()
+                    .success(true)
+                    .message("Login successful")
+                    .token(jwtToken)
+                    .user(AuthResponse.UserInfo.builder()
+                            .id(hrFacultyUser.getId())
+                            .firstName(hrFacultyUser.getFirstName())
+                            .lastName(hrFacultyUser.getLastName())
+                            .email(hrFacultyUser.getEmail())
+                            .userType(hrFacultyUser.getUserType())
+                            .mobileNo(hrFacultyUser.getMobileNo())
+                            .build())
+                    .build();
+        }
 
-        // Generate JWT token
-        String jwtToken = jwtService.generateToken(user);
-
-        // Build and return response
-        return AuthResponse.builder()
-                .success(true)
-                .message("Login successful")
-                .token(jwtToken)
-                .user(AuthResponse.UserInfo.builder()
-                        .id(user.getId())
-                        .firstName(user.getFirstName())
-                        .lastName(user.getLastName())
-                        .email(user.getEmail())
-                        .userType(user.getUserType())
-                        .mobileNo(user.getMobileNo())
-                        .build())
-                .build();
+        // No user found in any table
+        throw new InvalidCredentialsException("Invalid email or password");
     }
 }
