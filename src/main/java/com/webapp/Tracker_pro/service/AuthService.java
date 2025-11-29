@@ -6,13 +6,13 @@ import com.webapp.Tracker_pro.dto.RegisterRequest;
 import com.webapp.Tracker_pro.exception.InvalidCredentialsException;
 import com.webapp.Tracker_pro.exception.UserAlreadyExistsException;
 import com.webapp.Tracker_pro.model.Admin;
-import com.webapp.Tracker_pro.model.User;
+import com.webapp.Tracker_pro.model.Student;
+import com.webapp.Tracker_pro.model.HRFacultyUser;
 import com.webapp.Tracker_pro.model.UserType;
 import com.webapp.Tracker_pro.repository.AdminRepository;
+import com.webapp.Tracker_pro.repository.StudentRepository;
+import com.webapp.Tracker_pro.repository.HRFacultyUserRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,17 +21,17 @@ import java.util.Optional;
 
 /**
  * Service for authentication operations including registration and login.
- * Handles both Admin and User authentication.
+ * Handles Admin, Student, HR, and Faculty authentication with normalized tables.
  */
 @Service
 @RequiredArgsConstructor
 public class AuthService {
 
-    private final UserService userService;
     private final AdminRepository adminRepository;
+    private final StudentRepository studentRepository;
+    private final HRFacultyUserRepository hrFacultyUserRepository;
     private final JwtService jwtService;
     private final PasswordEncoder passwordEncoder;
-    private final AuthenticationManager authenticationManager;
 
     /**
      * Register a new user
