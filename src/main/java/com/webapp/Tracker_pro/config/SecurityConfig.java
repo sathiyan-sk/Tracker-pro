@@ -110,10 +110,11 @@ public class SecurityConfig {
 
     /**
      * Configure authentication provider
+     * Uses UnifiedUserDetailsService to load users from all normalized tables
      */
     @Bean
     public AuthenticationProvider authenticationProvider() {
-        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(userService);
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider(userDetailsService);
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
