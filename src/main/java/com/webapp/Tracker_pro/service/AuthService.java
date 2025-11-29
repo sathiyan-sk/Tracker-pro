@@ -34,45 +34,49 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
 
     /**
-     * Register a new user
+     * Register a new student user
      * @param request Registration request containing user details
      * @return AuthResponse with JWT token and user information
      */
     @Transactional
     public AuthResponse register(RegisterRequest request) {
-        // Check if email already exists
-        if (userService.existsByEmail(request.getEmail())) {
+        String email = request.getEmail().trim().toLowerCase();
+        
+        // Check if email already exists in any table
+        if (adminRepository.existsByEmail(email) || 
+            studentRepository.existsByEmail(email) || 
+            hrFacultyUserRepository.existsByEmail(email)) {
             throw new UserAlreadyExistsException(
                 "Email already registered. Please use a different email or login."
             );
         }
 
         // Check if mobile number already exists
-        if (userService.existsByMobileNo(request.getMobileNo())) {
+        if (studentRepository.existsByMobileNo(request.getMobileNo()) ||
+            hrFacultyUserRepository.existsByMobileNo(request.getMobileNo())) {
             throw new UserAlreadyExistsException(
                 "Mobile number already registered. Please use a different number."
             );
         }
 
-        // Create new user
-        User user = new User();
-        user.setFirstName(request.getFirstName().trim());
-        user.setLastName(request.getLastName() != null ? request.getLastName().trim() : null);
-        user.setUserType(request.getUserType());
-        user.setEmail(request.getEmail().trim().toLowerCase());
-        user.setPassword(passwordEncoder.encode(request.getPassword()));
-        user.setMobileNo(request.getMobileNo());
-        user.setGender(request.getGender());
-        user.setDob(request.getDob());
-        user.setAge(request.getAge());
-        user.setLocation(request.getLocation() != null ? request.getLocation().trim() : null);
-        user.setIsActive(true);
+        // Create new student (registration is only for students)
+        Student student = new Student();
+        student.setFirstName(request.getFirstName().trim());
+        student.setLastName(request.getLastName() != null ? request.getLastName().trim() : null);
+        student.setEmail(email);
+        student.setPassword(passwordEncoder.encode(request.getPassword()));
+        student.setMobileNo(request.getMobileNo());
+        student.setGender(request.getGender());
+        student.setDob(request.getDob());
+        student.setAge(request.getAge());
+        student.setLocation(request.getLocation() != null ? request.getLocation().trim() : null);
+        student.setIsActive(true);
 
-        // Save user to database
-        User savedUser = userService.saveUser(user);
+        // Save student to database
+        Student savedStudent = studentRepository.save(student);
 
         // Generate JWT token
-        String jwtToken = jwtService.generateToken(savedUser);
+        String jwtToken = jwtService.generateToken(savedStudent);
 
         // Build and return response
         return AuthResponse.builder()
@@ -80,12 +84,12 @@ public class AuthService {
                 .message("Registration successful")
                 .token(jwtToken)
                 .user(AuthResponse.UserInfo.builder()
-                        .id(savedUser.getId())
-                        .firstName(savedUser.getFirstName())
-                        .lastName(savedUser.getLastName())
-                        .email(savedUser.getEmail())
-                        .userType(savedUser.getUserType())
-                        .mobileNo(savedUser.getMobileNo())
+                        .id(savedStudent.getId())
+                        .firstName(savedStudent.getFirstName())
+                        .lastName(savedStudent.getLastName())
+                        .email(savedStudent.getEmail())
+                        .userType(UserType.STUDENT)
+                        .mobileNo(savedStudent.getMobileNo())
                         .build())
                 .build();
     }
