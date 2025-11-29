@@ -1,7 +1,7 @@
 package com.webapp.Tracker_pro.config;
 
 import com.webapp.Tracker_pro.service.JwtService;
-import com.webapp.Tracker_pro.service.UserService;
+import com.webapp.Tracker_pro.service.UnifiedUserDetailsService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,13 +20,14 @@ import java.io.IOException;
 /**
  * JWT Authentication Filter that intercepts every request to validate JWT tokens.
  * Extends OncePerRequestFilter to ensure it's executed once per request.
+ * Uses UnifiedUserDetailsService to load users from normalized tables.
  */
 @Component
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
-    private final UserService userService;
+    private final UnifiedUserDetailsService userDetailsService;
 
     @Override
     protected void doFilterInternal(
