@@ -21,8 +21,10 @@ import java.util.stream.Collectors;
 
 /**
  * Service for admin operations including user management and dashboard statistics
+ * DEPRECATED: Replaced by AdminServiceV2 with normalized database structure
+ * Keeping this file for reference only
  */
-@Service
+// @Service - DISABLED: Using AdminServiceV2 instead
 @RequiredArgsConstructor
 @Slf4j
 public class AdminService {
