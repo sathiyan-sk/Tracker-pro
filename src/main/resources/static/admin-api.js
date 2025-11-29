@@ -1,7 +1,10 @@
 /**
- * TrackerPro Admin API Client
- * Connects to Java Backend REST API
- * Handles all HTTP requests and authentication
+ * TrackerPro Admin API Client - Production Version
+ * Consolidated and optimized for Java Spring Boot Backend
+ * Version: 3.0 Production
+ * 
+ * This file provides a complete API client for the admin panel
+ * Connects to backend endpoints without versioning (/api/...)
  */
 
 // ==========================================
@@ -9,56 +12,9 @@
 // ==========================================
 
 const API_CONFIG = {
-    // Change this to your Java backend URL
-    baseURL: 'http://localhost:8080/api',  // Spring Boot default port
-    // baseURL: 'https://yourbackend.com/trackerpro/api',  // Production URL
-
+    // Automatically detect backend URL from current origin
+    baseURL: window.location.origin + '/api',
     timeout: 30000,  // 30 seconds timeout
-
-    endpoints: {
-        // Authentication
-        auth: {
-            login: '/auth/login',
-            logout: '/auth/logout',
-            verify: '/auth/verify'
-        },
-        // User Management (HR/Faculty/Admin)
-        users: {
-            getAll: '/users',
-            getById: '/users/:id',
-            create: '/users',
-            update: '/users/:id',
-            delete: '/users/:id',
-            toggleStatus: '/users/:id/toggle-status'
-        },
-        // Student Registrations
-        registrations: {
-            getAll: '/registrations',
-            getById: '/registrations/:id',
-            delete: '/registrations/:id',
-            export: '/registrations/export'
-        },
-        // Internships/Career Outcomes
-        internships: {
-            getAll: '/internships',
-            getById: '/internships/:id',
-            create: '/internships',
-            update: '/internships/:id',
-            delete: '/internships/:id',
-            toggleStatus: '/internships/:id/toggle-status'
-        },
-        // Dashboard Stats
-        dashboard: {
-            stats: '/dashboard/stats'
-        },
-        // Complaints
-        complaints: {
-            getAll: '/complaints',
-            getById: '/complaints/:id',
-            create: '/complaints',
-            update: '/complaints/:id'
-        }
-    }
 };
 
 // ==========================================
@@ -69,34 +25,35 @@ const API_CONFIG = {
  * Get authentication token from localStorage
  */
 function getAuthToken() {
-    return localStorage.getItem('adminAuthToken');
+    return localStorage.getItem('authToken');
 }
 
 /**
  * Set authentication token to localStorage
  */
 function setAuthToken(token) {
-    localStorage.setItem('adminAuthToken', token);
+    localStorage.setItem('authToken', token);
 }
 
 /**
  * Remove authentication token
  */
 function removeAuthToken() {
-    localStorage.removeItem('adminAuthToken');
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('userInfo');
 }
 
 /**
- * Build full URL with parameters
+ * Build full URL with path parameters
  */
 function buildURL(endpoint, pathParams = {}) {
     let url = API_CONFIG.baseURL + endpoint;
-
+    
     // Replace path parameters like /users/:id
     Object.keys(pathParams).forEach(key => {
         url = url.replace(`:${key}`, pathParams[key]);
     });
-
+    
     return url;
 }
 
@@ -114,7 +71,7 @@ async function makeRequest(endpoint, options = {}) {
     } = options;
 
     const url = buildURL(endpoint, pathParams);
-
+    
     // Build query string
     const queryString = new URLSearchParams(queryParams).toString();
     const fullURL = queryString ? `${url}?${queryString}` : url;
@@ -147,17 +104,17 @@ async function makeRequest(endpoint, options = {}) {
 
     try {
         console.log(`📡 API Request: ${method} ${fullURL}`);
-
+        
         const response = await fetch(fullURL, fetchOptions);
-
+        
         // Handle file downloads
         if (isFileDownload && response.ok) {
             return response.blob();
         }
-
+        
         // Parse JSON response
         const data = await response.json();
-
+        
         // Handle HTTP errors
         if (!response.ok) {
             throw new APIError(
@@ -166,19 +123,19 @@ async function makeRequest(endpoint, options = {}) {
                 data
             );
         }
-
+        
         console.log(`✅ API Response: ${method} ${fullURL}`, data);
-
+        
         return data;
-
+        
     } catch (error) {
         console.error(`❌ API Error: ${method} ${fullURL}`, error);
-
+        
         // Handle network errors
         if (error instanceof TypeError) {
             throw new APIError('Network error. Please check your connection.', 0);
         }
-
+        
         // Re-throw API errors
         throw error;
     }
@@ -208,17 +165,17 @@ const AuthAPI = {
      * @returns {Promise<{token: string, user: object}>}
      */
     async login(email, password) {
-        const response = await makeRequest(API_CONFIG.endpoints.auth.login, {
+        const response = await makeRequest('/auth/login', {
             method: 'POST',
             body: { email, password },
             requiresAuth: false
         });
-
+        
         // Save token
         if (response.token) {
             setAuthToken(response.token);
         }
-
+        
         return response;
     },
 
@@ -227,7 +184,7 @@ const AuthAPI = {
      */
     async logout() {
         try {
-            await makeRequest(API_CONFIG.endpoints.auth.logout, {
+            await makeRequest('/auth/logout', {
                 method: 'POST'
             });
         } finally {
@@ -240,7 +197,7 @@ const AuthAPI = {
      */
     async verifyToken() {
         try {
-            const response = await makeRequest(API_CONFIG.endpoints.auth.verify, {
+            const response = await makeRequest('/auth/verify', {
                 method: 'GET'
             });
             return response.valid === true;
@@ -251,78 +208,17 @@ const AuthAPI = {
 };
 
 // ==========================================
-// USER MANAGEMENT API (HR/Faculty/Admin)
+// DASHBOARD API
 // ==========================================
 
-const UserAPI = {
+const DashboardAPI = {
     /**
-     * Get all users (HR/Faculty/Admin)
-     * @param {object} filters - { role: 'HR'|'Faculty'|'Admin', status: 'Active'|'Inactive' }
-     * @returns {Promise<Array>}
+     * Get dashboard statistics
+     * @returns {Promise<{totalStudents, totalFacultyHR, publishedPosts, newStudentsThisWeek}>}
      */
-    async getAll(filters = {}) {
-        return await makeRequest(API_CONFIG.endpoints.users.getAll, {
-            method: 'GET',
-            queryParams: filters
-        });
-    },
-
-    /**
-     * Get user by ID
-     * @param {number} userId
-     */
-    async getById(userId) {
-        return await makeRequest(API_CONFIG.endpoints.users.getById, {
-            method: 'GET',
-            pathParams: { id: userId }
-        });
-    },
-
-    /**
-     * Create new user (HR/Faculty/Admin)
-     * @param {object} userData
-     */
-    async create(userData) {
-        return await makeRequest(API_CONFIG.endpoints.users.create, {
-            method: 'POST',
-            body: userData
-        });
-    },
-
-    /**
-     * Update existing user
-     * @param {number} userId
-     * @param {object} userData
-     */
-    async update(userId, userData) {
-        return await makeRequest(API_CONFIG.endpoints.users.update, {
-            method: 'PUT',
-            pathParams: { id: userId },
-            body: userData
-        });
-    },
-
-    /**
-     * Delete user
-     * @param {number} userId
-     */
-    async delete(userId) {
-        return await makeRequest(API_CONFIG.endpoints.users.delete, {
-            method: 'DELETE',
-            pathParams: { id: userId }
-        });
-    },
-
-    /**
-     * Toggle user status (Enable/Disable login)
-     * @param {number} userId
-     * @param {boolean} isEnabled
-     */
-    async toggleStatus(userId, isEnabled) {
-        return await makeRequest(API_CONFIG.endpoints.users.toggleStatus, {
-            method: 'PATCH',
-            pathParams: { id: userId },
-            body: { isEnabled }
+    async getStats() {
+        return await makeRequest('/dashboard/stats', {
+            method: 'GET'
         });
     }
 };
@@ -334,21 +230,27 @@ const UserAPI = {
 const RegistrationAPI = {
     /**
      * Get all student registrations
-     * @param {object} filters - { search: 'query', page: 1, limit: 10 }
+     * @param {string} search - Optional search term
+     * @returns {Promise<{success: boolean, data: Array, total: number}>}
      */
-    async getAll(filters = {}) {
-        return await makeRequest(API_CONFIG.endpoints.registrations.getAll, {
+    async getAll(search = null) {
+        const queryParams = {};
+        if (search) {
+            queryParams.search = search;
+        }
+        return await makeRequest('/registrations', {
             method: 'GET',
-            queryParams: filters
+            queryParams
         });
     },
 
     /**
      * Get registration by ID
      * @param {number} registrationId
+     * @returns {Promise<{success: boolean, data: object}>}
      */
     async getById(registrationId) {
-        return await makeRequest(API_CONFIG.endpoints.registrations.getById, {
+        return await makeRequest('/registrations/:id', {
             method: 'GET',
             pathParams: { id: registrationId }
         });
@@ -357,9 +259,10 @@ const RegistrationAPI = {
     /**
      * Delete registration
      * @param {number} registrationId
+     * @returns {Promise<{success: boolean, message: string}>}
      */
     async delete(registrationId) {
-        return await makeRequest(API_CONFIG.endpoints.registrations.delete, {
+        return await makeRequest('/registrations/:id', {
             method: 'DELETE',
             pathParams: { id: registrationId }
         });
@@ -368,35 +271,124 @@ const RegistrationAPI = {
     /**
      * Delete multiple registrations
      * @param {Array<number>} ids - Array of registration IDs to delete
+     * @returns {Promise<{success: boolean, message: string}>}
      */
     async deleteMultiple(ids) {
-        return await makeRequest(API_CONFIG.endpoints.registrations.getAll + '/delete-multiple', {
+        return await makeRequest('/registrations/delete-multiple', {
             method: 'POST',
             body: { ids }
         });
     },
 
     /**
-     * Export registrations as CSV
+     * Export registrations data
+     * @returns {Promise<{success: boolean, data: Array}>}
      */
     async exportData() {
-        return await makeRequest(API_CONFIG.endpoints.registrations.export, {
+        return await makeRequest('/registrations/export', {
             method: 'GET'
         });
     }
 };
 
 // ==========================================
-// INTERNSHIP API (Career Outcomes)
+// USER MANAGEMENT API (HR/Faculty)
+// ==========================================
+
+const UserAPI = {
+    /**
+     * Get all users (HR/Faculty)
+     * @param {string} roleFilter - Optional role filter ('Faculty' or 'HR' or null for all)
+     * @returns {Promise<{success: boolean, data: Array, total: number}>}
+     */
+    async getAll(roleFilter = null) {
+        const queryParams = {};
+        if (roleFilter && roleFilter !== 'all') {
+            queryParams.role = roleFilter;
+        }
+        return await makeRequest('/users', {
+            method: 'GET',
+            queryParams
+        });
+    },
+
+    /**
+     * Get user by ID
+     * @param {number} userId
+     * @returns {Promise<{success: boolean, data: object}>}
+     */
+    async getById(userId) {
+        return await makeRequest('/users/:id', {
+            method: 'GET',
+            pathParams: { id: userId }
+        });
+    },
+
+    /**
+     * Create new user (HR/Faculty)
+     * @param {object} userData
+     * @returns {Promise<{success: boolean, message: string, data: object}>}
+     */
+    async create(userData) {
+        return await makeRequest('/users', {
+            method: 'POST',
+            body: userData
+        });
+    },
+
+    /**
+     * Update existing user
+     * @param {number} userId
+     * @param {object} userData
+     * @returns {Promise<{success: boolean, message: string, data: object}>}
+     */
+    async update(userId, userData) {
+        return await makeRequest('/users/:id', {
+            method: 'PUT',
+            pathParams: { id: userId },
+            body: userData
+        });
+    },
+
+    /**
+     * Delete user
+     * @param {number} userId
+     * @returns {Promise<{success: boolean, message: string}>}
+     */
+    async delete(userId) {
+        return await makeRequest('/users/:id', {
+            method: 'DELETE',
+            pathParams: { id: userId }
+        });
+    },
+
+    /**
+     * Toggle user status (Enable/Disable login)
+     * @param {number} userId
+     * @param {boolean} isEnabled
+     * @returns {Promise<{success: boolean, message: string}>}
+     */
+    async toggleStatus(userId, isEnabled) {
+        return await makeRequest('/users/:id/toggle-status', {
+            method: 'PATCH',
+            pathParams: { id: userId },
+            body: { isEnabled }
+        });
+    }
+};
+
+// ==========================================
+// INTERNSHIP API (Career Posts)
 // ==========================================
 
 const InternshipAPI = {
     /**
-     * Get all internships
-     * @param {object} filters - { status: 'PUBLISHED'|'DRAFT', workMode: 'Online'|'Offline'|'Hybrid' }
+     * Get all internships/career posts
+     * @param {object} filters - { status: 'Posted'|'Draft', workMode: 'Online'|'Offline'|'Hybrid' }
+     * @returns {Promise<{success: boolean, data: Array, total: number}>}
      */
     async getAll(filters = {}) {
-        return await makeRequest(API_CONFIG.endpoints.internships.getAll, {
+        return await makeRequest('/internships', {
             method: 'GET',
             queryParams: filters
         });
@@ -405,9 +397,10 @@ const InternshipAPI = {
     /**
      * Get internship by ID
      * @param {number} internshipId
+     * @returns {Promise<{success: boolean, data: object}>}
      */
     async getById(internshipId) {
-        return await makeRequest(API_CONFIG.endpoints.internships.getById, {
+        return await makeRequest('/internships/:id', {
             method: 'GET',
             pathParams: { id: internshipId }
         });
@@ -416,9 +409,10 @@ const InternshipAPI = {
     /**
      * Create new internship post
      * @param {object} internshipData
+     * @returns {Promise<{success: boolean, message: string, data: object}>}
      */
     async create(internshipData) {
-        return await makeRequest(API_CONFIG.endpoints.internships.create, {
+        return await makeRequest('/internships', {
             method: 'POST',
             body: internshipData
         });
@@ -428,9 +422,10 @@ const InternshipAPI = {
      * Update existing internship
      * @param {number} internshipId
      * @param {object} internshipData
+     * @returns {Promise<{success: boolean, message: string, data: object}>}
      */
     async update(internshipId, internshipData) {
-        return await makeRequest(API_CONFIG.endpoints.internships.update, {
+        return await makeRequest('/internships/:id', {
             method: 'PUT',
             pathParams: { id: internshipId },
             body: internshipData
@@ -440,9 +435,10 @@ const InternshipAPI = {
     /**
      * Delete internship
      * @param {number} internshipId
+     * @returns {Promise<{success: boolean, message: string}>}
      */
     async delete(internshipId) {
-        return await makeRequest(API_CONFIG.endpoints.internships.delete, {
+        return await makeRequest('/internships/:id', {
             method: 'DELETE',
             pathParams: { id: internshipId }
         });
@@ -451,104 +447,53 @@ const InternshipAPI = {
     /**
      * Toggle internship status (Publish/Unpublish)
      * @param {number} internshipId
-     * @param {string} status - 'PUBLISHED' or 'DRAFT'
+     * @param {string} status - 'Posted' or 'Draft'
+     * @returns {Promise<{success: boolean, message: string}>}
      */
     async toggleStatus(internshipId, status) {
-        return await makeRequest(API_CONFIG.endpoints.internships.toggleStatus, {
+        return await makeRequest('/internships/:id/toggle-status', {
             method: 'PATCH',
             pathParams: { id: internshipId },
             body: { status }
         });
-    }
-};
+    },
 
-// ==========================================
-// DASHBOARD API
-// ==========================================
-
-const DashboardAPI = {
     /**
-     * Get dashboard statistics
-     * @returns {Promise<{totalStudents, totalUsers, totalPosts, newStudents}>}
+     * Search internships
+     * @param {string} term - Search term
+     * @returns {Promise<{success: boolean, data: Array}>}
      */
-    async getStats() {
-        return await makeRequest(API_CONFIG.endpoints.dashboard.stats, {
-            method: 'GET'
-        });
-    }
-};
-
-// ==========================================
-// COMPLAINTS API (Future)
-// ==========================================
-
-const ComplaintAPI = {
-    /**
-     * Get all complaints
-     */
-    async getAll(filters = {}) {
-        return await makeRequest(API_CONFIG.endpoints.complaints.getAll, {
+    async search(term) {
+        return await makeRequest('/internships/search', {
             method: 'GET',
-            queryParams: filters
-        });
-    },
-
-    /**
-     * Get complaint by ID
-     */
-    async getById(complaintId) {
-        return await makeRequest(API_CONFIG.endpoints.complaints.getById, {
-            method: 'GET',
-            pathParams: { id: complaintId }
-        });
-    },
-
-    /**
-     * Create new complaint
-     */
-    async create(complaintData) {
-        return await makeRequest(API_CONFIG.endpoints.complaints.create, {
-            method: 'POST',
-            body: complaintData
-        });
-    },
-
-    /**
-     * Update complaint status
-     */
-    async update(complaintId, updateData) {
-        return await makeRequest(API_CONFIG.endpoints.complaints.update, {
-            method: 'PUT',
-            pathParams: { id: complaintId },
-            body: updateData
+            queryParams: { term }
         });
     }
 };
 
 // ==========================================
-// EXPORT ALL APIs
+// EXPORT ALL APIs TO GLOBAL SCOPE
 // ==========================================
 
-// Make APIs available globally
 window.AdminAPI = {
     Auth: AuthAPI,
-    User: UserAPI,
-    Registration: RegistrationAPI,
-    Internship: InternshipAPI,
     Dashboard: DashboardAPI,
-    Complaint: ComplaintAPI,
-
+    Registration: RegistrationAPI,
+    User: UserAPI,
+    Internship: InternshipAPI,
+    
     // Helper functions
     getAuthToken,
     setAuthToken,
     removeAuthToken,
-
+    
     // Error class
     APIError,
-
+    
     // Configuration
     config: API_CONFIG
 };
 
-console.log('✅ Admin API Client loaded successfully');
+console.log('✅ TrackerPro Admin API Client loaded successfully');
 console.log('🔗 Backend URL:', API_CONFIG.baseURL);
+console.log('📦 Version: 3.0 Production - Consolidated');
