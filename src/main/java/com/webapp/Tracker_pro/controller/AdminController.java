@@ -1,7 +1,7 @@
 package com.webapp.Tracker_pro.controller;
 
 import com.webapp.Tracker_pro.dto.*;
-import com.webapp.Tracker_pro.service.AdminServiceV2;
+import com.webapp.Tracker_pro.service.AdminService;
 import com.webapp.Tracker_pro.service.CareerPostService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
