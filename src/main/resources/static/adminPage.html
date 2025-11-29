@@ -694,18 +694,871 @@
             userAvatarEl.textContent = userInfo.firstName.charAt(0).toUpperCase();
         }
     })();
-  class DataManager {
-      constructor() {
-          this.STORAGE_KEY = 'trackerProData';
-          this.initializeData();
-      }
+    // ==========================================
+    // GLOBAL STATE & VARIABLES
+    // ==========================================
+    
+    let editingInternshipId = null;
+    let editingUserId = null;
+    let currentViewUserId = null;
+    let currentPage = 1;
+    let currentUserFilter = 'all';
+    const itemsPerPage = 10;
+    
+    // ==========================================
+    // UTILITY FUNCTIONS
+    // ==========================================
+    
+    function showAlert(message, type = 'info') {
+        alert(message);
+    }
+    
+    function showStatusMessage(message, type = 'success') {
+        let container = document.getElementById('statusMessageContainer');
+        if (!container) {
+            container = document.createElement('div');
+            container.id = 'statusMessageContainer';
+            container.style.cssText = 'position: fixed; top: 90px; right: 20px; z-index: 10000;';
+            document.body.appendChild(container);
+        }
 
-      initializeData() {
-          const existingData = localStorage.getItem(this.STORAGE_KEY);
+        const messageDiv = document.createElement('div');
+        messageDiv.className = `alert alert-${type === 'success' ? 'success' : 'error'}`;
+        messageDiv.textContent = message;
+        messageDiv.style.cssText = `padding: 12px 24px; margin-bottom: 10px; border-radius: 8px; font-weight: 500; box-shadow: 0 4px 12px rgba(0,0,0,0.15); animation: slideIn 0.3s ease;`;
+        container.appendChild(messageDiv);
+        setTimeout(() => {
+            messageDiv.style.animation = 'slideOut 0.3s ease';
+            setTimeout(() => messageDiv.remove(), 300);
+        }, 3000);
+    }
+    
+    function closeModal(modalId) {
+        const modal = document.getElementById(modalId);
+        if (modal) {
+            modal.classList.remove('active');
+        }
+    }
+    
+    // ==========================================
+    // NAVIGATION & PAGE MANAGEMENT
+    // ==========================================
+    
+    function showPage(pageId) {
+        document.querySelectorAll('.page').forEach(page => {
+            page.classList.remove('active-page');
+        });
 
-          if (!existingData) {
-              const initialData = {
-                  registrations: Array.from({length: 22}, (_, i) => ({
+        const targetPage = document.getElementById(pageId);
+        if (targetPage) {
+            targetPage.classList.add('active-page');
+        }
+
+        document.querySelectorAll('.nav-item').forEach(nav => {
+            nav.classList.remove('active');
+        });
+
+        const activeNav = document.querySelector(`[data-page="${pageId}"]`);
+        if (activeNav) activeNav.classList.add('active');
+
+        if (pageId === 'registrations') loadRegistrationsData();
+        else if (pageId === 'user-management') loadUsersData();
+        else if (pageId === 'internship-management') loadInternshipsData();
+        else if (pageId === 'dashboard') updateDashboardStats();
+    }
+
+    function toggleSidebar() {
+        const sidebar = document.getElementById('sidebar');
+        if (sidebar) sidebar.classList.toggle('collapsed');
+    }
+
+    async function logout() {
+        if (confirm('Are you sure you want to logout?')) {
+            try {
+                await window.AdminAPI.Auth.logout();
+            } catch (error) {
+                console.error('Logout error:', error);
+            }
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('userInfo');
+            showAlert('Logged out successfully');
+            window.location.href = 'loginPage.html';
+        }
+    }
+    
+    // ==========================================
+    // DASHBOARD STATISTICS
+    // ==========================================
+    
+    async function updateDashboardStats() {
+        try {
+            const response = await window.AdminAPI.Dashboard.getStats();
+            
+            const totalRegsEl = document.getElementById('totalRegistrations');
+            const totalUsersEl = document.getElementById('totalUsers');
+            const totalPostsEl = document.getElementById('totalPosts');
+            const newUsersEl = document.getElementById('newUsers');
+
+            if (totalRegsEl) totalRegsEl.textContent = response.totalStudents || 0;
+            if (totalUsersEl) totalUsersEl.textContent = response.totalFacultyHR || 0;
+            if (totalPostsEl) totalPostsEl.textContent = response.publishedPosts || 0;
+            if (newUsersEl) newUsersEl.textContent = response.newStudentsThisWeek || 0;
+        } catch (error) {
+            console.error('Error loading dashboard stats:', error);
+            showAlert('Error loading dashboard statistics');
+        }
+    }
+    
+    // ==========================================
+    // STUDENT REGISTRATIONS MANAGEMENT
+    // ==========================================
+    
+    async function loadRegistrationsData(page = 1) {
+        try {
+            const response = await window.AdminAPI.Registration.getAll();
+            const registrations = response.data || [];
+            const tbody = document.querySelector('#registrationsTable tbody');
+
+            if (!tbody) return;
+
+            currentPage = page;
+            const startIndex = (page - 1) * itemsPerPage;
+            const endIndex = startIndex + itemsPerPage;
+            const paginatedData = registrations.slice(startIndex, endIndex);
+
+            tbody.innerHTML = paginatedData.map(reg => `
+                <tr>
+                    <td><input type="checkbox" data-id="${reg.id}"></td>
+                    <td>${reg.firstName || '-'}</td>
+                    <td>${reg.lastName || '-'}</td>
+                    <td>${reg.email || '-'}</td>
+                    <td>${reg.gender || 'N/A'}</td>
+                    <td>${reg.dob || 'N/A'}</td>
+                    <td>${reg.location || 'N/A'}</td>
+                    <td>${reg.mobileNo || '-'}</td>
+                    <td><span class="badge badge-primary">STUDENT</span></td>
+                    <td>${reg.createdAt ? new Date(reg.createdAt).toLocaleDateString() : 'N/A'}</td>
+                    <td>
+                        <div class="actions">
+                            <button onclick="viewRegistration(${reg.id})" class="btn btn-sm btn-outline">View</button>
+                            <button onclick="deleteRegistration(${reg.id})" class="btn btn-sm btn-danger">Delete</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+
+            updateRegistrationCounts(registrations.length, paginatedData.length);
+            renderPagination(registrations.length);
+            
+            // Show/hide delete selected button
+            const deleteBtn = document.getElementById('deleteSelectedBtn');
+            if (deleteBtn) {
+                deleteBtn.style.display = registrations.length > 0 ? 'inline-block' : 'none';
+            }
+        } catch (error) {
+            console.error('Error loading registrations:', error);
+            showAlert('Error loading student registrations');
+        }
+    }
+
+    function updateRegistrationCounts(total, showing) {
+        const showingEl = document.getElementById('registrationShowingCount');
+        const totalEl = document.getElementById('registrationTotalCount');
+
+        if (showingEl) showingEl.textContent = showing;
+        if (totalEl) totalEl.textContent = total;
+    }
+
+    function renderPagination(totalItems) {
+        const paginationEl = document.getElementById('registrationPagination');
+        if (!paginationEl) return;
+
+        const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+        let paginationHTML = `
+            <button onclick="loadRegistrationsData(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>Previous</button>
+        `;
+
+        for (let i = 1; i <= totalPages; i++) {
+            paginationHTML += `<button onclick="loadRegistrationsData(${i})" class="${i === currentPage ? 'active' : ''}">${i}</button>`;
+        }
+
+        paginationHTML += `
+            <button onclick="loadRegistrationsData(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>Next</button>
+        `;
+
+        paginationEl.innerHTML = paginationHTML;
+    }
+
+    async function viewRegistration(id) {
+        try {
+            const response = await window.AdminAPI.Registration.getById(id);
+            const registration = response.data;
+            if (registration) {
+                alert(`Student Details:\n\nName: ${registration.firstName} ${registration.lastName}\nEmail: ${registration.email}\nMobile: ${registration.mobileNo}\nGender: ${registration.gender || 'N/A'}\nDOB: ${registration.dob || 'N/A'}\nLocation: ${registration.location || 'N/A'}`);
+            }
+        } catch (error) {
+            console.error('Error viewing registration:', error);
+            showAlert('Error loading student details');
+        }
+    }
+
+    async function deleteRegistration(id) {
+        if (confirm('Are you sure you want to delete this registration?')) {
+            try {
+                await window.AdminAPI.Registration.delete(id);
+                loadRegistrationsData(currentPage);
+                updateDashboardStats();
+                showStatusMessage('Registration deleted successfully', 'success');
+            } catch (error) {
+                console.error('Error deleting registration:', error);
+                showAlert('Error deleting registration');
+            }
+        }
+    }
+
+    function filterRegistrations() {
+        const searchInput = document.getElementById('registrationSearch');
+        if (!searchInput) return;
+
+        const searchTerm = searchInput.value.toLowerCase();
+        const rows = document.querySelectorAll('#registrationsTable tbody tr');
+
+        let visibleCount = 0;
+        rows.forEach(row => {
+            const text = row.textContent.toLowerCase();
+            const isVisible = text.includes(searchTerm);
+            row.style.display = isVisible ? '' : 'none';
+            if (isVisible) visibleCount++;
+        });
+
+        const showingEl = document.getElementById('registrationShowingCount');
+        if (showingEl) showingEl.textContent = visibleCount;
+    }
+
+    function refreshRegistrations() {
+        loadRegistrationsData(1);
+        showStatusMessage('Registrations refreshed', 'success');
+    }
+
+    function toggleSelectAll() {
+        const selectAll = document.getElementById('selectAll');
+        const checkboxes = document.querySelectorAll('#registrationsTable tbody input[type="checkbox"]');
+        checkboxes.forEach(cb => cb.checked = selectAll.checked);
+    }
+
+    async function deleteSelectedRegistrations() {
+        const checkboxes = document.querySelectorAll('#registrationsTable tbody input[type="checkbox"]:checked');
+        if (checkboxes.length === 0) {
+            alert('No registrations selected');
+            return;
+        }
+
+        if (confirm(`Delete ${checkboxes.length} selected registration(s)?`)) {
+            try {
+                const ids = Array.from(checkboxes).map(cb => parseInt(cb.getAttribute('data-id')));
+                await window.AdminAPI.Registration.deleteMultiple(ids);
+                loadRegistrationsData(currentPage);
+                updateDashboardStats();
+                showStatusMessage(`${checkboxes.length} registration(s) deleted`, 'success');
+            } catch (error) {
+                console.error('Error deleting registrations:', error);
+                showAlert('Error deleting selected registrations');
+            }
+        }
+    }
+
+    async function exportRegistrations() {
+        try {
+            const response = await window.AdminAPI.Registration.exportData();
+            const registrations = response.data || [];
+            
+            const csv = 'First Name,Last Name,Email,Mobile,Gender,DOB,Location,Registered On\n' +
+                        registrations.map(r =>
+                            `"${r.firstName}","${r.lastName}",${r.email},${r.mobileNo},${r.gender || ''},${r.dob || ''},${r.location || ''},${r.createdAt ? new Date(r.createdAt).toLocaleDateString() : ''}`
+                        ).join('\n');
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `registrations_${new Date().toISOString().split('T')[0]}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+            
+            showStatusMessage('Data exported successfully', 'success');
+        } catch (error) {
+            console.error('Error exporting registrations:', error);
+            showAlert('Error exporting data');
+        }
+    }
+    
+    // ==========================================
+    // USER MANAGEMENT (HR/FACULTY) - PRIORITY FEATURE
+    // ==========================================
+    
+    async function loadUsersData(filterType = null) {
+        if (filterType !== null) {
+            currentUserFilter = filterType;
+        }
+
+        try {
+            const filter = currentUserFilter === 'all' ? '' : currentUserFilter;
+            const response = await window.AdminAPI.User.getAll({ filter });
+            let users = response.data || [];
+
+            const tbody = document.querySelector('#usersTable tbody');
+            if (!tbody) return;
+
+            tbody.innerHTML = users.map(user => `
+                <tr>
+                    <td>${user.firstName} ${user.lastName || ''}</td>
+                    <td>${user.email}</td>
+                    <td><span class="badge badge-${user.userType === 'FACULTY' ? 'primary' : 'info'}">${user.userType}</span></td>
+                    <td><span class="badge badge-${user.isActive ? 'success' : 'disabled'}">${user.isActive ? 'Active' : 'Inactive'}</span></td>
+                    <td>${user.updatedAt ? new Date(user.updatedAt).toLocaleDateString() : 'Never'}</td>
+                    <td>
+                        <div class="actions">
+                            <button onclick="viewUser(${user.id})" class="btn btn-sm btn-outline">View</button>
+                            <button onclick="editUser(${user.id})" class="btn btn-sm btn-primary">Edit</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+
+            updateFilterButtonStates();
+        } catch (error) {
+            console.error('Error loading users:', error);
+            showAlert('Error loading user data');
+        }
+    }
+
+    function updateFilterButtonStates() {
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.classList.remove('active');
+        });
+
+        const activeBtn = document.querySelector(`.filter-btn[onclick*="'${currentUserFilter}'"]`);
+        if (activeBtn) {
+            activeBtn.classList.add('active');
+        }
+    }
+
+    function filterUsers(type) {
+        loadUsersData(type);
+    }
+
+    function openAddUserModal() {
+        const modal = document.getElementById('userModal');
+        const form = document.getElementById('userForm');
+        const title = document.getElementById('userModalTitle');
+
+        if (form) form.reset();
+        if (title) title.textContent = 'Add New User';
+        if (modal) modal.classList.add('active');
+
+        editingUserId = null;
+    }
+
+    async function viewUser(id) {
+        try {
+            const response = await window.AdminAPI.User.getById(id);
+            const user = response.data;
+            if (!user) return;
+
+            currentViewUserId = id;
+
+            // Populate view fields
+            document.getElementById('viewFirstName').textContent = user.firstName || '-';
+            document.getElementById('viewLastName').textContent = user.lastName || '-';
+            document.getElementById('viewEmail').textContent = user.email || '-';
+            document.getElementById('viewRole').textContent = user.userType || '-';
+            document.getElementById('viewGender').textContent = user.gender || '-';
+            document.getElementById('viewMobile').textContent = user.mobileNo || '-';
+            document.getElementById('viewCity').textContent = user.location || '-';
+            document.getElementById('viewDOB').textContent = user.dob || '-';
+            document.getElementById('viewAge').textContent = user.age || '-';
+            document.getElementById('viewLastLogin').textContent = user.updatedAt ? new Date(user.updatedAt).toLocaleDateString() : 'Never';
+
+            // Set toggle
+            const toggleInput = document.getElementById('sheetUserToggle');
+            if (toggleInput) {
+                toggleInput.checked = user.isActive;
+            }
+
+            // Update status badge
+            updateSheetStatusDisplay(user.isActive);
+
+            // Show sheet
+            document.getElementById('userSheet').classList.add('active');
+        } catch (error) {
+            console.error('Error viewing user:', error);
+            showAlert('Error loading user details');
+        }
+    }
+
+    async function editUser(id) {
+        try {
+            const response = await window.AdminAPI.User.getById(id);
+            const user = response.data;
+            if (!user) return;
+
+            editingUserId = id;
+
+            // Populate form fields
+            document.getElementById('userFirstName').value = user.firstName || '';
+            document.getElementById('userLastName').value = user.lastName || '';
+            document.getElementById('userEmail').value = user.email || '';
+            document.getElementById('userPassword').value = '';  // Don't show password
+            document.getElementById('userRole').value = user.userType || '';
+            document.getElementById('userGender').value = user.gender || '';
+            document.getElementById('userMobile').value = user.mobileNo || '';
+            document.getElementById('userCity').value = user.location || '';
+            document.getElementById('userDOB').value = user.dob || '';
+            document.getElementById('userAge').value = user.age || '';
+
+            // Update modal title
+            document.getElementById('userModalTitle').textContent = 'Edit User';
+
+            // Show modal
+            document.getElementById('userModal').classList.add('active');
+        } catch (error) {
+            console.error('Error loading user for edit:', error);
+            showAlert('Error loading user details');
+        }
+    }
+
+    function updateSheetStatusDisplay(isEnabled) {
+        const statusBadge = document.getElementById('sheetStatusBadge');
+        if (statusBadge) {
+            statusBadge.textContent = isEnabled ? 'Active' : 'Inactive';
+            statusBadge.className = `badge badge-${isEnabled ? 'success' : 'disabled'}`;
+        }
+    }
+
+    async function onSheetToggleChange() {
+        if (!currentViewUserId) return;
+
+        const toggleInput = document.getElementById('sheetUserToggle');
+        if (!toggleInput) return;
+
+        const isEnabled = toggleInput.checked;
+
+        try {
+            await window.AdminAPI.User.toggleStatus(currentViewUserId, isEnabled);
+            
+            // Update display
+            updateSheetStatusDisplay(isEnabled);
+
+            // Refresh table
+            loadUsersData();
+
+            showStatusMessage(`User ${isEnabled ? 'enabled' : 'disabled'} successfully`, 'success');
+        } catch (error) {
+            console.error('Error toggling user status:', error);
+            showAlert('Error updating user status');
+            // Revert toggle
+            toggleInput.checked = !isEnabled;
+        }
+    }
+
+    function closeUserSheet() {
+        document.getElementById('userSheet').classList.remove('active');
+        currentViewUserId = null;
+    }
+
+    async function saveUser(event) {
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
+
+        try {
+            const firstName = document.getElementById('userFirstName').value.trim();
+            const lastName = document.getElementById('userLastName').value.trim();
+            const email = document.getElementById('userEmail').value.trim();
+            const password = document.getElementById('userPassword').value.trim();
+            const userType = document.getElementById('userRole').value;
+            const gender = document.getElementById('userGender').value;
+            const mobileNo = document.getElementById('userMobile').value.trim();
+            const location = document.getElementById('userCity').value.trim();
+            const dob = document.getElementById('userDOB').value.trim();
+            const age = parseInt(document.getElementById('userAge').value) || 0;
+
+            if (!firstName || !email || (!editingUserId && !password) || !userType) {
+                showAlert('Please fill all required fields');
+                return false;
+            }
+
+            if (password && password.length < 6) {
+                showAlert('Password must be at least 6 characters');
+                return false;
+            }
+
+            const formData = {
+                firstName,
+                lastName,
+                email,
+                userType,
+                gender,
+                mobileNo,
+                location,
+                dob,
+                age
+            };
+            
+            // Only include password if it's provided
+            if (password) {
+                formData.password = password;
+            }
+
+            if (editingUserId) {
+                // Update existing user
+                await window.AdminAPI.User.update(editingUserId, formData);
+                showStatusMessage('User updated successfully!', 'success');
+            } else {
+                // Add new user (password required)
+                if (!password) {
+                    showAlert('Password is required for new users');
+                    return false;
+                }
+                await window.AdminAPI.User.create(formData);
+                showStatusMessage('User added successfully!', 'success');
+            }
+
+            closeModal('userModal');
+            loadUsersData();
+            updateDashboardStats();
+            editingUserId = null;
+
+            return false;
+
+        } catch (error) {
+            console.error('Error saving user:', error);
+            showAlert(error.message || 'Error saving user');
+            return false;
+        }
+    }
+    
+    // ==========================================
+    // INTERNSHIP/CAREER MANAGEMENT - PRIORITY FEATURE
+    // ==========================================
+    
+    async function loadInternshipsData() {
+        try {
+            const response = await window.AdminAPI.Internship.getAll();
+            const internships = response.data || [];
+            const container = document.getElementById('internshipsList');
+
+            if (!container) return;
+
+            if (internships.length === 0) {
+                container.innerHTML = '<div class="alert alert-info">No internship posts yet. Create your first post!</div>';
+                return;
+            }
+
+            container.innerHTML = `
+                <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(350px, 1fr)); gap: 1.5rem; margin-top: 1.5rem;">
+                    ${internships.map(internship => `
+                        <div onclick="showPostPreview(${internship.id})" style="background: white; border: 1px solid #e2e8f0; border-radius: 12px; padding: 1.5rem; box-shadow: 0 2px 8px rgba(0,0,0,0.08); transition: all 0.3s ease; cursor: pointer;" onmouseover="this.style.boxShadow='0 8px 24px rgba(0,0,0,0.12)'" onmouseout="this.style.boxShadow='0 2px 8px rgba(0,0,0,0.08)'">
+                            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 1rem;">
+                                <div style="flex: 1;">
+                                    <h3 style="margin: 0 0 0.5rem 0; font-size: 1.1rem; color: #1e293b; font-weight: 600;">${internship.title}</h3>
+                                    <span style="display: inline-block; padding: 0.25rem 0.75rem; background: #e5eaff; color: #4a6fff; border-radius: 20px; font-size: 0.75rem; font-weight: 600;">${internship.code}</span>
+                                </div>
+                                <span class="badge badge-${internship.status === 'Posted' ? 'success' : 'warning'}" style="font-size: 0.7rem; padding: 0.35rem 0.75rem;">${internship.status}</span>
+                            </div>
+
+                            <div style="margin-bottom: 1rem;">
+                                <div style="display: flex; gap: 1.5rem; margin-bottom: 0.75rem; flex-wrap: wrap;">
+                                    <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: #475569;">
+                                        <span>🧾</span>
+                                        <span style="font-weight: 500;">${internship.duration} months</span>
+                                    </div>
+                                    <div style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.85rem; color: #475569;">
+                                        <span>📍</span>
+                                        <span style="font-weight: 500;">${internship.workMode}</span>
+                                    </div>
+                                </div>
+
+                                <p style="font-size: 0.875rem; color: #475569; line-height: 1.6; margin: 0; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;">${internship.description}</p>
+                            </div>
+
+                            <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
+                                ${(internship.prerequisites || '').split(',').slice(0, 3).map(skill =>
+                                    `<span style="padding: 0.25rem 0.6rem; background: #f0f0f0; color: #555; border-radius: 4px; font-size: 0.75rem;">${skill.trim()}</span>`
+                                ).join('')}
+                                ${(internship.prerequisites || '').split(',').length > 3 ? `<span style="padding: 0.25rem 0.6rem; background: #f0f0f0; color: #555; border-radius: 4px; font-size: 0.75rem;">+${(internship.prerequisites || '').split(',').length - 3}</span>` : ''}
+                            </div>
+
+                            <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; border-top: 1px solid #e2e8f0;">
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <span style="font-size: 0.9rem; font-weight: 600; color: #4a6fff;">${internship.applicationsCount || 0} Applications</span>
+                                </div>
+
+                                <div style="display: flex; gap: 0.5rem;" onclick="event.stopPropagation()">
+                                    <button onclick="togglePostStatus(${internship.id}, '${internship.status}')" class="btn btn-sm btn-${internship.status === 'Posted' ? 'warning' : 'success'}" style="font-size: 0.75rem; padding: 0.4rem 0.7rem;">
+                                        ${internship.status === 'Posted' ? 'Unpublish' : 'Publish'}
+                                    </button>
+                                    <button onclick="deleteInternship(${internship.id})" class="btn btn-sm btn-danger" style="font-size: 0.75rem; padding: 0.4rem 0.7rem;">Delete</button>
+                                </div>
+                            </div>
+
+                            ${internship.createdAt ? `<div style="font-size: 0.75rem; color: #64748b; margin-top: 0.75rem; text-align: right;">Posted: ${new Date(internship.createdAt).toLocaleDateString()}</div>` : ''}
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+        } catch (error) {
+            console.error('Error loading internships:', error);
+            showAlert('Error loading internship data');
+        }
+    }
+
+    async function showPostPreview(postId) {
+        try {
+            const response = await window.AdminAPI.Internship.getById(postId);
+            const internship = response.data;
+            if (!internship) return;
+
+            const previewHTML = `
+                <div class="preview-container">
+                    <div class="preview-field"><div class="preview-label">Internship ID</div><div class="preview-value">${internship.code}</div></div>
+                    <div class="preview-field"><div class="preview-label">Title</div><div class="preview-value"><strong>${internship.title}</strong></div></div>
+                    <div class="preview-field"><div class="preview-label">Duration</div><div class="preview-value">${internship.duration} months</div></div>
+                    <div class="preview-field"><div class="preview-label">Work Mode</div><div class="preview-value">${internship.workMode}</div></div>
+                    <div class="preview-field"><div class="preview-label">Required Skills</div><div class="preview-value">${internship.prerequisites}</div></div>
+                    <div class="preview-field"><div class="preview-label">Status</div><div class="preview-value"><span class="badge badge-${internship.status === 'Posted' ? 'success' : 'warning'}">${internship.status}</span></div></div>
+                    <div class="preview-field"><div class="preview-label">Applications Received</div><div class="preview-value">${internship.applicationsCount || 0}</div></div>
+                    ${internship.createdAt ? `<div class="preview-field"><div class="preview-label">Posted Date</div><div class="preview-value">${new Date(internship.createdAt).toLocaleDateString()}</div></div>` : ''}
+                    <div class="preview-field"><div class="preview-label">Description</div><div class="preview-value">${internship.description}</div></div>
+                </div>
+            `;
+
+            document.getElementById('previewContent').innerHTML = previewHTML;
+
+            const footer = document.getElementById('previewModalFooter');
+            if (footer) {
+                footer.innerHTML = `
+                    <button class="btn btn-outline" onclick="closeModal('previewModal')">Close</button>
+                    <button class="btn btn-primary" onclick="closeModal('previewModal');editInternship(${postId})">✏️ Edit</button>
+                `;
+            }
+
+            document.getElementById('previewModal').classList.add('active');
+        } catch (error) {
+            console.error('Error showing post preview:', error);
+            showAlert('Error loading internship details');
+        }
+    }
+
+    function toggleInternshipForm() {
+        const modal = document.getElementById('internshipFormSheet');
+        if (modal) {
+            modal.classList.toggle('active');
+            if (!modal.classList.contains('active')) {
+                document.getElementById('internshipForm').reset();
+                editingInternshipId = null;
+                document.getElementById('internshipModalTitle').textContent = 'Create New Post';
+            }
+        }
+    }
+
+    async function saveInternship(event) {
+        if (event) event.preventDefault();
+
+        const code = document.getElementById('internshipCode').value.trim();
+        const title = document.getElementById('internshipTitle').value.trim();
+        const duration = parseInt(document.getElementById('internshipDuration').value);
+        const workMode = document.getElementById('internshipWorkMode').value;
+        const prerequisites = document.getElementById('internshipPrerequisites').value.trim();
+        const description = document.getElementById('internshipDescription').value.trim();
+        const status = document.getElementById('internshipStatus').value;
+
+        if (!code || !title || !duration) {
+            showAlert('Please fill all required fields');
+            return;
+        }
+
+        try {
+            const formData = {
+                code,
+                title,
+                duration,
+                workMode,
+                prerequisites,
+                description,
+                status
+            };
+
+            if (editingInternshipId) {
+                await window.AdminAPI.Internship.update(editingInternshipId, formData);
+                showStatusMessage('Internship updated successfully', 'success');
+            } else {
+                await window.AdminAPI.Internship.create(formData);
+                showStatusMessage('Internship created successfully', 'success');
+            }
+            
+            toggleInternshipForm();
+            loadInternshipsData();
+            updateDashboardStats();
+        } catch (error) {
+            console.error('Error saving internship:', error);
+            showAlert(error.message || 'Error saving internship');
+        }
+    }
+
+    async function editInternship(id) {
+        try {
+            const response = await window.AdminAPI.Internship.getById(id);
+            const internship = response.data;
+            if (internship) {
+                editingInternshipId = id;
+                document.getElementById('internshipCode').value = internship.code;
+                document.getElementById('internshipTitle').value = internship.title;
+                document.getElementById('internshipDuration').value = internship.duration || '';
+                document.getElementById('internshipWorkMode').value = internship.workMode;
+                document.getElementById('internshipPrerequisites').value = internship.prerequisites;
+                document.getElementById('internshipDescription').value = internship.description;
+                document.getElementById('internshipStatus').value = internship.status;
+                document.getElementById('internshipModalTitle').textContent = 'Edit Internship Post';
+                document.getElementById('internshipFormSheet').classList.add('active');
+            }
+        } catch (error) {
+            console.error('Error loading internship for edit:', error);
+            showAlert('Error loading internship details');
+        }
+    }
+
+    async function togglePostStatus(id, currentStatus) {
+        try {
+            const newStatus = currentStatus === 'Posted' ? 'Draft' : 'Posted';
+            await window.AdminAPI.Internship.toggleStatus(id, newStatus);
+            loadInternshipsData();
+            updateDashboardStats();
+            showStatusMessage(`Internship ${newStatus.toLowerCase()} successfully`, 'success');
+        } catch (error) {
+            console.error('Error toggling post status:', error);
+            showAlert('Error updating internship status');
+        }
+    }
+
+    async function deleteInternship(id) {
+        if (confirm('Are you sure you want to delete this internship?')) {
+            try {
+                await window.AdminAPI.Internship.delete(id);
+                loadInternshipsData();
+                updateDashboardStats();
+                showStatusMessage('Internship deleted successfully', 'success');
+            } catch (error) {
+                console.error('Error deleting internship:', error);
+                showAlert('Error deleting internship');
+            }
+        }
+    }
+
+    function previewPost() {
+        const code = document.getElementById('internshipCode').value;
+        const title = document.getElementById('internshipTitle').value;
+        const duration = document.getElementById('internshipDuration').value;
+        const workMode = document.getElementById('internshipWorkMode').value;
+        const skills = document.getElementById('internshipPrerequisites').value;
+        const description = document.getElementById('internshipDescription').value;
+        const status = document.getElementById('internshipStatus').value;
+
+        const previewHTML = `
+            <div class="preview-container">
+                <div class="preview-field"><div class="preview-label">Internship ID</div><div class="preview-value">${code}</div></div>
+                <div class="preview-field"><div class="preview-label">Title</div><div class="preview-value"><strong>${title}</strong></div></div>
+                <div class="preview-field"><div class="preview-label">Duration</div><div class="preview-value">${duration} Months</div></div>
+                <div class="preview-field"><div class="preview-label">Work Mode</div><div class="preview-value">${workMode}</div></div>
+                <div class="preview-field"><div class="preview-label">Required Skills</div><div class="preview-value">${skills}</div></div>
+                <div class="preview-field"><div class="preview-label">Status</div><div class="preview-value"><span class="badge badge-${status === 'Posted' ? 'success' : 'warning'}">${status}</span></div></div>
+                <div class="preview-field"><div class="preview-label">Description</div><div class="preview-value">${description}</div></div>
+            </div>
+        `;
+        document.getElementById('previewContent').innerHTML = previewHTML;
+
+        const footer = document.getElementById('previewModalFooter');
+        if (footer) {
+            footer.innerHTML = `<button class="btn btn-outline" onclick="closeModal('previewModal')">Close</button>`;
+        }
+
+        document.getElementById('previewModal').classList.add('active');
+    }
+
+    function showSettingsTab(tabName) {
+        document.querySelectorAll('.settings-content').forEach(content => content.classList.remove('active'));
+        document.querySelectorAll('.settings-tab').forEach(tab => tab.classList.remove('active'));
+        const targetContent = document.getElementById(tabName + 'Settings');
+        if (targetContent) targetContent.classList.add('active');
+        if (event && event.target) event.target.classList.add('active');
+    }
+    
+    // ==========================================
+    // INITIALIZATION
+    // ==========================================
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('🚀 TrackerPro Admin Panel v8.0 - API Connected');
+        
+        // Load initial data
+        updateDashboardStats();
+        loadRegistrationsData(1);
+        loadUsersData('all');
+
+        // Setup navigation
+        document.querySelectorAll('.nav-item').forEach(item => {
+            item.addEventListener('click', function() {
+                const pageId = this.getAttribute('data-page');
+                if (pageId) showPage(pageId);
+            });
+        });
+
+        // Modal click outside to close
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal') || event.target.classList.contains('sheet')) {
+                if (event.target.id === 'userSheet') {
+                    closeUserSheet();
+                } else {
+                    event.target.classList.remove('active');
+                }
+            }
+        };
+    });
+
+    // ==========================================
+    // CSS ANIMATIONS & STYLES
+    // ==========================================
+    
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes slideIn { from { transform: translateX(400px); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+        @keyframes slideOut { from { transform: translateX(0); opacity: 1; } to { transform: translateX(400px); opacity: 0; } }
+        .preview-container { padding: 1rem; }
+        .preview-field { margin-bottom: 1rem; }
+        .preview-label { font-weight: 600; color: #475569; margin-bottom: 0.25rem; font-size: 0.875rem; }
+        .preview-value { color: #1e293b; line-height: 1.6; }
+
+        .toggle-switch { position: relative; display: inline-block; width: 50px; height: 26px; }
+        .toggle-switch input { opacity: 0; width: 0; height: 0; }
+        .toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .3s; border-radius: 26px; }
+        .toggle-slider:before { position: absolute; content: ""; height: 20px; width: 20px; left: 3px; bottom: 3px; background-color: white; transition: .3s; border-radius: 50%; }
+        .toggle-switch input:checked + .toggle-slider { background-color: #2ecc71; }
+        .toggle-switch input:checked + .toggle-slider:before { transform: translateX(24px); }
+
+        .sheet { display: none; position: fixed; top: 0; right: -100%; width: 500px; height: 100%; background: white; box-shadow: -4px 0 12px rgba(0,0,0,0.15); z-index: 9999; transition: right 0.3s ease; overflow-y: auto; }
+        .sheet.active { display: block; right: 0; }
+        .sheet-header { padding: 1.5rem; border-bottom: 1px solid #e2e8f0; display: flex; justify-content: space-between; align-items: center; background: #f8f9fc; }
+        .sheet-body { padding: 1.5rem; }
+        .sheet-footer { padding: 1.5rem; border-top: 1px solid #e2e8f0; display: flex; justify-content: flex-end; gap: 0.75rem; position: sticky; bottom: 0; background: white; box-shadow: 0 -2px 8px rgba(0,0,0,0.05); }
+
+        .filter-btn.active { background-color: var(--primary-color); color: white; }
+    `;
+    document.head.appendChild(style);
+</script>
                       id: i + 1,
                       candidateId: `STU-${String(i + 1).padStart(3, '0')}`,
                       firstName: `Student${i + 1}`,
