@@ -1184,9 +1184,10 @@
             const gender = document.getElementById('userGender').value;
             const mobileNo = document.getElementById('userMobile').value.trim();
             const location = document.getElementById('userCity').value.trim();
-            const dob = document.getElementById('userDOB').value.trim();
+            const dobInput = document.getElementById('userDOB').value.trim();
             const age = parseInt(document.getElementById('userAge').value) || 0;
 
+            // Validation
             if (!firstName || !email || (!editingUserId && !password) || !userType) {
                 showAlert('Please fill all required fields');
                 return false;
@@ -1197,11 +1198,32 @@
                 return false;
             }
 
+            // Validate mobile number (10-digit Indian number starting with 6-9)
+            if (mobileNo && !/^[6-9][0-9]{9}$/.test(mobileNo)) {
+                showAlert('Mobile number must be a valid 10-digit Indian number starting with 6-9');
+                return false;
+            }
+
+            // Convert date from YYYY-MM-DD to DD/MM/YYYY
+            let dob = '';
+            if (dobInput) {
+                const dateParts = dobInput.split('-');
+                if (dateParts.length === 3) {
+                    dob = `${dateParts[2]}/${dateParts[1]}/${dateParts[0]}`;
+                }
+            }
+
+            // Validate age
+            if (age && (age < 20 || age > 65)) {
+                showAlert('Age must be between 20 and 65');
+                return false;
+            }
+
             const formData = {
                 firstName,
                 lastName,
                 email,
-                userType,
+                userType: userType.toUpperCase(), // Ensure uppercase (HR or FACULTY)
                 gender,
                 mobileNo,
                 location,
