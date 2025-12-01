@@ -1107,16 +1107,25 @@
 
             editingUserId = id;
 
+            // Convert date from DD/MM/YYYY to YYYY-MM-DD for HTML input
+            let dobForInput = '';
+            if (user.dob) {
+                const dobParts = user.dob.split('/');
+                if (dobParts.length === 3) {
+                    dobForInput = `${dobParts[2]}-${dobParts[1]}-${dobParts[0]}`;
+                }
+            }
+
             // Populate form fields
             document.getElementById('userFirstName').value = user.firstName || '';
             document.getElementById('userLastName').value = user.lastName || '';
             document.getElementById('userEmail').value = user.email || '';
             document.getElementById('userPassword').value = '';  // Don't show password
-            document.getElementById('userRole').value = user.role || '';
+            document.getElementById('userRole').value = user.role || user.userType || '';
             document.getElementById('userGender').value = user.gender || '';
-            document.getElementById('userMobile').value = user.mobileNo || '';
-            document.getElementById('userCity').value = user.location || '';
-            document.getElementById('userDOB').value = user.dob || '';
+            document.getElementById('userMobile').value = user.mobileNo || user.mobile || '';
+            document.getElementById('userCity').value = user.location || user.city || '';
+            document.getElementById('userDOB').value = dobForInput;
             document.getElementById('userAge').value = user.age || '';
 
             // Update modal title
