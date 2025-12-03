@@ -66,6 +66,28 @@ public class Student implements UserDetails {
     @Column(name = "is_active")
     private Boolean isActive = true;
 
+    // Additional profile fields for student career module
+    @Column(name = "profile_photo_url", length = 500)
+    private String profilePhotoUrl;
+
+    @Column(name = "primary_resume_url", length = 500)
+    private String primaryResumeUrl;
+
+    @Column(name = "linkedin_url", length = 200)
+    private String linkedinUrl;
+
+    @Column(name = "github_url", length = 200)
+    private String githubUrl;
+
+    @Column(columnDefinition = "TEXT")
+    private String skills;
+
+    @Column(columnDefinition = "TEXT")
+    private String bio;
+
+    @Column(name = "profile_completion_percentage")
+    private Integer profileCompletionPercentage = 0;
+
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
