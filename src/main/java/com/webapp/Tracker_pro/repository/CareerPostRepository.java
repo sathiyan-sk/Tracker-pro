@@ -52,4 +52,22 @@ public interface CareerPostRepository extends JpaRepository<CareerPost, Long> {
            "LOWER(cp.title) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
            "LOWER(cp.code) LIKE LOWER(CONCAT('%', :searchTerm, '%'))")
     List<CareerPost> searchPosts(@Param("searchTerm") String searchTerm);
+
+    /**
+     * Find posts by status ordered by creation date
+     */
+    List<CareerPost> findByStatusOrderByCreatedAtDesc(String status);
+
+    /**
+     * Find posts by status and work mode
+     */
+    List<CareerPost> findByStatusAndWorkModeOrderByCreatedAtDesc(String status, String workMode);
+
+    /**
+     * Search by title or code (alternative method name)
+     */
+    @Query("SELECT cp FROM CareerPost cp WHERE " +
+           "LOWER(cp.title) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR " +
+           "LOWER(cp.code) LIKE LOWER(CONCAT('%', :searchTerm, '%'))")
+    List<CareerPost> searchByTitleOrCode(@Param("searchTerm") String searchTerm);
 }
