@@ -58,7 +58,7 @@ public class HRFacultyUser implements UserDetails {
     @Column(name = "date_of_birth", length = 20)
     private String dob;
 
-    @Column(nullable = false)
+    @Column
     private Integer age;
 
     @Column(length = 50)
