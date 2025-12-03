@@ -38,10 +38,10 @@ public class CreateUserRequest {
     @Pattern(regexp = "^[6-9][0-9]{9}$", message = "Mobile number must be a valid 10-digit Indian number")
     private String mobileNo;
 
-    @Pattern(regexp = "^(Male|Female|Other)$", message = "Gender must be Male, Female, or Other")
+    @Pattern(regexp = "^$|^(Male|Female|Other)$", message = "Gender must be Male, Female, or Other")
     private String gender;
 
-    @Pattern(regexp = "^\\d{2}/\\d{2}/\\d{4}$", message = "Date of birth must be in DD/MM/YYYY format")
+    @Pattern(regexp = "^$|^\\d{2}/\\d{2}/\\d{4}$", message = "Date of birth must be in DD/MM/YYYY format")
     private String dob;
 
     @Min(value = 20, message = "Age must be at least 20")
