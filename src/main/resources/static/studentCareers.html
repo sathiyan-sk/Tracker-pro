@@ -1,0 +1,1952 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrackerPro - Student Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-color: #4a6fff;
+            --primary-light: #e5eaff;
+            --primary-dark: #3a5ccc;
+            --secondary-color: #ff7e42;
+            --text-color: #333333;
+            --text-light: #666666;
+            --text-primary: #202124;
+            --text-secondary: #5f6368;
+            --white: #ffffff;
+            --light-color: #f8f9fc;
+            --bg-hover: #f8f9fa;
+            --bg-active: #e8f0fe;
+            --success-color: #2ecc71;
+            --warning-color: #f1c40f;
+            --danger-color: #e74c3c;
+            --info-color: #17a2b8;
+            --header-height: 70px;
+            --sidebar-width: 230px;
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.05);
+            --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.1);
+            --border-radius-sm: 4px;
+            --border-radius-md: 8px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f9fafb;
+            color: var(--text-color);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .header-bar {
+            background-color: var(--white);
+            height: var(--header-height);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+            justify-content: space-between;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .logo {
+            height: 38px;
+            margin-right: 12px;
+            border-radius: var(--border-radius-sm);
+        }
+
+        .logo-text {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            position: relative;
+            padding: 8px 12px;
+            border-radius: var(--border-radius-md);
+            transition: var(--transition);
+        }
+
+        .user-profile:hover {
+            background-color: var(--bg-hover);
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: white;
+            font-size: 1.2rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .user-details .user-name {
+            font-weight: 500;
+            font-size: 0.9rem;
+            line-height: 1.2;
+            color: var(--text-primary);
+        }
+
+        .user-details .user-role {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+
+        .user-dropdown {
+            position: absolute;
+            top: calc(100% + 10px);
+            right: 0;
+            background: var(--white);
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-md);
+            min-width: 200px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: var(--transition);
+            z-index: 1000;
+            border: 1px solid #e2e8f0;
+        }
+
+        .user-dropdown.active {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item {
+            display: block;
+            padding: 12px 20px;
+            color: var(--text-color);
+            text-decoration: none;
+            font-size: 14px;
+            transition: background-color 0.2s;
+            border-bottom: 1px solid var(--light-color);
+        }
+
+        .dropdown-item:hover {
+            background-color: var(--bg-hover);
+        }
+
+        .dropdown-item:last-child {
+            border-bottom: none;
+            color: var(--danger-color);
+        }
+
+        .dashboard-container {
+            display: flex;
+            min-height: 100vh;
+            padding-top: var(--header-height);
+        }
+
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--white);
+            height: calc(100vh - var(--header-height));
+            position: fixed;
+            top: var(--header-height);
+            left: 0;
+            overflow-y: auto;
+            z-index: 90;
+            border-right: 1px solid #e8e9ea;
+            transition: var(--transition);
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 14px 20px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 400;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            border-left: 3px solid transparent;
+            margin: 2px 0;
+        }
+
+        .nav-item:hover {
+            background-color: var(--bg-hover);
+            color: var(--primary-color);
+        }
+
+        .nav-item.active {
+            background-color: var(--bg-active);
+            color: var(--primary-color);
+            font-weight: 500;
+            border-left: 3px solid var(--primary-color);
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            padding: 32px;
+            background-color: var(--white);
+            transition: var(--transition);
+            min-height: calc(100vh - var(--header-height));
+        }
+
+        .page {
+            display: none;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .page.active-page {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .page-title {
+            margin-bottom: 32px;
+            font-size: 28px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .welcome-card {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            border-radius: var(--border-radius-md);
+            padding: 2.5rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            margin-bottom: 2rem;
+            box-shadow: var(--shadow-md);
+        }
+
+        .welcome-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .welcome-card h2 {
+            font-size: 2.2rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 2;
+            font-weight: 600;
+        }
+
+        .welcome-card p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 2;
+            font-weight: 400;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(180deg); }
+        }
+
+        .apt-container {
+            background: var(--white);
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-sm);
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid #e8e9ea;
+        }
+
+        .apt-title {
+            text-align: center;
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 2.5rem;
+        }
+
+        .apt-progress {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            margin: 0 20px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .apt-progress::before {
+            content: '';
+            position: absolute;
+            top: 25px;
+            left: 25px;
+            right: 25px;
+            height: 3px;
+            background: #dfe2e9;
+            z-index: 1;
+            border-radius: 2px;
+        }
+
+        .apt-progress-line {
+            position: absolute;
+            top: 25px;
+            left: 25px;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--primary-dark));
+            z-index: 2;
+            transition: width 0.8s ease;
+            width: 0%;
+            border-radius: 2px;
+        }
+
+        .apt-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            z-index: 3;
+            flex: 1;
+            padding: 0 10px;
+            transition: var(--transition);
+        }
+
+        .apt-circle {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 12px;
+            transition: var(--transition);
+            border: 3px solid transparent;
+        }
+
+        .apt-step.pending .apt-circle {
+            background: var(--light-color);
+            color: var(--text-light);
+            border-color: #dfe2e9;
+        }
+
+        .apt-step.active .apt-circle {
+            background:#16A34A;
+            color: white;
+            border-color:#16A34A;
+            box-shadow: 0 4px 20px rgba(74, 111, 255, 0.4);
+            transform: scale(1.1);
+        }
+
+        .apt-step.completed .apt-circle {
+            background: var(--success-color);
+            color: white;
+            border-color: var(--success-color);
+            box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
+        }
+
+        .apt-label {
+            font-size: 14px;
+            color: var(--text-light);
+            font-weight: 500;
+            margin-bottom: 4px;
+            transition: var(--transition);
+        }
+
+        .apt-step.active .apt-label {
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .apt-step.completed .apt-label {
+            color: var(--success-color);
+            font-weight: 600;
+        }
+
+        .apt-description {
+            font-size: 12px;
+            color: var(--text-light);
+            font-weight: 400;
+        }
+
+        .applied-internships-section {
+            background: var(--white);
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-sm);
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid #e8e9ea;
+        }
+
+        .applied-internships-title {
+            font-size: 1.6rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 1.5rem;
+            text-align: left;
+            border-bottom: 2px solid var(--light-color);
+            padding-bottom: 0.75rem;
+        }
+
+        .internships-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 24px;
+        }
+
+        .internship-card {
+            background: var(--white);
+            border: 1px solid #e0e0e0;
+            border-radius: var(--border-radius-md);
+            padding: 0;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-direction: column;
+            min-height: 240px;
+        }
+
+        .internship-card:hover {
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+            transform: translateY(-4px);
+            border-color: var(--primary-light);
+        }
+
+        .internship-card-header {
+            padding: 20px 20px 16px;
+            border-bottom: 1px solid #f0f0f0;
+            background: linear-gradient(to right, #fafafa, #f5f5f5);
+        }
+
+        .internship-institute {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .internship-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--text-primary);
+            margin-bottom: 0;
+            line-height: 1.3;
+        }
+
+        .internship-card-body {
+            padding: 16px 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .info-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 0;
+            border-bottom: 1px solid #f8f9fa;
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .info-value {
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .info-value.id {
+            color: var(--primary-color);
+        }
+
+        .info-value.posted {
+            color: var(--secondary-color);
+        }
+
+        .info-value.duration {
+            color: var(--success-color);
+        }
+
+        .info-value.mode {
+            color: var(--info-color);
+        }
+
+        .internship-card-footer {
+            padding: 16px 20px;
+            border-top: 1px solid #f0f0f0;
+            background: #fafafa;
+        }
+
+        .apply-btn {
+            background-color: #0A84FF;
+            color: #ffffff;
+            padding: 12px 28px;
+            border-radius: 10px;
+            border: none;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.12);
+            width: 100%;
+            letter-spacing: 0.5px;
+        }
+
+        .apply-btn:hover:not(:disabled) {
+            background-color: #006EDC;
+            box-shadow: 0px 4px 12px rgba(10, 132, 255, 0.25);
+            transform: translateY(-2px);
+        }
+
+        .apply-btn.applied {
+            background-color: #16A34A;
+            color: #ffffff;
+            cursor: default;
+            font-weight: 600;
+        }
+
+        .apply-btn.applied:hover {
+            background-color: #16A34A;
+            box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.12);
+            transform: none;
+        }
+
+        .apply-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            background-color: #d0d0d0;
+            color: #888;
+        }
+
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 999;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--white);
+            border-radius: var(--border-radius-md);
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            position: relative;
+            animation: modalSlideUp 0.4s ease-out;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+        }
+
+        @keyframes modalSlideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            padding: 24px;
+            border-bottom: 1px solid #e8e9ea;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--light-color);
+        }
+
+        .modal-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .modal-close {
+            background: transparent;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            transition: var(--transition);
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close:hover {
+            color: var(--danger-color);
+            background: rgba(231, 76, 60, 0.1);
+            border-radius: 50%;
+        }
+
+        .modal-body {
+            padding: 24px;
+        }
+
+        .internship-summary {
+            background: var(--primary-light);
+            padding: 16px;
+            border-radius: var(--border-radius-md);
+            margin-bottom: 24px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .internship-summary-label {
+            font-size: 0.85rem;
+            color: var(--text-light);
+            font-weight: 600;
+            text-transform: uppercase;
+            margin-bottom: 6px;
+        }
+
+        .internship-summary-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .form-section {
+            margin-bottom: 24px;
+        }
+
+        .form-section-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid var(--primary-light);
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .form-label .required {
+            color: var(--danger-color);
+        }
+
+        .form-input, .form-textarea {
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius-sm);
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.9rem;
+            transition: border-color 0.2s ease;
+        }
+
+        .form-input:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(74, 111, 255, 0.1);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-input-label {
+            display: inline-block;
+            padding: 12px;
+            background: var(--light-color);
+            border: 1px dashed var(--primary-color);
+            border-radius: var(--border-radius-sm);
+            cursor: pointer;
+            text-align: center;
+            transition: all 0.2s ease;
+            width: 100%;
+            color: var(--primary-color);
+            font-weight: 600;
+        }
+
+        .file-input-label:hover {
+            background: var(--primary-light);
+        }
+
+        .file-input-label.has-file {
+            background: rgba(46, 204, 113, 0.1);
+            border-color: var(--success-color);
+            color: var(--success-color);
+        }
+
+        #resumeFile {
+            display: none;
+        }
+
+        .modal-footer {
+            padding: 20px 24px;
+            border-top: 1px solid #e8e9ea;
+            display: flex;
+            gap: 12px;
+            background: var(--light-color);
+        }
+
+        .btn-cancel {
+            flex: 1;
+            padding: 12px;
+            background: #f0f0f0;
+            color: var(--text-primary);
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius-md);
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: var(--transition);
+            text-transform: uppercase;
+        }
+
+        .btn-cancel:hover {
+            background: #e0e0e0;
+        }
+
+        .btn-submit {
+            flex: 1;
+            padding: 12px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            border: none;
+            border-radius: var(--border-radius-md);
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: var(--transition);
+            text-transform: uppercase;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(74, 111, 255, 0.3);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 4rem;
+            color: var(--text-light);
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 1.5rem;
+            opacity: 0.7;
+        }
+
+        .empty-state h3 {
+            margin-bottom: 0.8rem;
+            color: var(--text-secondary);
+            font-size: 1.2rem;
+            font-weight: 500;
+        }
+
+        .empty-state p {
+            font-size: 1rem;
+            line-height: 1.5;
+        }
+
+        .applications-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: var(--white);
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .applications-table thead {
+            background: var(--light-color);
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .applications-table th {
+            padding: 12px 15px;
+            text-align: left;
+            font-weight: 600;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .applications-table tbody tr {
+            border-bottom: 1px solid #e8e9ea;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .applications-table tbody tr:hover {
+            background-color: var(--bg-hover);
+        }
+
+        .applications-table td {
+            padding: 15px;
+            font-size: 0.9rem;
+            color: var(--text-color);
+            font-family: 'Poppins', sans-serif;
+            font-weight: 400;
+        }
+
+        .status-text {
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .status-applied {
+            color: #16A34A;
+        }
+
+        .status-under_review {
+            color: #e67e22;
+        }
+
+        .status-shortlisted {
+            color: #28a745;
+        }
+
+        .status-interview {
+            color: var(--primary-color);
+        }
+
+        .status-selected {
+            color: var(--success-color);
+        }
+
+        .status-rejected {
+            color: var(--danger-color);
+        }
+
+        #myApplicationsContainer {
+            width: 100%;
+            overflow: visible;
+        }
+
+        /* Interview Panel Styles */
+        .interviews-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 24px;
+        }
+
+        .interview-card {
+            background: var(--white);
+            border: 1px solid #e0e0e0;
+            border-radius: var(--border-radius-md);
+            padding: 24px;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+        }
+
+        .interview-card:hover {
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+            transform: translateY(-2px);
+        }
+
+        .interview-card h3 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 16px;
+            border-bottom: 2px solid var(--primary-light);
+            padding-bottom: 12px;
+        }
+
+        .interview-details {
+            margin-bottom: 16px;
+        }
+
+        .interview-details p {
+            margin: 8px 0;
+            font-size: 0.95rem;
+            color: var(--text-color);
+        }
+
+        .interview-details strong {
+            color: var(--text-primary);
+            font-weight: 600;
+        }
+
+        .interview-status {
+            margin: 16px 0;
+        }
+
+        .status-badge {
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            display: inline-block;
+        }
+
+        .status-scheduled {
+            background-color: rgba(74, 111, 255, 0.1);
+            color: var(--primary-color);
+            border: 1px solid rgba(74, 111, 255, 0.2);
+        }
+
+        .status-completed {
+            background-color: rgba(46, 204, 113, 0.1);
+            color: var(--success-color);
+            border: 1px solid rgba(46, 204, 113, 0.2);
+        }
+
+        .status-missed {
+            background-color: rgba(231, 76, 60, 0.1);
+            color: var(--danger-color);
+            border: 1px solid rgba(231, 76, 60, 0.2);
+        }
+
+        .join-btn {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 100%;
+            margin-top: 12px;
+        }
+
+        .join-btn:hover:not(:disabled) {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(74, 111, 255, 0.3);
+        }
+
+        .join-btn:disabled {
+            background-color: #d0d0d0;
+            color: #888;
+            cursor: not-allowed;
+        }
+
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 12px 20px;
+            border-radius: 4px;
+            color: white;
+            z-index: 2000;
+            transform: translateX(400px);
+            transition: transform 0.3s ease;
+            font-weight: 600;
+        }
+
+        .notification.success {
+            background: #28a745;
+        }
+
+        .notification.error {
+            background: #dc3545;
+        }
+
+        @media (max-width: 1024px) {
+            .main-content {
+                padding: 24px;
+            }
+            
+            .internships-grid {
+                grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                z-index: 1000;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 16px;
+            }
+
+            .internships-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .apt-progress {
+                flex-direction: column;
+                gap: 30px;
+            }
+
+            .apt-progress::before,
+            .apt-progress-line {
+                display: none;
+            }
+
+            .welcome-card h2 {
+                font-size: 1.8rem;
+            }
+
+            .page-title {
+                font-size: 24px;
+            }
+
+            .modal-content {
+                max-height: calc(100vh - 2rem);
+            }
+
+            .applications-table {
+                font-size: 0.85rem;
+            }
+            
+            .applications-table th,
+            .applications-table td {
+                padding: 10px 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 12px;
+            }
+
+            .internship-card {
+                padding: 16px;
+            }
+
+            .internships-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-footer {
+                flex-direction: column-reverse;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header-bar">
+        <div class="logo-container">
+            <img src="https://via.placeholder.com/38x38/4a6fff/ffffff?text=TP" alt="TrackerPro Logo" class="logo">
+            <h1 class="logo-text">TrackerPro</h1>
+        </div>
+        
+        <div class="header-actions">
+            <div class="user-profile" onclick="UI.toggleUserDropdown()">
+                <div class="user-avatar" id="userAvatar">S</div>
+                <div class="user-details">
+                    <div class="user-name" id="userName">Loading...</div>
+                    <div class="user-role" id="userRole">Student</div>
+                </div>
+                
+                <div class="user-dropdown" id="userDropdown">
+                    <a href="#" class="dropdown-item">My Profile</a>
+                    <a href="#" class="dropdown-item">Application History</a>
+                    <a href="#" class="dropdown-item">Help & Support</a>
+                    <a href="#" class="dropdown-item" onclick="logout()">Logout</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="dashboard-container">
+        <aside class="sidebar" id="sidebar">
+            <div class="nav-item active" data-page="my-applications" onclick="showPage('my-applications')">
+                <span class="nav-item-text">My Applications</span>
+            </div>
+            <div class="nav-item" data-page="available-internships" onclick="showPage('available-internships')">
+                <span class="nav-item-text">Available Internships</span>
+            </div>
+            <div class="nav-item" data-page="interview-panel" onclick="showPage('interview-panel')">
+                <span class="nav-item-text">Interview Panel</span>
+            </div>
+            <div class="nav-item" data-page="help-support" onclick="showPage('help-support')">
+                <span class="nav-item-text">Help & Support</span>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div id="my-applications" class="page active-page">
+                <div class="welcome-card">
+                    <h2 id="welcomeTitle">Welcome, Student</h2>
+                    <p>Track your internship application progress through our comprehensive student portal</p>
+                </div>
+
+                <div class="apt-container">
+                    <h2 class="apt-title">Application Progress Tracker</h2>
+                    internships
+                    <div class="apt-progress" id="progressTracker">
+                        <div class="apt-progress-line" id="progressLine"></div>
+                        
+                        <div class="apt-step completed" data-step="1">
+                            <div class="apt-circle">✓</div>
+                            <h3 class="apt-label">Registered</h3>
+                            <p class="apt-description">Account Created</p>
+                        </div>
+                        
+                        <div class="apt-step pending" data-step="2">
+                            <div class="apt-circle">2</div>
+                            <h3 class="apt-label">Applied</h3>
+                            <p class="apt-description">Internship Application</p>
+                        </div>
+                        
+                        <div class="apt-step pending" data-step="3">
+                            <div class="apt-circle">3</div>
+                            <h3 class="apt-label">Under Review</h3>
+                            <p class="apt-description">Application Review</p>
+                        </div>
+                        
+                        <div class="apt-step pending" data-step="4">
+                            <div class="apt-circle">4</div>
+                            <h3 class="apt-label">Shortlisted</h3>
+                            <p class="apt-description">Candidate Shortlisted</p>
+                        </div>
+
+                        <div class="apt-step pending" data-step="5">
+                            <div class="apt-circle">5</div>
+                            <h3 class="apt-label">Interview</h3>
+                            <p class="apt-description">Interview Scheduled</p>
+                        </div>
+
+                        <div class="apt-step pending" data-step="6">
+                            <div class="apt-circle">6</div>
+                            <h3 class="apt-label">Final Decision</h3>
+                            <p class="apt-description">Selection Status</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="applied-internships-section">
+                    <h2 class="applied-internships-title">My Applications</h2>
+                    <div id="myApplicationsContainer" style="overflow-x: auto;">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">📋</div>
+                            <h3>No applications yet</h3>
+                            <p>Browse available internships to start your career journey</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="available-internships" class="page">
+                <h1 class="page-title">Available Internships</h1>
+                
+                <div class="internships-grid" id="internshipsContainer">
+                    <div class="empty-state">
+                        <div class="empty-state-icon">⏳</div>
+                        <h3>Loading internships...</h3>
+                        <p>Please wait while we fetch the latest internship opportunities</p>
+                    </div>
+                </div>
+            </div>
+
+            <div id="interview-panel" class="page">
+                <h1 class="page-title">Interview Panel</h1>
+                
+                <div class="applied-internships-section">
+                    <div id="interviewPanelContainer">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">🎤</div>
+                            <h3>No interviews scheduled yet</h3>
+                            <p>Your interview details will appear here once you reach the interview stage</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="help-support" class="page">
+                <h1 class="page-title">Help & Support</h1>
+                
+                <div class="applied-internships-section">
+                    <h2>Frequently Asked Questions</h2>
+                    <div class="faq-content">
+                        <p><strong>Q: How do I apply for an internship?</strong></p>
+                        <p>A: Browse the "Available Internships" section, click "Apply Now" on any internship card, and submit with your resume.</p>
+                        <br>
+                        <p><strong>Q: Is resume upload mandatory?</strong></p>
+                        <p>A: Resume upload is optional. You can submit your application even without a resume.</p>
+                        <br>
+                        <p><strong>Q: How can I track my application status?</strong></p>
+                        <p>A: Check the "My Applications" section and the Progress Tracker to see your current status.</p>
+                        <br>
+                        <p>For additional support, please contact our HR team.</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div class="modal-overlay" id="applicationModal" onclick="closeModal(event)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h2 class="modal-title">Apply for Internship</h2>
+                <button class="modal-close" onclick="closeModal()">✕</button>
+            </div>
+
+            <div class="modal-body">
+                <div class="internship-summary">
+                    <div class="internship-summary-label">Selected Position</div>
+                    <div class="internship-summary-title" id="modalInternshipTitle">--</div>
+                </div>
+
+                <form id="applicationForm">
+                    <div class="form-section">
+                        <h3 class="form-section-title">📄 Resume Upload</h3>
+                        <div class="form-group">
+                            <label class="form-label">Resume (PDF, DOC, DOCX)</label>
+                            <div class="file-input-wrapper">
+                                <label class="file-input-label" id="fileInputLabel" for="resumeFile">
+                                    📁 Click to upload or drag file here
+                                </label>
+                                <input type="file" id="resumeFile" accept=".pdf,.doc,.docx" onchange="updateFileLabel()">
+                            </div>
+                            <small style="color: var(--text-light); margin-top: 6px; display: block;">Max file size: 5MB (Optional)</small>
+                        </div>
+                    </div>
+                </form>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+                <button class="btn-submit" onclick="submitApplication()">Submit Application</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="notification-container"></div>
+
+<script>
+
+const CONFIG = {
+    STORAGE_KEY: 'trackerProData',
+    CURRENT_STUDENT_KEY: 'currentStudentId',
+    APP_NAME: 'TrackerPro',
+    VERSION: '2.0.0'
+};
+
+// Clear localStorage on page load for fresh data (demo mode)
+function clearLocalStorage() {
+    localStorage.removeItem(CONFIG.STORAGE_KEY);
+    localStorage.removeItem(CONFIG.CURRENT_STUDENT_KEY);
+    console.log('✓ Cleared localStorage cache for fresh data');
+}
+
+// Initialize with complete data structure
+function initTrackerProData() {
+    const seed = {
+        registrations: [
+            {
+                id: 1,
+                applicantId: 'STU-001',
+                firstName: 'Rajesh',
+                lastName: 'Kumar',
+                email: 'rajesh.kumar@university.edu',
+                mobile: '+91-9876543210',
+                address: '123 Tech Street, Bangalore',
+                university: 'Indian Institute of Technology',
+                program: 'B.Tech Computer Science',
+                yearSemester: '3rd Year',
+                cgpa: '3.8',
+                role: 'Student'
+            }
+        ],
+        
+        internships: [
+            {
+                id: 1,
+                internshipId: 'WD-001',
+                internshipTitle: 'Web Development Intern',
+                duration: '3 Months',
+                workMode: 'Online',
+                skills: 'HTML, CSS, JavaScript, React, Node.js, MongoDB, REST APIs',
+                description: 'Build responsive web applications using modern technologies. Work on UI/UX implementation, frontend optimization, and backend API development.',
+                status: 'PUBLISHED',
+                postedDate: '2024-11-15',
+                createdBy: 'HR-ADMIN-001',
+                applicationsReceived: 0
+            },
+            {
+                id: 2,
+                internshipId: 'DS-002',
+                internshipTitle: 'Data Analytics Intern',
+                duration: '4 Months',
+                workMode: 'Remote',
+                skills: 'Python, SQL, Statistics, Machine Learning, Pandas, Tableau',
+                description: 'Analyze business data and create actionable insights. Work with datasets, build dashboards, and develop predictive models.',
+                status: 'PUBLISHED',
+                postedDate: '2024-11-14',
+                createdBy: 'HR-ADMIN-001',
+                applicationsReceived: 0
+            }
+        ],
+        
+        applications: [],
+        interviews: []
+    };
+    
+    localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(seed));
+    localStorage.setItem(CONFIG.CURRENT_STUDENT_KEY, 'STU-001');
+    
+    console.log('✓ TrackerPro initialized with enhanced data structure');
+    return seed;
+}
+
+function getTrackerProData() {
+    return JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY)) || initTrackerProData();
+}
+
+function saveTrackerProData(data) {
+    localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(data));
+}
+
+function getCurrentStudent() {
+    const data = getTrackerProData();
+    const id = localStorage.getItem(CONFIG.CURRENT_STUDENT_KEY);
+    const student = data.registrations.find(r => r.applicantId === id);
+    
+    if (!student) {
+        return {
+            firstName: 'Student',
+            lastName: 'User',
+            role: 'Student',
+            applicantId: 'STU-001'
+        };
+    }
+    
+    return student;
+}
+
+function hasAnyApplication() {
+    const data = getTrackerProData();
+    const student = getCurrentStudent();
+    return data.applications.some(app => app.applicantId === student.applicantId);
+}
+
+function generateApplicationId() {
+    const student = getCurrentStudent();
+    const data = getTrackerProData();
+    const internship = data.internships.find(i => i.id === currentSelectedInternshipId);
+    const internshipCode = internship ? internship.internshipId.replace('-', '').substring(0, 3) : 'APP';
+    const randomNum = Math.floor(Math.random() * 9000) + 1000;
+    const studentInitial = student.firstName.charAt(0).toUpperCase();
+    return `${internshipCode}-${studentInitial}${randomNum}`;
+}
+
+function showPage(pageId) {
+    const allPages = document.querySelectorAll('.page');
+    allPages.forEach(p => {
+        p.style.display = 'none';
+        p.classList.remove('active-page');
+    });
+    
+    const targetPage = document.getElementById(pageId);
+    if (targetPage) {
+        targetPage.style.display = 'block';
+        targetPage.classList.add('active-page');
+    }
+    
+    updateSidebarHighlight(pageId);
+    
+    if (pageId === 'my-applications') {
+        renderMyApplications();
+        updateProgressTracker();
+    } else if (pageId === 'available-internships') {
+        renderAvailableInternships();
+    } else if (pageId === 'interview-panel') {
+        renderInterviewPanel();
+    }
+}
+
+function updateSidebarHighlight(pageId) {
+    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll(`[data-page="${pageId}"]`).forEach(el => el.classList.add('active'));
+}
+
+function initNavigation() {
+    document.querySelectorAll('[data-page]').forEach(el => {
+        el.addEventListener('click', function(e) {
+            e.preventDefault();
+            const pageId = this.getAttribute('data-page');
+            showPage(pageId);
+        });
+    });
+    
+    if (!document.querySelector('.page.active-page')) {
+        showPage('my-applications');
+    }
+}
+
+function updateWelcomeText() {
+    const welcomeEl = document.getElementById('welcomeTitle');
+    if (!welcomeEl) return;
+    
+    const student = getCurrentStudent();
+    welcomeEl.textContent = 'Welcome, ' + student.firstName + ' ' + student.lastName;
+    
+    const avatar = document.getElementById('userAvatar');
+    if (avatar) {
+        avatar.textContent = student.firstName.charAt(0).toUpperCase();
+    }
+    
+    const userName = document.getElementById('userName');
+    if (userName) {
+        userName.textContent = student.firstName + ' ' + student.lastName;
+    }
+}
+
+// Progress Tracker with all statuses
+function updateProgressTracker() {
+    const data = getTrackerProData();
+    const student = getCurrentStudent();
+    const myApplications = data.applications.filter(app => app.applicantId === student.applicantId);
+
+    let highestStep = 1;
+    
+    if (myApplications.length > 0) {
+        myApplications.forEach(app => {
+            const status = app.status.toLowerCase().trim();
+            
+            if (status === 'applied') {
+                highestStep = Math.max(highestStep, 2);
+            } else if (status.includes('review') || status.includes('under review')) {
+                highestStep = Math.max(highestStep, 3);
+            } else if (status.includes('shortlist')) {
+                highestStep = Math.max(highestStep, 4);
+            } else if (status.includes('interview')) {
+                highestStep = Math.max(highestStep, 5);
+            } else if (status.includes('selected') || status.includes('rejected')) {
+                highestStep = Math.max(highestStep, 6);
+            }
+        });
+    }
+
+    const steps = document.querySelectorAll('.apt-step');
+    steps.forEach((step, index) => {
+        const stepNum = index + 1;
+        const circle = step.querySelector('.apt-circle');
+        
+        step.classList.remove('pending', 'active', 'completed');
+        
+        if (stepNum < highestStep) {
+            step.classList.add('completed');
+            circle.textContent = '✓';
+            circle.style.fontWeight = '600';
+        } else if (stepNum === highestStep) {
+            step.classList.add('active');
+            circle.textContent = stepNum;
+        } else {
+            step.classList.add('pending');
+            circle.textContent = stepNum;
+        }
+    });
+
+    const progressLine = document.getElementById('progressLine');
+    const progress = ((highestStep - 1) / (steps.length - 1)) * 100;
+    if (progressLine) {
+        progressLine.style.width = `${progress}%`;
+    }
+}
+
+function renderAvailableInternships() {
+    const data = getTrackerProData();
+    const student = getCurrentStudent();
+    const container = document.getElementById('internshipsContainer');
+    if (!container) return;
+
+    const hasApplication = hasAnyApplication();
+    const internships = data.internships.filter(i => i.status === 'PUBLISHED');
+    
+    if (internships.length === 0) {
+        container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">💼</div><h3>No internships available</h3><p>Check back later for new opportunities</p></div>';
+        return;
+    }
+
+    container.innerHTML = '';
+
+    internships.forEach(internship => {
+        const alreadyApplied = data.applications.some(
+            app => app.applicantId === student.applicantId && app.internshipId === internship.internshipId
+        );
+
+        const card = document.createElement('div');
+        card.className = 'internship-card';
+        card.dataset.internshipId = internship.internshipId;
+
+        const isApplyDisabled = hasApplication || alreadyApplied;
+        const buttonText = alreadyApplied ? '✓ Applied' : (hasApplication ? 'Already Applied' : 'Apply Now');
+
+        card.innerHTML = `
+            <div class="internship-card-header">
+                <div class="internship-institute">TrackerPro Internship</div>
+                <h3 class="internship-title">${internship.internshipTitle}</h3>
+            </div>
+
+            <div class="internship-card-body">
+                <div class="info-item">
+                    <span class="info-label">Internship ID:</span>
+                    <span class="info-value id">${internship.internshipId}</span>
+                </div>
+                
+                <div class="info-item">
+                    <span class="info-label">Duration:</span>
+                    <span class="info-value duration">${internship.duration}</span>
+                </div>
+                
+                <div class="info-item">
+                    <span class="info-label">Work Mode:</span>
+                    <span class="info-value mode">${internship.workMode}</span>
+                </div>
+                
+                <div class="info-item">
+                    <span class="info-label">Posted:</span>
+                    <span class="info-value posted">${internship.postedDate}</span>
+                </div>
+            </div>
+
+            <div class="internship-card-footer">
+                <button class="apply-btn ${alreadyApplied ? 'applied' : ''}" 
+                        onclick="openApplicationModal(${internship.id})" 
+                        ${isApplyDisabled ? 'disabled' : ''}>
+                    ${buttonText}
+                </button>
+            </div>
+        `;
+
+        container.appendChild(card);
+    });
+}
+
+let currentSelectedInternshipId = null;
+
+function openApplicationModal(internshipId) {
+    if (hasAnyApplication()) {
+        showNotification('You have already applied to an internship. You cannot apply to multiple internships.', 'error');
+        return;
+    }
+
+    const data = getTrackerProData();
+    const internship = data.internships.find(i => i.id === internshipId);
+    
+    if (!internship) return;
+
+    currentSelectedInternshipId = internshipId;
+    document.getElementById('modalInternshipTitle').textContent = internship.internshipTitle + ' (' + internship.internshipId + ')';
+    
+    const modalBody = document.querySelector('.modal-body');
+    const existingSpecs = modalBody.querySelector('.internship-specifications');
+    if (existingSpecs) existingSpecs.remove();
+    
+    const specsHTML = `
+        <div class="internship-specifications">
+            <h3 style="font-size: 1rem; font-weight: 600; color: var(--text-primary); margin-bottom: 12px; border-bottom: 2px solid var(--primary-light); padding-bottom: 8px;">Position Specifications</h3>
+            
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+                <div style="padding: 12px; background: var(--light-color); border-radius: 8px;">
+                    <div style="font-size: 0.8rem; color: var(--text-light); font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Internship ID</div>
+                    <div style="font-size: 0.95rem; font-weight: 600; color: var(--primary-color);">${internship.internshipId}</div>
+                </div>
+                <div style="padding: 12px; background: var(--light-color); border-radius: 8px;">
+                    <div style="font-size: 0.8rem; color: var(--text-light); font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Duration</div>
+                    <div style="font-size: 0.95rem; font-weight: 600; color: var(--text-primary);">${internship.duration}</div>
+                </div>
+                <div style="padding: 12px; background: var(--light-color); border-radius: 8px;">
+                    <div style="font-size: 0.8rem; color: var(--text-light); font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Work Mode</div>
+                    <div style="font-size: 0.95rem; font-weight: 600; color: var(--text-primary);">${internship.workMode}</div>
+                </div>
+                <div style="padding: 12px; background: var(--light-color); border-radius: 8px;">
+                    <div style="font-size: 0.8rem; color: var(--text-light); font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Posted</div>
+                    <div style="font-size: 0.95rem; font-weight: 600; color: var(--secondary-color);">${internship.postedDate}</div>
+                </div>
+            </div>
+
+            <div style="margin-bottom: 16px;">
+                <div style="font-size: 0.8rem; color: var(--text-light); font-weight: 600; text-transform: uppercase; margin-bottom: 8px;">Required Skills</div>
+                <div style="padding: 12px; background: var(--light-color); border-radius: 8px; font-size: 0.95rem; color: var(--text-primary); line-height: 1.6;">${internship.skills}</div>
+            </div>
+
+            <div style="margin-bottom: 20px;">
+                <div style="font-size: 0.8rem; color: var(--text-light); font-weight: 600; text-transform: uppercase; margin-bottom: 8px;">Description</div>
+                <div style="padding: 12px; background: var(--light-color); border-radius: 8px; font-size: 0.95rem; color: var(--text-primary); line-height: 1.6;">${internship.description}</div>
+            </div>
+
+            <hr style="border: none; border-top: 2px solid #e8e9ea; margin: 20px 0;">
+        </div>
+    `;
+    
+    const internshipSummary = modalBody.querySelector('.internship-summary');
+    internshipSummary.insertAdjacentHTML('beforebegin', specsHTML);
+    
+    document.getElementById('applicationModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeModal(event) {
+    if (event && event.target.id !== 'applicationModal' && event.target.className !== 'modal-close') return;
+    
+    document.getElementById('applicationModal').classList.remove('active');
+    document.getElementById('applicationForm').reset();
+    document.getElementById('fileInputLabel').classList.remove('has-file');
+    document.getElementById('fileInputLabel').textContent = '📁 Click to upload or drag file here';
+    document.body.style.overflow = 'auto';
+    currentSelectedInternshipId = null;
+}
+
+function updateFileLabel() {
+    const fileInput = document.getElementById('resumeFile');
+    const label = document.getElementById('fileInputLabel');
+    
+    if (fileInput.files.length > 0) {
+        label.textContent = '✓ ' + fileInput.files[0].name;
+        label.classList.add('has-file');
+    } else {
+        label.textContent = '📁 Click to upload or drag file here';
+        label.classList.remove('has-file');
+    }
+}
+
+// submitApplication with complete data flow
+function submitApplication() {
+    if (hasAnyApplication()) {
+        showNotification('You have already applied to an internship. You cannot apply to multiple internships.', 'error');
+        closeModal();
+        return;
+    }
+
+    const data = getTrackerProData();
+    const student = getCurrentStudent();
+    const internship = data.internships.find(i => i.id === currentSelectedInternshipId);
+
+    if (!internship || !student) {
+        alert('Error: Unable to submit application');
+        return;
+    }
+
+    const resumeFile = document.getElementById('resumeFile').files[0];
+    const now = new Date();
+
+    const newApplication = {
+        id: data.applications.length + 1,
+        applicationId: generateApplicationId(),
+        applicantId: student.applicantId,
+        candidateName: student.firstName + ' ' + student.lastName,
+        email: student.email || 'not-provided@example.com',
+        phone: student.mobile || 'Not provided',
+        internshipId: internship.internshipId,
+        internshipTitle: internship.internshipTitle,
+        internshipCode: internship.internshipId,
+        duration: internship.duration,
+        workMode: internship.workMode,
+        skills: internship.skills,
+        appliedDate: now.toISOString().split('T')[0],
+        appliedTime: now.toLocaleTimeString('en-US', {hour: '2-digit', minute: '2-digit'}),
+        status: 'Applied',
+        resumeFileName: resumeFile ? resumeFile.name : 'No Resume',
+        coverLetter: '',
+        appliedTimestamp: now.getTime(),
+        createdAt: now.toISOString(),
+        lastUpdated: now.toISOString()
+    };
+
+    data.applications.push(newApplication);
+    
+    // Increment applications counter for internship
+    const internshipIndex = data.internships.findIndex(i => i.id === internship.id);
+    data.internships[internshipIndex].applicationsReceived += 1;
+    
+    saveTrackerProData(data);
+
+    closeModal();
+    
+    renderMyApplications();
+    renderAvailableInternships();
+    updateProgressTracker();
+    
+    showNotification('Application submitted successfully!', 'success');
+}
+
+function renderMyApplications() {
+    const container = document.getElementById('myApplicationsContainer');
+    if (!container) return;
+
+    const data = getTrackerProData();
+    const student = getCurrentStudent();
+    const myApps = data.applications.filter(app => app.applicantId === student.applicantId);
+
+    if (myApps.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-state-icon">📋</div>
+                <h3>No applications yet</h3>
+                <p>Browse available internships to start your career journey!</p>
+            </div>
+        `;
+        return;
+    }
+
+    myApps.sort((a, b) => (b.appliedTimestamp || 0) - (a.appliedTimestamp || 0));
+
+    let html = `
+        <table class="applications-table">
+            <thead>
+                <tr>
+                    <th>Application ID</th>
+                    <th>Internship Title</th>
+                    <th>Internship Code</th>
+                    <th>Status</th>
+                    <th>Applied Date</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+
+    myApps.forEach(app => {
+        const statusClass = 'status-' + (app.status || 'applied').toLowerCase().replace(/\s+/g, '_');
+        html += `
+            <tr>
+                <td><strong>${app.applicationId}</strong></td>
+                <td>${app.internshipTitle}</td>
+                <td><code>${app.internshipCode}</code></td>
+                <td><span class="status-text ${statusClass}">${app.status}</span></td>
+                <td>${app.appliedDate}</td>
+            </tr>
+        `;
+    });
+
+    html += `
+            </tbody>
+        </table>
+    `;
+
+    container.innerHTML = html;
+}
+
+// Interview Panel rendering
+function renderInterviewPanel() {
+    const container = document.getElementById('interviewPanelContainer');
+    if (!container) return;
+    
+    const data = getTrackerProData();
+    const student = getCurrentStudent();
+    
+    const myInterviews = data.interviews.filter(
+        int => int.applicantId === student.applicantId
+    );
+
+    if (myInterviews.length === 0) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-state-icon">🎤</div>
+                <h3>No interviews scheduled yet</h3>
+                <p>Your interview details will appear here once scheduled by HR</p>
+            </div>
+        `;
+        return;
+    }
+
+    myInterviews.sort((a, b) => 
+        new Date(a.scheduledAt) - new Date(b.scheduledAt)
+    );
+
+    let html = '<div class="interviews-grid">';
+    
+    myInterviews.forEach(interview => {
+        const scheduledDate = new Date(interview.scheduledAt);
+        const now = new Date();
+        const isUpcoming = scheduledDate > now;
+        const canJoin = (scheduledDate - now) <= 10 * 60 * 1000; // 10 min before
+        
+        html += `
+            <div class="interview-card">
+                <h3>${interview.internshipTitle || 'Internship Interview'}</h3>
+                <div class="interview-details">
+                    <p><strong>Date:</strong> ${interview.interviewDate}</p>
+                    <p><strong>Time:</strong> ${interview.interviewTime}</p>
+                    <p><strong>Mode:</strong> ${interview.interviewMode}</p>
+                    <p><strong>Interviewer:</strong> ${interview.interviewerName}</p>
+                    ${interview.interviewMode === 'Virtual' ? 
+                        `<p><strong>Platform:</strong> ${interview.meetingPlatform}</p>` : 
+                        `<p><strong>Location:</strong> ${interview.interviewLocation}</p>`
+                    }
+                </div>
+                <div class="interview-status">
+                    <span class="status-badge status-${interview.status.toLowerCase()}">
+                        ${interview.status}
+                    </span>
+                </div>
+                ${isUpcoming && interview.interviewMode === 'Virtual' ? 
+                    `<button class="join-btn" 
+                            onclick="joinInterview('${interview.interviewLink}')" 
+                            ${!canJoin ? 'disabled' : ''}>
+                        ${canJoin ? 'Join Interview' : 'Join available 10 min before'}
+                    </button>` : ''
+                }
+            </div>
+        `;
+    });
+    
+    html += '</div>';
+    container.innerHTML = html;
+}
+
+function joinInterview(link) {
+    window.open(link, '_blank');
+}
+
+const UI = {
+    toggleUserDropdown: function() {
+        const dropdown = document.getElementById('userDropdown');
+        if (dropdown) {
+            dropdown.classList.toggle('active');
+        }
+    }
+};
+
+function logout() {
+    if (confirm('Are you sure you want to logout?')) {
+        alert('Logged out successfully');
+    }
+}
+
+function showNotification(message, type) {
+    const container = document.getElementById('notification-container');
+    
+    const existing = container.querySelector('.notification');
+    if (existing) {
+        container.removeChild(existing);
+    }
+    
+    const notification = document.createElement('div');
+    notification.className = `notification ${type}`;
+    notification.textContent = message;
+    
+    container.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.style.transform = 'translateX(0)';
+    }, 10);
+    
+    setTimeout(() => {
+        notification.style.transform = 'translateX(400px)';
+        setTimeout(() => {
+            if (notification.parentElement) {
+                container.removeChild(notification);
+            }
+        }, 300);
+    }, 3000);
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('🚀 Initializing ' + CONFIG.APP_NAME + ' v' + CONFIG.VERSION);
+    
+    try {
+        clearLocalStorage();
+        initTrackerProData();
+        
+        const data = getTrackerProData();
+        console.log('📊 Enhanced Data Structure Loaded:', {
+            students: data.registrations.length,
+            internships: data.internships.length,
+            applications: data.applications.length,
+            interviews: data.interviews.length
+        });
+        
+        initNavigation();
+        updateWelcomeText();
+        renderMyApplications();
+        renderAvailableInternships();
+        renderInterviewPanel();
+        updateProgressTracker();
+        
+        console.log(' Application initialized with enhanced data flow');
+        
+    } catch (error) {
+        console.error(' Initialization error:', error);
+        alert('Error initializing application. Please refresh the page.');
+    }
+});
+</script>
+
+</body>
+</html>
+
