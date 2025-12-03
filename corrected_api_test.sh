@@ -230,7 +230,7 @@ CREATE_INTERNSHIP_RESPONSE=$(curl -s -w "\n%{http_code}" -X POST "$BASE_URL/inte
     \"code\": \"AI-${TIMESTAMP:5:5}\",
     \"title\": \"Artificial Intelligence Internship\",
     \"duration\": 5,
-    \"workMode\": \"Remote\",
+    \"workMode\": \"Online\",
     \"prerequisites\": \"Python, TensorFlow, Deep Learning\",
     \"description\": \"Advanced AI and machine learning internship program\",
     \"status\": \"Posted\"
