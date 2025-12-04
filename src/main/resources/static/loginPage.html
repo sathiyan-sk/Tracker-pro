@@ -1166,8 +1166,11 @@
                                 if (data.user.userType === 'ADMIN') {
                                     // Admin redirected to admin dashboard
                                     window.location.href = 'adminPage.html';
+                                } else if (data.user.userType === 'STUDENT') {
+                                    // Student redirected to student career dashboard
+                                    window.location.href = 'studentCareers.html';
                                 } else {
-                                    // Other users go to index page
+                                    // Other users (HR/FACULTY) go to index page
                                     window.location.href = 'index.html';
                                 }
                             }, 1500);
