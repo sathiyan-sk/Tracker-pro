@@ -1295,122 +1295,172 @@
 
     <div id="notification-container"></div>
 
+<!-- Include the Student Career API Client -->
+<script src="studentCareers-api.js"></script>
+
 <script>
+/**
+ * TrackerPro Student Career Portal - Production Version
+ * Uses real API calls via studentCareers-api.js
+ * Version: 3.0.0 - Production with API Integration
+ */
 
 const CONFIG = {
-    STORAGE_KEY: 'trackerProData',
-    CURRENT_STUDENT_KEY: 'currentStudentId',
     APP_NAME: 'TrackerPro',
-    VERSION: '2.0.0'
+    VERSION: '3.0.0'
 };
 
-// Clear localStorage on page load for fresh data (demo mode)
-function clearLocalStorage() {
-    localStorage.removeItem(CONFIG.STORAGE_KEY);
-    localStorage.removeItem(CONFIG.CURRENT_STUDENT_KEY);
-    console.log('✓ Cleared localStorage cache for fresh data');
-}
+// ==========================================
+// STATE MANAGEMENT
+// ==========================================
 
-// Initialize with complete data structure
-function initTrackerProData() {
-    const seed = {
-        registrations: [
-            {
-                id: 1,
-                applicantId: 'STU-001',
-                firstName: 'Rajesh',
-                lastName: 'Kumar',
-                email: 'rajesh.kumar@university.edu',
-                mobile: '+91-9876543210',
-                address: '123 Tech Street, Bangalore',
-                university: 'Indian Institute of Technology',
-                program: 'B.Tech Computer Science',
-                yearSemester: '3rd Year',
-                cgpa: '3.8',
-                role: 'Student'
-            }
-        ],
-        
-        internships: [
-            {
-                id: 1,
-                internshipId: 'WD-001',
-                internshipTitle: 'Web Development Intern',
-                duration: '3 Months',
-                workMode: 'Online',
-                skills: 'HTML, CSS, JavaScript, React, Node.js, MongoDB, REST APIs',
-                description: 'Build responsive web applications using modern technologies. Work on UI/UX implementation, frontend optimization, and backend API development.',
-                status: 'PUBLISHED',
-                postedDate: '2024-11-15',
-                createdBy: 'HR-ADMIN-001',
-                applicationsReceived: 0
-            },
-            {
-                id: 2,
-                internshipId: 'DS-002',
-                internshipTitle: 'Data Analytics Intern',
-                duration: '4 Months',
-                workMode: 'Remote',
-                skills: 'Python, SQL, Statistics, Machine Learning, Pandas, Tableau',
-                description: 'Analyze business data and create actionable insights. Work with datasets, build dashboards, and develop predictive models.',
-                status: 'PUBLISHED',
-                postedDate: '2024-11-14',
-                createdBy: 'HR-ADMIN-001',
-                applicationsReceived: 0
-            }
-        ],
-        
-        applications: [],
-        interviews: []
-    };
-    
-    localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(seed));
-    localStorage.setItem(CONFIG.CURRENT_STUDENT_KEY, 'STU-001');
-    
-    console.log('✓ TrackerPro initialized with enhanced data structure');
-    return seed;
-}
+// Global state to cache data
+let appState = {
+    student: null,
+    internships: [],
+    applications: [],
+    dashboardStats: null,
+    isLoading: false
+};
 
-function getTrackerProData() {
-    return JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY)) || initTrackerProData();
-}
+// Currently selected internship for application modal
+let currentSelectedInternship = null;
 
-function saveTrackerProData(data) {
-    localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(data));
-}
+// ==========================================
+// AUTHENTICATION CHECK
+// ==========================================
 
-function getCurrentStudent() {
-    const data = getTrackerProData();
-    const id = localStorage.getItem(CONFIG.CURRENT_STUDENT_KEY);
-    const student = data.registrations.find(r => r.applicantId === id);
-    
-    if (!student) {
-        return {
-            firstName: 'Student',
-            lastName: 'User',
-            role: 'Student',
-            applicantId: 'STU-001'
-        };
+/**
+ * Check if user is authenticated and redirect if not
+ */
+function checkAuthentication() {
+    const token = StudentAPI.getAuthToken();
+    if (!token) {
+        console.warn('⚠️ No authentication token found. Redirecting to login...');
+        window.location.href = '/loginPage.html';
+        return false;
     }
-    
-    return student;
+    return true;
 }
 
+// ==========================================
+// DATA LOADING FUNCTIONS
+// ==========================================
+
+/**
+ * Load student profile from API
+ */
+async function loadStudentProfile() {
+    try {
+        const response = await StudentAPI.Profile.getProfile();
+        if (response.success) {
+            appState.student = response.data;
+            console.log('✅ Student profile loaded:', appState.student);
+            return appState.student;
+        }
+    } catch (error) {
+        console.error('❌ Failed to load student profile:', error);
+        if (error.statusCode === 401 || error.statusCode === 403) {
+            StudentAPI.Auth.logout();
+        }
+        throw error;
+    }
+}
+
+/**
+ * Load available internships from API
+ */
+async function loadInternships(filters = {}) {
+    try {
+        const response = await StudentAPI.Internship.getAvailableInternships(filters);
+        if (response.success) {
+            appState.internships = response.data || [];
+            console.log('✅ Internships loaded:', appState.internships.length);
+            return appState.internships;
+        }
+    } catch (error) {
+        console.error('❌ Failed to load internships:', error);
+        appState.internships = [];
+        throw error;
+    }
+}
+
+/**
+ * Load student applications from API
+ */
+async function loadApplications(status = null) {
+    try {
+        const response = await StudentAPI.Application.getMyApplications(status);
+        if (response.success) {
+            appState.applications = response.data || [];
+            console.log('✅ Applications loaded:', appState.applications.length);
+            return appState.applications;
+        }
+    } catch (error) {
+        console.error('❌ Failed to load applications:', error);
+        appState.applications = [];
+        throw error;
+    }
+}
+
+/**
+ * Load dashboard statistics from API
+ */
+async function loadDashboardStats() {
+    try {
+        const response = await StudentAPI.Dashboard.getStats();
+        if (response.success) {
+            appState.dashboardStats = response.data;
+            console.log('✅ Dashboard stats loaded:', appState.dashboardStats);
+            return appState.dashboardStats;
+        }
+    } catch (error) {
+        console.error('❌ Failed to load dashboard stats:', error);
+        throw error;
+    }
+}
+
+// ==========================================
+// UI HELPER FUNCTIONS
+// ==========================================
+
+/**
+ * Get current student from state
+ */
+function getCurrentStudent() {
+    return appState.student || {
+        firstName: 'Student',
+        lastName: 'User',
+        email: ''
+    };
+}
+
+/**
+ * Check if student has any applications
+ */
 function hasAnyApplication() {
-    const data = getTrackerProData();
-    const student = getCurrentStudent();
-    return data.applications.some(app => app.applicantId === student.applicantId);
+    return appState.applications && appState.applications.length > 0;
 }
 
-function generateApplicationId() {
-    const student = getCurrentStudent();
-    const data = getTrackerProData();
-    const internship = data.internships.find(i => i.id === currentSelectedInternshipId);
-    const internshipCode = internship ? internship.internshipId.replace('-', '').substring(0, 3) : 'APP';
-    const randomNum = Math.floor(Math.random() * 9000) + 1000;
-    const studentInitial = student.firstName.charAt(0).toUpperCase();
-    return `${internshipCode}-${studentInitial}${randomNum}`;
+/**
+ * Show loading indicator
+ */
+function showLoading(containerId, message = 'Loading...') {
+    const container = document.getElementById(containerId);
+    if (container) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-state-icon">⏳</div>
+                <h3>${message}</h3>
+                <p>Please wait...</p>
+            </div>
+        `;
+    }
 }
+
+// ==========================================
+// PAGE NAVIGATION
+// ==========================================
 
 function showPage(pageId) {
     const allPages = document.querySelectorAll('.page');
@@ -1427,11 +1477,12 @@ function showPage(pageId) {
     
     updateSidebarHighlight(pageId);
     
+    // Load data for the page
     if (pageId === 'my-applications') {
-        renderMyApplications();
+        loadAndRenderApplications();
         updateProgressTracker();
     } else if (pageId === 'available-internships') {
-        renderAvailableInternships();
+        loadAndRenderInternships();
     } else if (pageId === 'interview-panel') {
         renderInterviewPanel();
     }
@@ -1456,45 +1507,50 @@ function initNavigation() {
     }
 }
 
+// ==========================================
+// UPDATE WELCOME TEXT
+// ==========================================
+
 function updateWelcomeText() {
-    const welcomeEl = document.getElementById('welcomeTitle');
-    if (!welcomeEl) return;
-    
     const student = getCurrentStudent();
-    welcomeEl.textContent = 'Welcome, ' + student.firstName + ' ' + student.lastName;
+    
+    const welcomeEl = document.getElementById('welcomeTitle');
+    if (welcomeEl) {
+        welcomeEl.textContent = 'Welcome, ' + student.firstName + ' ' + (student.lastName || '');
+    }
     
     const avatar = document.getElementById('userAvatar');
-    if (avatar) {
+    if (avatar && student.firstName) {
         avatar.textContent = student.firstName.charAt(0).toUpperCase();
     }
     
     const userName = document.getElementById('userName');
     if (userName) {
-        userName.textContent = student.firstName + ' ' + student.lastName;
+        userName.textContent = student.firstName + ' ' + (student.lastName || '');
     }
 }
 
-// Progress Tracker with all statuses
-function updateProgressTracker() {
-    const data = getTrackerProData();
-    const student = getCurrentStudent();
-    const myApplications = data.applications.filter(app => app.applicantId === student.applicantId);
+// ==========================================
+// PROGRESS TRACKER
+// ==========================================
 
+function updateProgressTracker() {
+    const applications = appState.applications || [];
     let highestStep = 1;
     
-    if (myApplications.length > 0) {
-        myApplications.forEach(app => {
-            const status = app.status.toLowerCase().trim();
+    if (applications.length > 0) {
+        applications.forEach(app => {
+            const status = (app.status || '').toLowerCase().trim();
             
-            if (status === 'applied') {
+            if (status === 'pending' || status === 'applied') {
                 highestStep = Math.max(highestStep, 2);
-            } else if (status.includes('review') || status.includes('under review')) {
+            } else if (status.includes('review') || status === 'under review') {
                 highestStep = Math.max(highestStep, 3);
             } else if (status.includes('shortlist')) {
                 highestStep = Math.max(highestStep, 4);
             } else if (status.includes('interview')) {
                 highestStep = Math.max(highestStep, 5);
-            } else if (status.includes('selected') || status.includes('rejected')) {
+            } else if (status.includes('accepted') || status.includes('rejected')) {
                 highestStep = Math.max(highestStep, 6);
             }
         });
@@ -1527,66 +1583,102 @@ function updateProgressTracker() {
     }
 }
 
+// ==========================================
+// RENDER INTERNSHIPS
+// ==========================================
+
+async function loadAndRenderInternships() {
+    const container = document.getElementById('internshipsContainer');
+    if (!container) return;
+    
+    showLoading('internshipsContainer', 'Loading internships...');
+    
+    try {
+        await loadInternships();
+        renderAvailableInternships();
+    } catch (error) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-state-icon">❌</div>
+                <h3>Failed to load internships</h3>
+                <p>${error.message || 'Please try again later'}</p>
+            </div>
+        `;
+    }
+}
+
 function renderAvailableInternships() {
-    const data = getTrackerProData();
-    const student = getCurrentStudent();
     const container = document.getElementById('internshipsContainer');
     if (!container) return;
 
-    const hasApplication = hasAnyApplication();
-    const internships = data.internships.filter(i => i.status === 'PUBLISHED');
+    const internships = appState.internships || [];
     
     if (internships.length === 0) {
-        container.innerHTML = '<div class="empty-state"><div class="empty-state-icon">💼</div><h3>No internships available</h3><p>Check back later for new opportunities</p></div>';
+        container.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-state-icon">💼</div>
+                <h3>No internships available</h3>
+                <p>Check back later for new opportunities</p>
+            </div>
+        `;
         return;
     }
 
     container.innerHTML = '';
+    const applications = appState.applications || [];
 
     internships.forEach(internship => {
-        const alreadyApplied = data.applications.some(
-            app => app.applicantId === student.applicantId && app.internshipId === internship.internshipId
+        // Check if already applied using careerPostId
+        const alreadyApplied = applications.some(
+            app => app.careerPostId === internship.id
         );
 
         const card = document.createElement('div');
         card.className = 'internship-card';
-        card.dataset.internshipId = internship.internshipId;
+        card.dataset.internshipId = internship.id;
 
-        const isApplyDisabled = hasApplication || alreadyApplied;
-        const buttonText = alreadyApplied ? '✓ Applied' : (hasApplication ? 'Already Applied' : 'Apply Now');
+        // Format duration
+        const durationText = internship.duration ? `${internship.duration} Months` : 'N/A';
+        
+        // Format posted date
+        const postedDate = internship.createdAt ? 
+            new Date(internship.createdAt).toLocaleDateString() : 'N/A';
+
+        const buttonText = alreadyApplied ? '✓ Applied' : 'Apply Now';
+        const buttonClass = alreadyApplied ? 'applied' : '';
 
         card.innerHTML = `
             <div class="internship-card-header">
                 <div class="internship-institute">TrackerPro Internship</div>
-                <h3 class="internship-title">${internship.internshipTitle}</h3>
+                <h3 class="internship-title">${internship.title || 'Untitled'}</h3>
             </div>
 
             <div class="internship-card-body">
                 <div class="info-item">
                     <span class="info-label">Internship ID:</span>
-                    <span class="info-value id">${internship.internshipId}</span>
+                    <span class="info-value id">${internship.code || 'N/A'}</span>
                 </div>
                 
                 <div class="info-item">
                     <span class="info-label">Duration:</span>
-                    <span class="info-value duration">${internship.duration}</span>
+                    <span class="info-value duration">${durationText}</span>
                 </div>
                 
                 <div class="info-item">
                     <span class="info-label">Work Mode:</span>
-                    <span class="info-value mode">${internship.workMode}</span>
+                    <span class="info-value mode">${internship.workMode || 'N/A'}</span>
                 </div>
                 
                 <div class="info-item">
                     <span class="info-label">Posted:</span>
-                    <span class="info-value posted">${internship.postedDate}</span>
+                    <span class="info-value posted">${postedDate}</span>
                 </div>
             </div>
 
             <div class="internship-card-footer">
-                <button class="apply-btn ${alreadyApplied ? 'applied' : ''}" 
+                <button class="apply-btn ${buttonClass}" 
                         onclick="openApplicationModal(${internship.id})" 
-                        ${isApplyDisabled ? 'disabled' : ''}>
+                        ${alreadyApplied ? 'disabled' : ''}>
                     ${buttonText}
                 </button>
             </div>
@@ -1596,25 +1688,43 @@ function renderAvailableInternships() {
     });
 }
 
-let currentSelectedInternshipId = null;
+// ==========================================
+// APPLICATION MODAL
+// ==========================================
 
-function openApplicationModal(internshipId) {
-    if (hasAnyApplication()) {
-        showNotification('You have already applied to an internship. You cannot apply to multiple internships.', 'error');
+async function openApplicationModal(internshipId) {
+    // Find internship from state
+    const internship = appState.internships.find(i => i.id === internshipId);
+    
+    if (!internship) {
+        showNotification('Internship not found', 'error');
         return;
     }
 
-    const data = getTrackerProData();
-    const internship = data.internships.find(i => i.id === internshipId);
-    
-    if (!internship) return;
+    // Check if already applied
+    const alreadyApplied = appState.applications.some(
+        app => app.careerPostId === internshipId
+    );
 
-    currentSelectedInternshipId = internshipId;
-    document.getElementById('modalInternshipTitle').textContent = internship.internshipTitle + ' (' + internship.internshipId + ')';
+    if (alreadyApplied) {
+        showNotification('You have already applied for this internship.', 'error');
+        return;
+    }
+
+    currentSelectedInternship = internship;
     
+    // Update modal title
+    document.getElementById('modalInternshipTitle').textContent = 
+        internship.title + ' (' + internship.code + ')';
+    
+    // Build internship specs
     const modalBody = document.querySelector('.modal-body');
     const existingSpecs = modalBody.querySelector('.internship-specifications');
     if (existingSpecs) existingSpecs.remove();
+    
+    const durationText = internship.duration ? `${internship.duration} Months` : 'N/A';
+    const postedDate = internship.createdAt ? 
+        new Date(internship.createdAt).toLocaleDateString() : 'N/A';
     
     const specsHTML = `
         <div class="internship-specifications">
@@ -1623,30 +1733,30 @@ function openApplicationModal(internshipId) {
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
                 <div style="padding: 12px; background: var(--light-color); border-radius: 8px;">
                     <div style="font-size: 0.8rem; color: var(--text-light); font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Internship ID</div>
-                    <div style="font-size: 0.95rem; font-weight: 600; color: var(--primary-color);">${internship.internshipId}</div>
+                    <div style="font-size: 0.95rem; font-weight: 600; color: var(--primary-color);">${internship.code}</div>
                 </div>
                 <div style="padding: 12px; background: var(--light-color); border-radius: 8px;">
                     <div style="font-size: 0.8rem; color: var(--text-light); font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Duration</div>
-                    <div style="font-size: 0.95rem; font-weight: 600; color: var(--text-primary);">${internship.duration}</div>
+                    <div style="font-size: 0.95rem; font-weight: 600; color: var(--text-primary);">${durationText}</div>
                 </div>
                 <div style="padding: 12px; background: var(--light-color); border-radius: 8px;">
                     <div style="font-size: 0.8rem; color: var(--text-light); font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Work Mode</div>
-                    <div style="font-size: 0.95rem; font-weight: 600; color: var(--text-primary);">${internship.workMode}</div>
+                    <div style="font-size: 0.95rem; font-weight: 600; color: var(--text-primary);">${internship.workMode || 'N/A'}</div>
                 </div>
                 <div style="padding: 12px; background: var(--light-color); border-radius: 8px;">
                     <div style="font-size: 0.8rem; color: var(--text-light); font-weight: 600; text-transform: uppercase; margin-bottom: 6px;">Posted</div>
-                    <div style="font-size: 0.95rem; font-weight: 600; color: var(--secondary-color);">${internship.postedDate}</div>
+                    <div style="font-size: 0.95rem; font-weight: 600; color: var(--secondary-color);">${postedDate}</div>
                 </div>
             </div>
 
             <div style="margin-bottom: 16px;">
                 <div style="font-size: 0.8rem; color: var(--text-light); font-weight: 600; text-transform: uppercase; margin-bottom: 8px;">Required Skills</div>
-                <div style="padding: 12px; background: var(--light-color); border-radius: 8px; font-size: 0.95rem; color: var(--text-primary); line-height: 1.6;">${internship.skills}</div>
+                <div style="padding: 12px; background: var(--light-color); border-radius: 8px; font-size: 0.95rem; color: var(--text-primary); line-height: 1.6;">${internship.prerequisites || 'Not specified'}</div>
             </div>
 
             <div style="margin-bottom: 20px;">
                 <div style="font-size: 0.8rem; color: var(--text-light); font-weight: 600; text-transform: uppercase; margin-bottom: 8px;">Description</div>
-                <div style="padding: 12px; background: var(--light-color); border-radius: 8px; font-size: 0.95rem; color: var(--text-primary); line-height: 1.6;">${internship.description}</div>
+                <div style="padding: 12px; background: var(--light-color); border-radius: 8px; font-size: 0.95rem; color: var(--text-primary); line-height: 1.6;">${internship.description || 'No description available'}</div>
             </div>
 
             <hr style="border: none; border-top: 2px solid #e8e9ea; margin: 20px 0;">
@@ -1668,7 +1778,12 @@ function closeModal(event) {
     document.getElementById('fileInputLabel').classList.remove('has-file');
     document.getElementById('fileInputLabel').textContent = '📁 Click to upload or drag file here';
     document.body.style.overflow = 'auto';
-    currentSelectedInternshipId = null;
+    currentSelectedInternship = null;
+    
+    // Remove specs
+    const modalBody = document.querySelector('.modal-body');
+    const existingSpecs = modalBody.querySelector('.internship-specifications');
+    if (existingSpecs) existingSpecs.remove();
 }
 
 function updateFileLabel() {
@@ -1684,75 +1799,90 @@ function updateFileLabel() {
     }
 }
 
-// submitApplication with complete data flow
-function submitApplication() {
-    if (hasAnyApplication()) {
-        showNotification('You have already applied to an internship. You cannot apply to multiple internships.', 'error');
-        closeModal();
-        return;
-    }
+// ==========================================
+// SUBMIT APPLICATION (API CALL)
+// ==========================================
 
-    const data = getTrackerProData();
-    const student = getCurrentStudent();
-    const internship = data.internships.find(i => i.id === currentSelectedInternshipId);
-
-    if (!internship || !student) {
-        alert('Error: Unable to submit application');
+async function submitApplication() {
+    if (!currentSelectedInternship) {
+        showNotification('No internship selected', 'error');
         return;
     }
 
     const resumeFile = document.getElementById('resumeFile').files[0];
-    const now = new Date();
-
-    const newApplication = {
-        id: data.applications.length + 1,
-        applicationId: generateApplicationId(),
-        applicantId: student.applicantId,
-        candidateName: student.firstName + ' ' + student.lastName,
-        email: student.email || 'not-provided@example.com',
-        phone: student.mobile || 'Not provided',
-        internshipId: internship.internshipId,
-        internshipTitle: internship.internshipTitle,
-        internshipCode: internship.internshipId,
-        duration: internship.duration,
-        workMode: internship.workMode,
-        skills: internship.skills,
-        appliedDate: now.toISOString().split('T')[0],
-        appliedTime: now.toLocaleTimeString('en-US', {hour: '2-digit', minute: '2-digit'}),
-        status: 'Applied',
-        resumeFileName: resumeFile ? resumeFile.name : 'No Resume',
-        coverLetter: '',
-        appliedTimestamp: now.getTime(),
-        createdAt: now.toISOString(),
-        lastUpdated: now.toISOString()
+    
+    // Prepare application data
+    const applicationData = {
+        careerPostId: currentSelectedInternship.id,
+        coverLetter: '',  // Optional
+        resumeUrl: '',
+        resumeFilename: resumeFile ? resumeFile.name : null,
+        additionalSkills: '',
+        availability: 'Immediate',
+        expectedStipend: ''
     };
 
-    data.applications.push(newApplication);
-    
-    // Increment applications counter for internship
-    const internshipIndex = data.internships.findIndex(i => i.id === internship.id);
-    data.internships[internshipIndex].applicationsReceived += 1;
-    
-    saveTrackerProData(data);
+    try {
+        // Show loading state
+        const submitBtn = document.querySelector('.btn-submit');
+        const originalText = submitBtn.textContent;
+        submitBtn.textContent = 'Submitting...';
+        submitBtn.disabled = true;
 
-    closeModal();
+        const response = await StudentAPI.Application.applyForInternship(applicationData);
+        
+        if (response.success) {
+            showNotification('Application submitted successfully!', 'success');
+            closeModal();
+            
+            // Refresh applications and internships
+            await loadApplications();
+            renderAvailableInternships();
+            updateProgressTracker();
+        } else {
+            showNotification(response.message || 'Failed to submit application', 'error');
+        }
+    } catch (error) {
+        console.error('❌ Application submission error:', error);
+        showNotification(error.message || 'Failed to submit application. Please try again.', 'error');
+    } finally {
+        const submitBtn = document.querySelector('.btn-submit');
+        submitBtn.textContent = 'Submit Application';
+        submitBtn.disabled = false;
+    }
+}
+
+// ==========================================
+// RENDER MY APPLICATIONS
+// ==========================================
+
+async function loadAndRenderApplications() {
+    const container = document.getElementById('myApplicationsContainer');
+    if (!container) return;
     
-    renderMyApplications();
-    renderAvailableInternships();
-    updateProgressTracker();
+    showLoading('myApplicationsContainer', 'Loading applications...');
     
-    showNotification('Application submitted successfully!', 'success');
+    try {
+        await loadApplications();
+        renderMyApplications();
+    } catch (error) {
+        container.innerHTML = `
+            <div class="empty-state">
+                <div class="empty-state-icon">❌</div>
+                <h3>Failed to load applications</h3>
+                <p>${error.message || 'Please try again later'}</p>
+            </div>
+        `;
+    }
 }
 
 function renderMyApplications() {
     const container = document.getElementById('myApplicationsContainer');
     if (!container) return;
 
-    const data = getTrackerProData();
-    const student = getCurrentStudent();
-    const myApps = data.applications.filter(app => app.applicantId === student.applicantId);
+    const applications = appState.applications || [];
 
-    if (myApps.length === 0) {
+    if (applications.length === 0) {
         container.innerHTML = `
             <div class="empty-state">
                 <div class="empty-state-icon">📋</div>
@@ -1762,8 +1892,6 @@ function renderMyApplications() {
         `;
         return;
     }
-
-    myApps.sort((a, b) => (b.appliedTimestamp || 0) - (a.appliedTimestamp || 0));
 
     let html = `
         <table class="applications-table">
@@ -1779,15 +1907,18 @@ function renderMyApplications() {
             <tbody>
     `;
 
-    myApps.forEach(app => {
-        const statusClass = 'status-' + (app.status || 'applied').toLowerCase().replace(/\s+/g, '_');
+    applications.forEach(app => {
+        const status = app.status || 'Pending';
+        const statusClass = 'status-' + status.toLowerCase().replace(/\s+/g, '_');
+        const appliedDate = app.appliedDate ? app.appliedDate.split(' ')[0] : 'N/A';
+        
         html += `
             <tr>
-                <td><strong>${app.applicationId}</strong></td>
-                <td>${app.internshipTitle}</td>
-                <td><code>${app.internshipCode}</code></td>
-                <td><span class="status-text ${statusClass}">${app.status}</span></td>
-                <td>${app.appliedDate}</td>
+                <td><strong>#${app.id}</strong></td>
+                <td>${app.internshipTitle || 'N/A'}</td>
+                <td><code>${app.internshipCode || 'N/A'}</code></td>
+                <td><span class="status-text ${statusClass}">${status}</span></td>
+                <td>${appliedDate}</td>
             </tr>
         `;
     });
@@ -1800,19 +1931,20 @@ function renderMyApplications() {
     container.innerHTML = html;
 }
 
-// Interview Panel rendering
+// ==========================================
+// INTERVIEW PANEL (Placeholder - will use notifications/dashboard)
+// ==========================================
+
 function renderInterviewPanel() {
     const container = document.getElementById('interviewPanelContainer');
     if (!container) return;
     
-    const data = getTrackerProData();
-    const student = getCurrentStudent();
-    
-    const myInterviews = data.interviews.filter(
-        int => int.applicantId === student.applicantId
+    // Check applications for interview status
+    const interviews = (appState.applications || []).filter(
+        app => app.status && app.status.toLowerCase().includes('interview')
     );
 
-    if (myInterviews.length === 0) {
+    if (interviews.length === 0) {
         container.innerHTML = `
             <div class="empty-state">
                 <div class="empty-state-icon">🎤</div>
@@ -1823,43 +1955,22 @@ function renderInterviewPanel() {
         return;
     }
 
-    myInterviews.sort((a, b) => 
-        new Date(a.scheduledAt) - new Date(b.scheduledAt)
-    );
-
     let html = '<div class="interviews-grid">';
     
-    myInterviews.forEach(interview => {
-        const scheduledDate = new Date(interview.scheduledAt);
-        const now = new Date();
-        const isUpcoming = scheduledDate > now;
-        const canJoin = (scheduledDate - now) <= 10 * 60 * 1000; // 10 min before
-        
+    interviews.forEach(interview => {
         html += `
             <div class="interview-card">
                 <h3>${interview.internshipTitle || 'Internship Interview'}</h3>
                 <div class="interview-details">
-                    <p><strong>Date:</strong> ${interview.interviewDate}</p>
-                    <p><strong>Time:</strong> ${interview.interviewTime}</p>
-                    <p><strong>Mode:</strong> ${interview.interviewMode}</p>
-                    <p><strong>Interviewer:</strong> ${interview.interviewerName}</p>
-                    ${interview.interviewMode === 'Virtual' ? 
-                        `<p><strong>Platform:</strong> ${interview.meetingPlatform}</p>` : 
-                        `<p><strong>Location:</strong> ${interview.interviewLocation}</p>`
-                    }
+                    <p><strong>Status:</strong> ${interview.status}</p>
+                    <p><strong>Applied:</strong> ${interview.appliedDate || 'N/A'}</p>
+                    ${interview.hrNotes ? `<p><strong>HR Notes:</strong> ${interview.hrNotes}</p>` : ''}
                 </div>
                 <div class="interview-status">
-                    <span class="status-badge status-${interview.status.toLowerCase()}">
+                    <span class="status-badge status-scheduled">
                         ${interview.status}
                     </span>
                 </div>
-                ${isUpcoming && interview.interviewMode === 'Virtual' ? 
-                    `<button class="join-btn" 
-                            onclick="joinInterview('${interview.interviewLink}')" 
-                            ${!canJoin ? 'disabled' : ''}>
-                        ${canJoin ? 'Join Interview' : 'Join available 10 min before'}
-                    </button>` : ''
-                }
             </div>
         `;
     });
@@ -1868,9 +1979,9 @@ function renderInterviewPanel() {
     container.innerHTML = html;
 }
 
-function joinInterview(link) {
-    window.open(link, '_blank');
-}
+// ==========================================
+// USER DROPDOWN & LOGOUT
+// ==========================================
 
 const UI = {
     toggleUserDropdown: function() {
@@ -1883,9 +1994,23 @@ const UI = {
 
 function logout() {
     if (confirm('Are you sure you want to logout?')) {
-        alert('Logged out successfully');
+        StudentAPI.Auth.logout();
     }
 }
+
+// Close dropdown when clicking outside
+document.addEventListener('click', function(event) {
+    const userProfile = document.querySelector('.user-profile');
+    const dropdown = document.getElementById('userDropdown');
+    
+    if (dropdown && userProfile && !userProfile.contains(event.target)) {
+        dropdown.classList.remove('active');
+    }
+});
+
+// ==========================================
+// NOTIFICATIONS UI
+// ==========================================
 
 function showNotification(message, type) {
     const container = document.getElementById('notification-container');
@@ -1915,36 +2040,55 @@ function showNotification(message, type) {
     }, 3000);
 }
 
-// Initialize on page load
-document.addEventListener('DOMContentLoaded', function() {
+// ==========================================
+// INITIALIZATION
+// ==========================================
+
+async function initializeApp() {
     console.log('🚀 Initializing ' + CONFIG.APP_NAME + ' v' + CONFIG.VERSION);
     
+    // Check authentication
+    if (!checkAuthentication()) {
+        return;
+    }
+    
     try {
-        clearLocalStorage();
-        initTrackerProData();
-        
-        const data = getTrackerProData();
-        console.log('📊 Enhanced Data Structure Loaded:', {
-            students: data.registrations.length,
-            internships: data.internships.length,
-            applications: data.applications.length,
-            interviews: data.interviews.length
-        });
-        
-        initNavigation();
+        // Load student profile first
+        await loadStudentProfile();
         updateWelcomeText();
+        
+        // Load applications for progress tracker
+        await loadApplications();
+        
+        // Initialize navigation
+        initNavigation();
+        
+        // Render initial page (my-applications)
         renderMyApplications();
-        renderAvailableInternships();
-        renderInterviewPanel();
         updateProgressTracker();
         
-        console.log(' Application initialized with enhanced data flow');
+        // Pre-load internships for faster switching
+        loadInternships();
+        
+        console.log('✅ Application initialized successfully with API integration');
         
     } catch (error) {
-        console.error(' Initialization error:', error);
-        alert('Error initializing application. Please refresh the page.');
+        console.error('❌ Initialization error:', error);
+        
+        // If unauthorized, redirect to login
+        if (error.statusCode === 401 || error.statusCode === 403) {
+            showNotification('Session expired. Please login again.', 'error');
+            setTimeout(() => {
+                StudentAPI.Auth.logout();
+            }, 2000);
+        } else {
+            showNotification('Error initializing application. Please refresh.', 'error');
+        }
     }
-});
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', initializeApp);
 </script>
 
 </body>
