@@ -12,11 +12,18 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Table(name = "applications",
+    uniqueConstraints = {
+        @UniqueConstraint(
+            name = "uk_application_student_career", 
+            columnNames = {"student_id", "career_post_id"}
+        )
+    },
     indexes = {
         @Index(name = "idx_application_student_id", columnList = "student_id"),
         @Index(name = "idx_application_career_post_id", columnList = "career_post_id"),
         @Index(name = "idx_application_status", columnList = "status"),
-        @Index(name = "idx_application_applied_date", columnList = "applied_date")
+        @Index(name = "idx_application_applied_date", columnList = "applied_date"),
+        @Index(name = "idx_application_student_career", columnList = "student_id, career_post_id")
     }
 )
 @Data
