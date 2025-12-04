@@ -30,7 +30,7 @@ echo ""
 echo "2. Creating Test Internship Posts..."
 
 # Internship 1: Software Development
-curl -s -X POST "${BASE_URL}/admin/career-posts" \
+curl -s -X POST "${BASE_URL}/internships" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $ADMIN_TOKEN" \
   -d '{
@@ -44,7 +44,7 @@ curl -s -X POST "${BASE_URL}/admin/career-posts" \
   }' | jq '.'
 
 # Internship 2: Data Science
-curl -s -X POST "${BASE_URL}/admin/career-posts" \
+curl -s -X POST "${BASE_URL}/internships" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $ADMIN_TOKEN" \
   -d '{
@@ -58,7 +58,7 @@ curl -s -X POST "${BASE_URL}/admin/career-posts" \
   }' | jq '.'
 
 # Internship 3: UI/UX Design
-curl -s -X POST "${BASE_URL}/admin/career-posts" \
+curl -s -X POST "${BASE_URL}/internships" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $ADMIN_TOKEN" \
   -d '{
@@ -72,7 +72,7 @@ curl -s -X POST "${BASE_URL}/admin/career-posts" \
   }' | jq '.'
 
 # Internship 4: DevOps Engineering
-curl -s -X POST "${BASE_URL}/admin/career-posts" \
+curl -s -X POST "${BASE_URL}/internships" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $ADMIN_TOKEN" \
   -d '{
@@ -86,7 +86,7 @@ curl -s -X POST "${BASE_URL}/admin/career-posts" \
   }' | jq '.'
 
 # Internship 5: Mobile App Development
-curl -s -X POST "${BASE_URL}/admin/career-posts" \
+curl -s -X POST "${BASE_URL}/internships" \
   -H "Content-Type: application/json" \
   -H "Authorization: Bearer $ADMIN_TOKEN" \
   -d '{
