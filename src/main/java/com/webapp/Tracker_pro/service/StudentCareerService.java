@@ -201,9 +201,18 @@ public class StudentCareerService {
         }
 
         // Build response with internship details
+        // Optimize: Batch fetch all career posts to avoid N+1 query problem
+        Set<Long> careerPostIds = applications.stream()
+            .map(Application::getCareerPostId)
+            .collect(Collectors.toSet());
+        
+        Map<Long, CareerPost> careerPostMap = careerPostRepository.findAllById(careerPostIds)
+            .stream()
+            .collect(Collectors.toMap(CareerPost::getId, cp -> cp));
+        
         List<ApplicationResponse> applicationResponses = applications.stream()
             .map(app -> {
-                CareerPost careerPost = careerPostRepository.findById(app.getCareerPostId()).orElse(null);
+                CareerPost careerPost = careerPostMap.get(app.getCareerPostId());
                 return buildApplicationResponse(app, careerPost, student);
             })
             .collect(Collectors.toList());
