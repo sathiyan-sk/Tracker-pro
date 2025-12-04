@@ -18,10 +18,17 @@ import java.util.List;
  * Implements UserDetails for Spring Security integration.
  */
 @Entity
-@Table(name = "admins", uniqueConstraints = {
-    @UniqueConstraint(columnNames = "email"),
-    @UniqueConstraint(columnNames = "mobile_no")
-})
+@Table(name = "admins", 
+    uniqueConstraints = {
+        @UniqueConstraint(columnNames = "email"),
+        @UniqueConstraint(columnNames = "mobile_no")
+    },
+    indexes = {
+        @Index(name = "idx_admin_email", columnList = "email"),
+        @Index(name = "idx_admin_created_at", columnList = "created_at"),
+        @Index(name = "idx_admin_is_active", columnList = "is_active")
+    }
+)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
