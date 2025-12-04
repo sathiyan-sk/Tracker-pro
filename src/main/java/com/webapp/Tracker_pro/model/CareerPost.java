@@ -19,6 +19,7 @@ import java.time.LocalDateTime;
     indexes = {
         @Index(name = "idx_career_post_code", columnList = "code"),
         @Index(name = "idx_career_post_status", columnList = "status"),
+        @Index(name = "idx_career_post_work_mode", columnList = "work_mode"),
         @Index(name = "idx_career_post_created_at", columnList = "created_at"),
         @Index(name = "idx_career_post_created_by", columnList = "created_by")
     }
