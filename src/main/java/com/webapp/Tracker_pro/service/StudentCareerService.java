@@ -140,6 +140,14 @@ public class StudentCareerService {
         CareerPost careerPost = careerPostRepository.findById(request.getCareerPostId())
             .orElseThrow(() -> new ResourceNotFoundException("Internship not found"));
 
+        // Check if internship is published
+        if (!"Posted".equals(careerPost.getStatus())) {
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", false);
+            response.put("message", "This internship is not available for applications");
+            return response;
+        }
+
         // Check if already applied
         if (applicationRepository.existsByStudentIdAndCareerPostId(student.getId(), request.getCareerPostId())) {
             Map<String, Object> response = new HashMap<>();
