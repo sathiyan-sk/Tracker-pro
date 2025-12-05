@@ -63,6 +63,12 @@ public class Student implements UserDetails {
     @Column(length = 50)
     private String location;
 
+    @Column(name = "father_name", length = 100)
+    private String fatherName;
+
+    @Column(name = "pincode", length = 10)
+    private String pincode;
+
     @Column(name = "is_active")
     private Boolean isActive = true;
 
