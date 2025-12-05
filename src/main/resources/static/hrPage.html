@@ -1272,11 +1272,58 @@ HR Team`
         });
 
         // =======================
-        // APPLICATIONS
+        // APPLICATIONS - API INTEGRATION
         // =======================
-        function renderTestApplications() {
+        
+        let realApplications = [];
+        
+        // Load applications from backend API
+        async function loadApplicationsFromAPI(filters = {}) {
+            try {
+                const response = await HRApplicationsAPI.getAll(filters);
+                if (response.success) {
+                    realApplications = response.data.map(app => transformApplicationData(app));
+                    renderApplications(realApplications);
+                    return realApplications;
+                }
+            } catch (error) {
+                console.error('Error loading applications:', error);
+                showToast('Failed to load applications. Using test data.');
+                // Fallback to test data
+                realApplications = testApplications;
+                renderApplications(realApplications);
+            }
+        }
+        
+        // Transform backend data to frontend format
+        function transformApplicationData(backendApp) {
+            return {
+                id: backendApp.id,
+                applicantId: backendApp.applicantId,
+                candidateName: `${backendApp.student.firstName} ${backendApp.student.lastName || ''}`.trim(),
+                fatherName: backendApp.student.fatherName || '-',
+                gender: backendApp.student.gender || '-',
+                dob: backendApp.student.dob || '-',
+                email: backendApp.student.email || '-',
+                phone: backendApp.student.mobileNo || '-',
+                address: backendApp.student.address || '-',
+                pincode: backendApp.student.pincode || '-',
+                internshipId: backendApp.internship.code || '-',
+                internshipTitle: backendApp.internship.title || '-',
+                appliedDate: backendApp.appliedDate ? backendApp.appliedDate.split('T')[0] : '-',
+                status: backendApp.status || 'Pending',
+                resumeUrl: backendApp.resumeUrl || null,
+                coverLetter: backendApp.coverLetter || '-',
+                additionalSkills: backendApp.additionalSkills || '-',
+                availability: backendApp.availability || '-',
+                expectedStipend: backendApp.expectedStipend || '-',
+                hrNotes: backendApp.hrNotes || '-'
+            };
+        }
+        
+        function renderApplications(applications = []) {
             const container = document.getElementById('applicationsContainer');
-            container.innerHTML = testApplications.map(app => `
+            container.innerHTML = applications.map(app => `
                 <div class="application-card" data-name="${app.candidateName}" data-email="${app.email}" data-date="${app.appliedDate}" data-status="${app.status}">
                     <input type="checkbox" class="card-checkbox" data-app='${JSON.stringify(app).replace(/'/g, "&apos;")}' onchange="updateSelectedCount()">
                     <div class="card-content">
