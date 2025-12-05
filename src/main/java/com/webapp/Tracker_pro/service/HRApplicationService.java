@@ -413,9 +413,9 @@ public class HRApplicationService {
                 .dob(student.getDob())
                 .age(student.getAge())
                 .location(student.getLocation())
-                .fatherName("")  // Student entity doesn't have fatherName field
+                .fatherName(student.getFatherName() != null ? student.getFatherName() : "")
                 .address(student.getLocation())  // Use location as address
-                .pincode("")  // Student entity doesn't have pincode field
+                .pincode(student.getPincode() != null ? student.getPincode() : "")
                 .profilePhotoUrl(student.getProfilePhotoUrl())
                 .primaryResumeUrl(student.getPrimaryResumeUrl())
                 .linkedinUrl(student.getLinkedinUrl())
