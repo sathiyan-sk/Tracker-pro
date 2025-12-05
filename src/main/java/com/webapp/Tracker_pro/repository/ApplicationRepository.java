@@ -65,4 +65,9 @@ public interface ApplicationRepository extends JpaRepository<Application, Long> 
      */
     @Query("SELECT a FROM Application a WHERE a.studentId = :studentId ORDER BY a.appliedDate DESC")
     List<Application> findApplicationsByStudentId(@Param("studentId") Long studentId);
+
+    /**
+     * Count applications by status (useful for HR dashboard)
+     */
+    long countByStatus(String status);
 }
