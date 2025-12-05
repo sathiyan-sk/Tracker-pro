@@ -1223,7 +1223,7 @@ HR Team`
             return statusMap[status] || '';
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', async function() {
             // Load persisted data
             allCandidates = DataPersistence.load('allCandidates', []);
             scheduledInterviews = DataPersistence.load('scheduledInterviews', []);
@@ -1232,7 +1232,8 @@ HR Team`
             hiredStudents = DataPersistence.load('hiredStudents', []);
             hiredCandidateIdCounter = DataPersistence.load('hiredCandidateIdCounter', 1);
             
-            renderTestApplications();
+            // Load applications from API
+            await loadApplicationsFromAPI();
             renderAllShortlistTables();
             renderInterviews();
             searchAndFilterHired();
