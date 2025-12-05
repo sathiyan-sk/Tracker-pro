@@ -363,9 +363,9 @@ public class HRApplicationService {
                 .mobileNo(student != null ? student.getMobileNo() : "")
                 .gender(student != null ? student.getGender() : "")
                 .dob(student != null ? student.getDob() : "")
-                .fatherName("")  // Student entity doesn't have fatherName field
+                .fatherName(student != null ? (student.getFatherName() != null ? student.getFatherName() : "") : "")
                 .address(student != null ? student.getLocation() : "")  // Use location as address
-                .pincode("")  // Student entity doesn't have pincode field
+                .pincode(student != null ? (student.getPincode() != null ? student.getPincode() : "") : "")
                 .build();
 
         // Build internship info
