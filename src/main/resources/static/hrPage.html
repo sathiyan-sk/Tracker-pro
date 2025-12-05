@@ -1371,13 +1371,31 @@ HR Team`
             updateSelectedCount();
         }
 
-        function updateApplicationStatus(button, status) {
+        async function updateApplicationStatus(button, status) {
             const card = button.closest('.application-card');
-            card.setAttribute('data-status', status);
-            const badge = card.querySelector('.status-badge');
-            badge.className = `status-badge status-${status.toLowerCase().replace(' ', '-')}`;
-            badge.textContent = status;
-            showToast(`Application marked as ${status}`);
+            const checkbox = card.querySelector('input[type="checkbox"]');
+            const appData = JSON.parse(checkbox.getAttribute('data-app'));
+            
+            try {
+                // Call backend API to update status
+                const response = await HRApplicationsAPI.updateStatus(appData.id, status);
+                if (response.success) {
+                    card.setAttribute('data-status', status);
+                    const badge = card.querySelector('.status-badge');
+                    badge.className = `status-badge status-${status.toLowerCase().replace(' ', '-')}`;
+                    badge.textContent = status;
+                    showToast(`Application marked as ${status}`);
+                    
+                    // Update local data
+                    appData.status = status;
+                    checkbox.setAttribute('data-app', JSON.stringify(appData));
+                } else {
+                    showToast('Failed to update application status', 'error');
+                }
+            } catch (error) {
+                console.error('Error updating status:', error);
+                showToast('Failed to update application status', 'error');
+            }
         }
 
         function updateSelectedCount() {
