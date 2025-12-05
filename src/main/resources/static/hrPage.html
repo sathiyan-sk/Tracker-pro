@@ -1429,34 +1429,48 @@ HR Team`
             updateSelectedCount();
         }
 
-        function bulkShortlist() {
+        async function bulkShortlist() {
             if (selectedApplications.length === 0) {
                 showToast('No applications selected');
                 return;
             }
             
-            selectedApplications.forEach(app => {
-                const candidate = {
-                    ...app,
-                    type: 'Applied',
-                    category: 'PMIS'
-                };
-                allCandidates.push(candidate);
-            });
+            const applicationIds = selectedApplications.map(app => app.id);
             
-            const count = selectedApplications.length;
-            document.querySelectorAll('.application-card input[type="checkbox"]:checked').forEach(cb => {
-                cb.closest('.application-card').remove();
-            });
-            
-            selectedApplications = [];
-            updateSelectedCount();
-            renderAllShortlistTables();
-            DataPersistence.save('allCandidates', allCandidates);  //Save data
-            showToast(`${count} candidates shortlisted successfully`);
+            try {
+                // Call backend API for bulk update
+                const response = await HRApplicationsAPI.bulkUpdate(applicationIds, 'Shortlisted');
+                if (response.success) {
+                    selectedApplications.forEach(app => {
+                        const candidate = {
+                            ...app,
+                            status: 'Shortlisted',
+                            type: 'Applied',
+                            category: 'PMIS'
+                        };
+                        allCandidates.push(candidate);
+                    });
+                    
+                    const count = response.updated || selectedApplications.length;
+                    document.querySelectorAll('.application-card input[type="checkbox"]:checked').forEach(cb => {
+                        cb.closest('.application-card').remove();
+                    });
+                    
+                    selectedApplications = [];
+                    updateSelectedCount();
+                    renderAllShortlistTables();
+                    DataPersistence.save('allCandidates', allCandidates);
+                    showToast(`${count} candidates shortlisted successfully`);
+                } else {
+                    showToast('Failed to shortlist candidates', 'error');
+                }
+            } catch (error) {
+                console.error('Error in bulk shortlist:', error);
+                showToast('Failed to shortlist candidates', 'error');
+            }
         }
 
-        function bulkReject() {
+        async function bulkReject() {
             if (selectedApplications.length === 0) {
                 showToast('No applications selected');
                 return;
@@ -1464,30 +1478,49 @@ HR Team`
             
             if (!confirm(`Are you sure you want to reject ${selectedApplications.length} applications?`)) return;
             
-            const count = selectedApplications.length;
-            document.querySelectorAll('.application-card input[type="checkbox"]:checked').forEach(cb => {
-                cb.closest('.application-card').remove();
-            });
+            const applicationIds = selectedApplications.map(app => app.id);
             
-            showToast(`${count} applications rejected`);
-            selectedApplications = [];
-            updateSelectedCount();
+            try {
+                // Call backend API for bulk update
+                const response = await HRApplicationsAPI.bulkUpdate(applicationIds, 'Rejected');
+                if (response.success) {
+                    const count = response.updated || selectedApplications.length;
+                    document.querySelectorAll('.application-card input[type="checkbox"]:checked').forEach(cb => {
+                        cb.closest('.application-card').remove();
+                    });
+                    
+                    showToast(`${count} applications rejected`);
+                    selectedApplications = [];
+                    updateSelectedCount();
+                } else {
+                    showToast('Failed to reject applications', 'error');
+                }
+            } catch (error) {
+                console.error('Error in bulk reject:', error);
+                showToast('Failed to reject applications', 'error');
+            }
         }
 
-        function bulkUpdateStatus(status) {
+        async function bulkUpdateStatus(status) {
             if (selectedApplications.length === 0) {
                 showToast('No applications selected');
                 return;
             }
             
-            const count = selectedApplications.length;
-            document.querySelectorAll('.application-card input[type="checkbox"]:checked').forEach(cb => {
-                const card = cb.closest('.application-card');
-                card.setAttribute('data-status', status);
-                const badge = card.querySelector('.status-badge');
-                badge.className = `status-badge status-${status.toLowerCase().replace(' ', '-')}`;
-                badge.textContent = status;
-                cb.checked = false;
+            const applicationIds = selectedApplications.map(app => app.id);
+            
+            try {
+                // Call backend API for bulk update
+                const response = await HRApplicationsAPI.bulkUpdate(applicationIds, status);
+                if (response.success) {
+                    const count = response.updated || selectedApplications.length;
+                    document.querySelectorAll('.application-card input[type="checkbox"]:checked').forEach(cb => {
+                        const card = cb.closest('.application-card');
+                        card.setAttribute('data-status', status);
+                        const badge = card.querySelector('.status-badge');
+                        badge.className = `status-badge status-${status.toLowerCase().replace(' ', '-')}`;
+                        badge.textContent = status;
+                        cb.checked = false;
             });
             
             showToast(`${count} applications marked as ${status}`);
