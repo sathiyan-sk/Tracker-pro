@@ -1692,36 +1692,62 @@ HR Team`
             updateSelectedCount();
         }
 
-        function shortlistCandidate(button, candidateType) {
+        async function shortlistCandidate(button, candidateType) {
             const card = button.closest('.application-card');
             const candidateName = card.getAttribute('data-name');
-            const email = card.getAttribute('data-email');
+            const checkbox = card.querySelector('input[type="checkbox"]');
+            const appData = JSON.parse(checkbox.getAttribute('data-app'));
             
-            const app = testApplications.find(a => a.email === email);
-            if (!app) return;
-            
-            const candidate = {
-                ...app,
-                type: candidateType === 'applied' ? 'Applied' : 'Imported',
-                category: 'PMIS'
-            };
-            
-            allCandidates.push(candidate);
-            card.remove();
-            updateSelectedCount();
-            searchApplications();
-            renderAllShortlistTables();
-            DataPersistence.save('allCandidates', allCandidates);  // Save data
-            showToast(`${candidateName} shortlisted successfully`);
+            try {
+                // Call backend API to update status to Shortlisted
+                const response = await HRApplicationsAPI.updateStatus(appData.id, 'Shortlisted');
+                if (response.success) {
+                    const candidate = {
+                        ...appData,
+                        status: 'Shortlisted',
+                        type: candidateType === 'applied' ? 'Applied' : 'Imported',
+                        category: 'PMIS'
+                    };
+                    
+                    allCandidates.push(candidate);
+                    card.remove();
+                    updateSelectedCount();
+                    searchApplications();
+                    renderAllShortlistTables();
+                    DataPersistence.save('allCandidates', allCandidates);
+                    showToast(`${candidateName} shortlisted successfully`);
+                } else {
+                    showToast('Failed to shortlist candidate', 'error');
+                }
+            } catch (error) {
+                console.error('Error shortlisting candidate:', error);
+                showToast('Failed to shortlist candidate', 'error');
+            }
         }
 
-        function rejectCandidate(button) {
+        async function rejectCandidate(button) {
             const card = button.closest('.application-card');
             const name = card.getAttribute('data-name');
             if (!confirm(`Are you sure you want to reject ${name}?`)) return;
-            card.remove();
-            updateSelectedCount();
-            searchApplications();
+            
+            const checkbox = card.querySelector('input[type="checkbox"]');
+            const appData = JSON.parse(checkbox.getAttribute('data-app'));
+            
+            try {
+                // Call backend API to update status to Rejected
+                const response = await HRApplicationsAPI.updateStatus(appData.id, 'Rejected');
+                if (response.success) {
+                    card.remove();
+                    updateSelectedCount();
+                    searchApplications();
+                    showToast(`${name} rejected successfully`);
+                } else {
+                    showToast('Failed to reject candidate', 'error');
+                }
+            } catch (error) {
+                console.error('Error rejecting candidate:', error);
+                showToast('Failed to reject candidate', 'error');
+            }
         }
 
         // =======================
