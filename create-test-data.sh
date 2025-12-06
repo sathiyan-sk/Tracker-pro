@@ -129,21 +129,21 @@ apply_for_internship() {
 # ========================================
 # STEP 1: Register Admin
 # ========================================
-register_user "ADMIN" "admin@trackerpro.com" "admin123" "Admin" "User"
+register_user "ADMIN" "admin@trackerpro.com" "admin123" "Admin" "User" "9876543210" "Male"
 
 # ========================================
 # STEP 2: Register HR User
 # ========================================
-register_user "HR" "hr@trackerpro.com" "hr123456" "HR" "Manager"
+register_user "HR" "hr@trackerpro.com" "hr123456" "HR" "Manager" "9876543211" "Female"
 
 # ========================================
 # STEP 3: Register Students
 # ========================================
-register_user "STUDENT" "john.doe@student.com" "student123" "John" "Doe"
-register_user "STUDENT" "jane.smith@student.com" "student123" "Jane" "Smith"
-register_user "STUDENT" "raj.kumar@student.com" "student123" "Raj" "Kumar"
-register_user "STUDENT" "priya.sharma@student.com" "student123" "Priya" "Sharma"
-register_user "STUDENT" "amit.patel@student.com" "student123" "Amit" "Patel"
+register_user "STUDENT" "john.doe@student.com" "student123" "John" "Doe" "9876543212" "Male"
+register_user "STUDENT" "jane.smith@student.com" "student123" "Jane" "Smith" "9876543213" "Female"
+register_user "STUDENT" "raj.kumar@student.com" "student123" "Raj" "Kumar" "9876543214" "Male"
+register_user "STUDENT" "priya.sharma@student.com" "student123" "Priya" "Sharma" "9876543215" "Female"
+register_user "STUDENT" "amit.patel@student.com" "student123" "Amit" "Patel" "9876543216" "Male"
 
 sleep 2
 
