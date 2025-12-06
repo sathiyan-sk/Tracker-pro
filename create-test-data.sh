@@ -11,14 +11,16 @@ echo "========================================="
 
 # Function to register a user (student or HR)
 register_user() {
-    local role=$1
+    local userType=$1
     local email=$2
     local password=$3
     local firstName=$4
     local lastName=$5
+    local mobile=$6
+    local gender=$7
     
     echo ""
-    echo "📝 Registering $role: $email"
+    echo "📝 Registering $userType: $email"
     
     response=$(curl -s -X POST "$BASE_URL/auth/register" \
         -H "Content-Type: application/json" \
@@ -27,8 +29,12 @@ register_user() {
             \"password\": \"$password\",
             \"firstName\": \"$firstName\",
             \"lastName\": \"$lastName\",
-            \"mobileNo\": \"9876543210\",
-            \"role\": \"$role\"
+            \"mobileNo\": \"$mobile\",
+            \"userType\": \"$userType\",
+            \"gender\": \"$gender\",
+            \"dob\": \"2000-01-15\",
+            \"age\": 24,
+            \"location\": \"Bangalore\"
         }")
     
     echo "$response" | jq '.'
