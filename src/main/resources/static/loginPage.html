@@ -1169,8 +1169,11 @@
                                 } else if (data.user.userType === 'STUDENT') {
                                     // Student redirected to student career dashboard
                                     window.location.href = 'studentCareers.html';
+                                } else if (data.user.userType === 'HR' || data.user.userType === 'FACULTY') {
+                                    // HR/Faculty users redirected to HR page
+                                    window.location.href = 'hrPage.html';
                                 } else {
-                                    // Other users (HR/FACULTY) go to index page
+                                    // Fallback to index page
                                     window.location.href = 'index.html';
                                 }
                             }, 1500);
