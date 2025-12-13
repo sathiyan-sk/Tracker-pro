@@ -71,7 +71,13 @@ public class SecurityConfig {
                         ).permitAll()
 
                         // Admin endpoints - require ADMIN role
-                        .requestMatchers("/api/v1/**").hasAuthority("ROLE_ADMIN")
+                        .requestMatchers("/api/admin/**").hasAuthority("ROLE_ADMIN")
+
+                        // HR endpoints - require HR or ADMIN role
+                        .requestMatchers("/api/hr/**").hasAnyAuthority("ROLE_HR", "ROLE_ADMIN")
+
+                        // Student endpoints - require STUDENT role
+                        .requestMatchers("/api/student/**").hasAuthority("ROLE_STUDENT")
 
                         // All other requests require authentication
                         .anyRequest().authenticated()
