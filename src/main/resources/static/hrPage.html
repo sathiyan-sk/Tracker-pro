@@ -369,6 +369,21 @@
         #toast.show {
             display: block;
         }
+        #toast.toast-success {
+            background-color: #d4edda;
+            color: #155724;
+            border-color: #c3e6cb;
+        }
+        #toast.toast-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border-color: #f5c6cb;
+        }
+        #toast.toast-warning {
+            background-color: #fff3cd;
+            color: #856404;
+            border-color: #ffeaa7;
+        }
         @keyframes slideInToast {
             from {transform: translateX(400px); opacity: 0;}
             to {transform: translateX(0); opacity: 1;}
@@ -1156,11 +1171,21 @@ HR Team`
             return value;
         };
 
-        function showToast(message) {
+        function showToast(message, type = 'success') {
             const toast = document.getElementById('toast');
             toast.textContent = message;
-            toast.classList.remove('hide');
+            toast.classList.remove('hide', 'toast-success', 'toast-error', 'toast-warning');
             toast.classList.add('show');
+            
+            // Add type-specific class
+            if (type === 'error') {
+                toast.classList.add('toast-error');
+            } else if (type === 'warning') {
+                toast.classList.add('toast-warning');
+            } else {
+                toast.classList.add('toast-success');
+            }
+            
             setTimeout(() => {
                 toast.classList.remove('show');
                 toast.classList.add('hide');
@@ -1223,7 +1248,102 @@ HR Team`
             return statusMap[status] || '';
         }
 
+        // =======================
+        // AUTHENTICATION & USER PROFILE
+        // =======================
+        
+        /**
+         * Check if user is authenticated and has HR role
+         * Redirects to login page if not authenticated
+         */
+        function checkAuthentication() {
+            const token = getHRAuthToken();
+            const userInfo = getHRUserInfo();
+            
+            if (!token || !userInfo) {
+                console.log('No authentication found, redirecting to login...');
+                window.location.href = '/loginPage.html';
+                return false;
+            }
+            
+            // Check if user has HR or ADMIN role
+            const userType = userInfo.userType || userInfo.role;
+            if (userType !== 'HR' && userType !== 'ADMIN') {
+                console.log('User does not have HR access, redirecting...');
+                alert('Access Denied: You do not have permission to access the HR dashboard.');
+                window.location.href = '/loginPage.html';
+                return false;
+            }
+            
+            return true;
+        }
+        
+        /**
+         * Populate user profile information in the header
+         */
+        function populateUserProfile() {
+            const userInfo = getHRUserInfo();
+            if (!userInfo) return;
+            
+            // Get user name
+            const firstName = userInfo.firstName || '';
+            const lastName = userInfo.lastName || '';
+            const fullName = `${firstName} ${lastName}`.trim() || 'User';
+            
+            // Get user initials for avatar
+            const initials = firstName.charAt(0).toUpperCase() + (lastName.charAt(0).toUpperCase() || '');
+            
+            // Get user role
+            const userType = userInfo.userType || userInfo.role || 'HR';
+            const roleDisplay = userType === 'HR' ? 'HR Manager' : userType === 'ADMIN' ? 'Administrator' : userType;
+            
+            // Update DOM elements
+            const userNameElement = document.querySelector('.user-name');
+            const userRoleElement = document.querySelector('.user-role');
+            const userAvatarElement = document.querySelector('.user-avatar');
+            
+            if (userNameElement) userNameElement.textContent = fullName;
+            if (userRoleElement) userRoleElement.textContent = roleDisplay;
+            if (userAvatarElement) userAvatarElement.textContent = initials;
+            
+            console.log('User profile populated:', { fullName, roleDisplay, initials });
+        }
+        
+        /**
+         * Handle user logout
+         */
+        function handleLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                console.log('Logging out user...');
+                removeHRAuthToken();
+                window.location.href = '/loginPage.html';
+            }
+        }
+        
+        /**
+         * Setup logout button click handler
+         */
+        function setupLogoutHandler() {
+            const dropdownItems = document.querySelectorAll('#userDropdown .dropdown-item');
+            dropdownItems.forEach(item => {
+                if (item.textContent.trim() === 'Logout') {
+                    item.addEventListener('click', handleLogout);
+                }
+            });
+        }
+
         document.addEventListener('DOMContentLoaded', async function() {
+            // CHECK AUTHENTICATION FIRST
+            if (!checkAuthentication()) {
+                return; // Stop execution if not authenticated
+            }
+            
+            // Populate user profile
+            populateUserProfile();
+            
+            // Setup logout handler
+            setupLogoutHandler();
+            
             // Load persisted data
             allCandidates = DataPersistence.load('allCandidates', []);
             scheduledInterviews = DataPersistence.load('scheduledInterviews', []);
@@ -1281,18 +1401,42 @@ HR Team`
         // Load applications from backend API
         async function loadApplicationsFromAPI(filters = {}) {
             try {
+                console.log('Loading applications from API with filters:', filters);
                 const response = await HRApplicationsAPI.getAll(filters);
+                
                 if (response.success) {
+                    console.log(`Successfully loaded ${response.data.length} applications`);
                     realApplications = response.data.map(app => transformApplicationData(app));
                     renderApplications(realApplications);
                     return realApplications;
+                } else {
+                    console.warn('API returned success=false:', response.message);
+                    showToast('Error: ' + (response.message || 'Failed to load applications'), 'error');
+                    realApplications = [];
+                    renderApplications(realApplications);
                 }
             } catch (error) {
                 console.error('Error loading applications:', error);
-                showToast('Failed to load applications. Using test data.');
-                // Fallback to test data
-                realApplications = testApplications;
+                
+                // Handle authentication errors
+                if (error.status === 401 || error.status === 403) {
+                    showToast('Authentication failed. Please login again.', 'error');
+                    setTimeout(() => {
+                        removeHRAuthToken();
+                        window.location.href = '/loginPage.html';
+                    }, 1500);
+                    return [];
+                }
+                
+                // Show error message
+                const errorMsg = error.message || 'Failed to load applications from server';
+                showToast(errorMsg, 'error');
+                console.log('Using empty applications list due to error');
+                
+                // Show empty state instead of test data
+                realApplications = [];
                 renderApplications(realApplications);
+                return [];
             }
         }
         
