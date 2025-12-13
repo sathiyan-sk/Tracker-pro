@@ -1376,18 +1376,42 @@ HR Team`
         // Load applications from backend API
         async function loadApplicationsFromAPI(filters = {}) {
             try {
+                console.log('Loading applications from API with filters:', filters);
                 const response = await HRApplicationsAPI.getAll(filters);
+                
                 if (response.success) {
+                    console.log(`Successfully loaded ${response.data.length} applications`);
                     realApplications = response.data.map(app => transformApplicationData(app));
                     renderApplications(realApplications);
                     return realApplications;
+                } else {
+                    console.warn('API returned success=false:', response.message);
+                    showToast('Error: ' + (response.message || 'Failed to load applications'), 'error');
+                    realApplications = [];
+                    renderApplications(realApplications);
                 }
             } catch (error) {
                 console.error('Error loading applications:', error);
-                showToast('Failed to load applications. Using test data.');
-                // Fallback to test data
-                realApplications = testApplications;
+                
+                // Handle authentication errors
+                if (error.status === 401 || error.status === 403) {
+                    showToast('Authentication failed. Please login again.', 'error');
+                    setTimeout(() => {
+                        removeHRAuthToken();
+                        window.location.href = '/loginPage.html';
+                    }, 1500);
+                    return [];
+                }
+                
+                // Show error message
+                const errorMsg = error.message || 'Failed to load applications from server';
+                showToast(errorMsg, 'error');
+                console.log('Using empty applications list due to error');
+                
+                // Show empty state instead of test data
+                realApplications = [];
                 renderApplications(realApplications);
+                return [];
             }
         }
         
