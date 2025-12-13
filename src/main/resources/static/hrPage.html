@@ -1156,11 +1156,21 @@ HR Team`
             return value;
         };
 
-        function showToast(message) {
+        function showToast(message, type = 'success') {
             const toast = document.getElementById('toast');
             toast.textContent = message;
-            toast.classList.remove('hide');
+            toast.classList.remove('hide', 'toast-success', 'toast-error', 'toast-warning');
             toast.classList.add('show');
+            
+            // Add type-specific class
+            if (type === 'error') {
+                toast.classList.add('toast-error');
+            } else if (type === 'warning') {
+                toast.classList.add('toast-warning');
+            } else {
+                toast.classList.add('toast-success');
+            }
+            
             setTimeout(() => {
                 toast.classList.remove('show');
                 toast.classList.add('hide');
