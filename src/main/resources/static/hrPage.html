@@ -1223,7 +1223,102 @@ HR Team`
             return statusMap[status] || '';
         }
 
+        // =======================
+        // AUTHENTICATION & USER PROFILE
+        // =======================
+        
+        /**
+         * Check if user is authenticated and has HR role
+         * Redirects to login page if not authenticated
+         */
+        function checkAuthentication() {
+            const token = getHRAuthToken();
+            const userInfo = getHRUserInfo();
+            
+            if (!token || !userInfo) {
+                console.log('No authentication found, redirecting to login...');
+                window.location.href = '/loginPage.html';
+                return false;
+            }
+            
+            // Check if user has HR or ADMIN role
+            const userType = userInfo.userType || userInfo.role;
+            if (userType !== 'HR' && userType !== 'ADMIN') {
+                console.log('User does not have HR access, redirecting...');
+                alert('Access Denied: You do not have permission to access the HR dashboard.');
+                window.location.href = '/loginPage.html';
+                return false;
+            }
+            
+            return true;
+        }
+        
+        /**
+         * Populate user profile information in the header
+         */
+        function populateUserProfile() {
+            const userInfo = getHRUserInfo();
+            if (!userInfo) return;
+            
+            // Get user name
+            const firstName = userInfo.firstName || '';
+            const lastName = userInfo.lastName || '';
+            const fullName = `${firstName} ${lastName}`.trim() || 'User';
+            
+            // Get user initials for avatar
+            const initials = firstName.charAt(0).toUpperCase() + (lastName.charAt(0).toUpperCase() || '');
+            
+            // Get user role
+            const userType = userInfo.userType || userInfo.role || 'HR';
+            const roleDisplay = userType === 'HR' ? 'HR Manager' : userType === 'ADMIN' ? 'Administrator' : userType;
+            
+            // Update DOM elements
+            const userNameElement = document.querySelector('.user-name');
+            const userRoleElement = document.querySelector('.user-role');
+            const userAvatarElement = document.querySelector('.user-avatar');
+            
+            if (userNameElement) userNameElement.textContent = fullName;
+            if (userRoleElement) userRoleElement.textContent = roleDisplay;
+            if (userAvatarElement) userAvatarElement.textContent = initials;
+            
+            console.log('User profile populated:', { fullName, roleDisplay, initials });
+        }
+        
+        /**
+         * Handle user logout
+         */
+        function handleLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                console.log('Logging out user...');
+                removeHRAuthToken();
+                window.location.href = '/loginPage.html';
+            }
+        }
+        
+        /**
+         * Setup logout button click handler
+         */
+        function setupLogoutHandler() {
+            const dropdownItems = document.querySelectorAll('#userDropdown .dropdown-item');
+            dropdownItems.forEach(item => {
+                if (item.textContent.trim() === 'Logout') {
+                    item.addEventListener('click', handleLogout);
+                }
+            });
+        }
+
         document.addEventListener('DOMContentLoaded', async function() {
+            // CHECK AUTHENTICATION FIRST
+            if (!checkAuthentication()) {
+                return; // Stop execution if not authenticated
+            }
+            
+            // Populate user profile
+            populateUserProfile();
+            
+            // Setup logout handler
+            setupLogoutHandler();
+            
             // Load persisted data
             allCandidates = DataPersistence.load('allCandidates', []);
             scheduledInterviews = DataPersistence.load('scheduledInterviews', []);
