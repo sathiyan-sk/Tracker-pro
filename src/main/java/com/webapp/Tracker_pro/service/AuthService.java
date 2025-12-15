@@ -34,13 +34,14 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
 
     /**
-     * Register a new student user
+     * Register a new user (Admin, Student, HR, or Faculty)
      * @param request Registration request containing user details
      * @return AuthResponse with JWT token and user information
      */
     @Transactional
     public AuthResponse register(RegisterRequest request) {
         String email = request.getEmail().trim().toLowerCase();
+        UserType userType = request.getUserType();
         
         // Check if email already exists in any table
         if (adminRepository.existsByEmail(email) || 
@@ -52,14 +53,66 @@ public class AuthService {
         }
 
         // Check if mobile number already exists
-        if (studentRepository.existsByMobileNo(request.getMobileNo()) ||
+        if (adminRepository.existsByMobileNo(request.getMobileNo()) ||
+            studentRepository.existsByMobileNo(request.getMobileNo()) ||
             hrFacultyUserRepository.existsByMobileNo(request.getMobileNo())) {
             throw new UserAlreadyExistsException(
                 "Mobile number already registered. Please use a different number."
             );
         }
 
-        // Create new student (registration is only for students)
+        // Handle registration based on user type
+        switch (userType) {
+            case ADMIN:
+                return registerAdmin(request, email);
+            case STUDENT:
+                return registerStudent(request, email);
+            case HR:
+            case FACULTY:
+                return registerHROrFaculty(request, email, userType);
+            default:
+                throw new IllegalArgumentException("Invalid user type: " + userType);
+        }
+    }
+
+    /**
+     * Register a new Admin user
+     */
+    private AuthResponse registerAdmin(RegisterRequest request, String email) {
+        Admin admin = new Admin();
+        admin.setFirstName(request.getFirstName().trim());
+        admin.setLastName(request.getLastName() != null ? request.getLastName().trim() : null);
+        admin.setEmail(email);
+        admin.setPassword(passwordEncoder.encode(request.getPassword()));
+        admin.setMobileNo(request.getMobileNo());
+        admin.setGender(request.getGender());
+        admin.setDob(request.getDob());
+        admin.setAge(request.getAge());
+        admin.setLocation(request.getLocation() != null ? request.getLocation().trim() : null);
+        admin.setIsActive(true);
+
+        Admin savedAdmin = adminRepository.save(admin);
+        String jwtToken = jwtService.generateToken(savedAdmin);
+
+        return AuthResponse.builder()
+                .success(true)
+                .message("Admin registration successful")
+                .token(jwtToken)
+                .user(AuthResponse.UserInfo.builder()
+                        .id(savedAdmin.getId())
+                        .firstName(savedAdmin.getFirstName())
+                        .lastName(savedAdmin.getLastName())
+                        .email(savedAdmin.getEmail())
+                        .userType(UserType.ADMIN)
+                        .mobileNo(savedAdmin.getMobileNo())
+                        .build())
+                .build();
+    }
+
+    /**
+     * Register a new Student user
+     */
+    private AuthResponse registerStudent(RegisterRequest request, String email) {
         Student student = new Student();
         student.setFirstName(request.getFirstName().trim());
         student.setLastName(request.getLastName() != null ? request.getLastName().trim() : null);
@@ -72,16 +125,12 @@ public class AuthService {
         student.setLocation(request.getLocation() != null ? request.getLocation().trim() : null);
         student.setIsActive(true);
 
-        // Save student to database
         Student savedStudent = studentRepository.save(student);
-
-        // Generate JWT token
         String jwtToken = jwtService.generateToken(savedStudent);
 
-        // Build and return response
         return AuthResponse.builder()
                 .success(true)
-                .message("Registration successful")
+                .message("Student registration successful")
                 .token(jwtToken)
                 .user(AuthResponse.UserInfo.builder()
                         .id(savedStudent.getId())
@@ -90,6 +139,41 @@ public class AuthService {
                         .email(savedStudent.getEmail())
                         .userType(UserType.STUDENT)
                         .mobileNo(savedStudent.getMobileNo())
+                        .build())
+                .build();
+    }
+
+    /**
+     * Register a new HR or Faculty user
+     */
+    private AuthResponse registerHROrFaculty(RegisterRequest request, String email, UserType userType) {
+        HRFacultyUser hrFacultyUser = new HRFacultyUser();
+        hrFacultyUser.setFirstName(request.getFirstName().trim());
+        hrFacultyUser.setLastName(request.getLastName() != null ? request.getLastName().trim() : null);
+        hrFacultyUser.setEmail(email);
+        hrFacultyUser.setPassword(passwordEncoder.encode(request.getPassword()));
+        hrFacultyUser.setMobileNo(request.getMobileNo());
+        hrFacultyUser.setGender(request.getGender());
+        hrFacultyUser.setDob(request.getDob());
+        hrFacultyUser.setAge(request.getAge());
+        hrFacultyUser.setLocation(request.getLocation() != null ? request.getLocation().trim() : null);
+        hrFacultyUser.setUserType(userType); // Set the correct user type (HR or FACULTY)
+        hrFacultyUser.setIsActive(true);
+
+        HRFacultyUser savedHRFacultyUser = hrFacultyUserRepository.save(hrFacultyUser);
+        String jwtToken = jwtService.generateToken(savedHRFacultyUser);
+
+        return AuthResponse.builder()
+                .success(true)
+                .message(userType.name() + " registration successful")
+                .token(jwtToken)
+                .user(AuthResponse.UserInfo.builder()
+                        .id(savedHRFacultyUser.getId())
+                        .firstName(savedHRFacultyUser.getFirstName())
+                        .lastName(savedHRFacultyUser.getLastName())
+                        .email(savedHRFacultyUser.getEmail())
+                        .userType(userType) // Return the correct user type
+                        .mobileNo(savedHRFacultyUser.getMobileNo())
                         .build())
                 .build();
     }
