@@ -2551,8 +2551,8 @@ HR Team`
         // =======================
         // INTERVIEW SCHEDULING (SINGLE)
         // =======================
-        function scheduleInterview(name, email, phone, internshipId, internshipTitle) {
-            currentCandidateForInterview = { name, email, phone, internshipId, internshipTitle };
+        function scheduleInterview(name, email, phone, internshipId, internshipTitle, applicationId = null) {
+            currentCandidateForInterview = { name, email, phone, internshipId, internshipTitle, applicationId };
             document.getElementById('candidateToDisplay').textContent = escapeHtml(name);  // FIX #8
             document.getElementById('interviewTitle').value = '';
             document.getElementById('hrManagerName').value = '';
