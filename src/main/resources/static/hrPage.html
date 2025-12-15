@@ -1142,6 +1142,95 @@ HR Team`
             }
         };
 
+        // =======================
+        // API SERVICE FOR HR APPLICATIONS
+        // =======================
+        const HRApplicationsAPI = {
+            baseUrl: '/api',
+            
+            /**
+             * Get authorization header with JWT token
+             */
+            getAuthHeaders() {
+                const token = localStorage.getItem('authToken');
+                return {
+                    'Content-Type': 'application/json',
+                    'Authorization': token ? `Bearer ${token}` : ''
+                };
+            },
+            
+            /**
+             * Get all applications with optional filters
+             */
+            async getAll(filters = {}) {
+                try {
+                    const queryParams = new URLSearchParams(filters).toString();
+                    const url = `${this.baseUrl}/applications${queryParams ? '?' + queryParams : ''}`;
+                    
+                    const response = await fetch(url, {
+                        method: 'GET',
+                        headers: this.getAuthHeaders()
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    
+                    const data = await response.json();
+                    return { success: true, data: data };
+                } catch (error) {
+                    console.error('Error fetching applications:', error);
+                    return { success: false, message: error.message, data: [] };
+                }
+            },
+            
+            /**
+             * Update application status
+             */
+            async updateStatus(applicationId, status) {
+                try {
+                    const response = await fetch(`${this.baseUrl}/applications/${applicationId}/status`, {
+                        method: 'PUT',
+                        headers: this.getAuthHeaders(),
+                        body: JSON.stringify({ status })
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    
+                    const data = await response.json();
+                    return { success: true, data: data };
+                } catch (error) {
+                    console.error('Error updating application status:', error);
+                    return { success: false, message: error.message };
+                }
+            },
+            
+            /**
+             * Bulk update application statuses
+             */
+            async bulkUpdate(applicationIds, status) {
+                try {
+                    const response = await fetch(`${this.baseUrl}/applications/bulk-update`, {
+                        method: 'PUT',
+                        headers: this.getAuthHeaders(),
+                        body: JSON.stringify({ applicationIds, status })
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    
+                    const data = await response.json();
+                    return { success: true, data: data };
+                } catch (error) {
+                    console.error('Error bulk updating applications:', error);
+                    return { success: false, message: error.message };
+                }
+            }
+        };
+
         
         // : Input sanitization function
         function escapeHtml(text) {
