@@ -2428,6 +2428,9 @@ HR Team`
                     candidateName: candidate.candidateName,
                     email: candidate.email,
                     phone: candidate.phone,
+                    applicationId: candidate.id || null,
+                    internshipId: candidate.internshipId || 'N/A',
+                    internshipTitle: candidate.internshipTitle || 'N/A',
                     title: title,
                     hrManager: hrManager,
                     date: date,
@@ -2441,11 +2444,20 @@ HR Team`
                     inviteSent: false
                 };
                 scheduledInterviews.push(interview);
+                
+                // Update application status to "Interview Scheduled" in backend
+                if (candidate.id) {
+                    updateApplicationStatusToInterviewScheduled(candidate.id);
+                }
+                
+                // Remove from shortlist
+                removeFromShortlist(candidate.email);
             });
             
             showToast(`${selectedShortlistCandidates[currentShortlistTab].length} interviews scheduled successfully`);
             closeBulkInterviewModal();
             renderInterviews();
+            renderAllShortlistTables();
             
             // Clear selections
             selectedShortlistCandidates[currentShortlistTab] = [];
