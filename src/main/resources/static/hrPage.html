@@ -1508,8 +1508,13 @@ HR Team`
         }
         
         function renderApplications(applications = []) {
+            // Filter to show only Pending and Under Review applications
+            const filteredApplications = applications.filter(app => 
+                app.status === 'Pending' || app.status === 'Under Review'
+            );
+            
             const container = document.getElementById('applicationsContainer');
-            container.innerHTML = applications.map(app => `
+            container.innerHTML = filteredApplications.map(app => `
                 <div class="application-card" data-name="${app.candidateName}" data-email="${app.email}" data-date="${app.appliedDate}" data-status="${app.status}">
                     <input type="checkbox" class="card-checkbox" data-app='${JSON.stringify(app).replace(/'/g, "&apos;")}' onchange="updateSelectedCount()">
                     <div class="card-content">
