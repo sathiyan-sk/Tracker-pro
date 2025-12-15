@@ -2736,6 +2736,32 @@ HR Team`
             renderAllShortlistTables();
         }
 
+        // Helper function to update application status to "Interview Scheduled"
+        async function updateApplicationStatusToInterviewScheduled(applicationId) {
+            try {
+                const response = await HRApplicationsAPI.updateStatus(applicationId, 'Interview Scheduled');
+                if (response.success) {
+                    console.log(`Application ${applicationId} status updated to Interview Scheduled`);
+                } else {
+                    console.warn('Failed to update application status:', response.message);
+                }
+            } catch (error) {
+                console.error('Error updating application status:', error);
+            }
+        }
+
+        // Helper function to remove candidate from shortlist
+        function removeFromShortlist(email) {
+            const initialCount = allCandidates.length;
+            allCandidates = allCandidates.filter(candidate => candidate.email !== email);
+            const removedCount = initialCount - allCandidates.length;
+            
+            if (removedCount > 0) {
+                DataPersistence.save('allCandidates', allCandidates);
+                console.log(`Removed ${removedCount} candidate(s) from shortlist with email: ${email}`);
+            }
+        }
+
         // =======================
         // INTERVIEWS RENDERING
         // =======================
