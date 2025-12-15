@@ -3086,8 +3086,8 @@ HR Team`
                 email: interview.email,
                 gender: 'Male', 
                 phone: interview.phone || '0000000000',
-                internshipTitle: interview.title || 'Software Development',
-                internshipId: 'INT-001',  // Default
+                internshipTitle: interview.internshipTitle || interview.title || 'N/A',
+                internshipId: interview.internshipId || 'N/A',
                 hiredDate: new Date().toISOString().split('T')[0],
                 hrManager: interview.hrManager || 'HR Manager',
                 category: 'PMIS',  // Default
