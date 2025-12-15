@@ -1480,19 +1480,22 @@ HR Team`
         
         // Transform backend data to frontend format
         function transformApplicationData(backendApp) {
+            const student = backendApp.student || {};
+            const internship = backendApp.internship || {};
+            
             return {
                 id: backendApp.id,
                 applicantId: backendApp.applicantId,
-                candidateName: `${backendApp.student.firstName} ${backendApp.student.lastName || ''}`.trim(),
-                fatherName: backendApp.student.fatherName || '-',
-                gender: backendApp.student.gender || '-',
-                dob: backendApp.student.dob || '-',
-                email: backendApp.student.email || '-',
-                phone: backendApp.student.mobileNo || '-',
-                address: backendApp.student.address || '-',
-                pincode: backendApp.student.pincode || '-',
-                internshipId: backendApp.internship?.code || '-',
-                internshipTitle: backendApp.internship?.title || '-',
+                candidateName: `${student.firstName || ''} ${student.lastName || ''}`.trim() || '-',
+                fatherName: student.fatherName || '-',
+                gender: student.gender || '-',
+                dob: student.dob || '-',
+                email: student.email || '-',
+                phone: student.mobileNo || '-',
+                address: student.address || '-',
+                pincode: student.pincode || '-',
+                internshipId: internship.code || '-',
+                internshipTitle: internship.title || '-',
                 appliedDate: backendApp.appliedDate ? backendApp.appliedDate.split('T')[0] : '-',
                 status: backendApp.status || 'Pending',
                 resumeUrl: backendApp.resumeUrl || null,
