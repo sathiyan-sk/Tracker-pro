@@ -1704,11 +1704,16 @@ HR Team`
                         badge.className = `status-badge status-${status.toLowerCase().replace(' ', '-')}`;
                         badge.textContent = status;
                         cb.checked = false;
-            });
-            
-            showToast(`${count} applications marked as ${status}`);
-            selectedApplications = [];
-            updateSelectedCount();
+                    });
+                    
+                    showToast(`${count} applications marked as ${status}`);
+                    selectedApplications = [];
+                    updateSelectedCount();
+                }
+            } catch (error) {
+                console.error('Error in bulk update:', error);
+                showToast('Failed to update applications', 'error');
+            }
         }
 
         // =======================
