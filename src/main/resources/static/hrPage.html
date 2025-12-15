@@ -1253,6 +1253,34 @@ HR Team`
         // =======================
         
         /**
+         * Get authentication token from localStorage
+         */
+        function getHRAuthToken() {
+            return localStorage.getItem('authToken');
+        }
+        
+        /**
+         * Get user information from localStorage
+         */
+        function getHRUserInfo() {
+            try {
+                const userInfoStr = localStorage.getItem('userInfo');
+                return userInfoStr ? JSON.parse(userInfoStr) : null;
+            } catch (e) {
+                console.error('Error parsing user info:', e);
+                return null;
+            }
+        }
+        
+        /**
+         * Remove authentication data from localStorage
+         */
+        function removeHRAuthToken() {
+            localStorage.removeItem('authToken');
+            localStorage.removeItem('userInfo');
+        }
+        
+        /**
          * Check if user is authenticated and has HR role
          * Redirects to login page if not authenticated
          */
