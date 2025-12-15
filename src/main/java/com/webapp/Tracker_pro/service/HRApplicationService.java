@@ -36,7 +36,7 @@ public class HRApplicationService {
 
     // Valid status values
     private static final Set<String> VALID_STATUSES = Set.of(
-        "Pending", "Under Review", "Shortlisted", "Accepted", "Rejected"
+        "Pending", "Under Review", "Shortlisted", "Interview Scheduled", "Accepted", "Rejected"
     );
 
     /**
