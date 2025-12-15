@@ -2153,7 +2153,7 @@ HR Team`
                             <div class="action-dropdown">
                                 <button class="action-dropdown-btn" onclick="toggleActionDropdown(${i}, '${tab}')">Next Steps →</button>
                                 <div class="action-dropdown-menu" id="actionMenu${tab}${i}">
-                                    <div class="action-dropdown-item" onclick="scheduleInterview('${c.candidateName}', '${c.email}', '${c.phone}', '${c.internshipId || ''}', '${c.internshipTitle || ''}'); closeActionDropdown(${i}, '${tab}')">Schedule Interview</div>
+                                    <div class="action-dropdown-item" onclick="scheduleInterview('${c.candidateName}', '${c.email}', '${c.phone}', '${c.internshipId || ''}', '${c.internshipTitle || ''}', ${c.id || null}); closeActionDropdown(${i}, '${tab}')">Schedule Interview</div>
                                     <div class="action-dropdown-item" onclick="viewApplicationShortlist(${i}, '${tab}'); closeActionDropdown(${i}, '${tab}')">View Application</div>
                                     <div class="action-dropdown-item danger" onclick="rejectShortlistCandidate(${i}, '${tab}'); closeActionDropdown(${i}, '${tab}')">Reject</div>
                                 </div>
