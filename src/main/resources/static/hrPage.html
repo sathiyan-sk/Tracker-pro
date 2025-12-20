@@ -16,7 +16,8 @@
         .menu-icon {width: 20px; height: 16px; display: flex; flex-direction: column; justify-content: space-between;}
         .menu-line {width: 100%; height: 2px; background: var(--text-primary); border-radius: 2px;}
         .header-bar {background: var(--white); height: 70px; position: fixed; top: 0; left: 0; right: 0; z-index: 100; box-shadow: var(--shadow-sm); display: flex; align-items: center; padding: 0 2rem 0 80px; justify-content: space-between;}
-        .logo-container {display: flex; align-items: center;}
+       .logo-container {display: flex; align-items: center; gap: 0.75rem;}
+        .logo-icon {height: 38px; width: 38px; object-fit: contain;}
         .logo-text {font-size: 1.4rem; font-weight: 600; color: black;}
         .user-profile {display: flex; align-items: center; gap: 0.75rem; cursor: pointer; position: relative;}
         .user-avatar {width: 40px; height: 40px; background: var(--primary-light); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 600; color: #3a5ccc; font-size: 1.2rem;}
@@ -2194,7 +2195,50 @@ HR Team`
             showToast('Candidate removed');
         }
 
-        function removeSelectedShortlist(tab) {}
+       checkboxes = tbody?.querySelectorAll('.shortlisted-checkbox');
+            const selectedCheckboxes = Array.from(checkboxes || []).filter(cb => cb.checked);
+
+            if (selectedCheckboxes.length === 0) {
+                showToast('No candidates selected', 'warning');
+                return;
+            }
+
+            if (!confirm(`Are you sure you want to delete ${selectedCheckboxes.length} selected candidate(s)?`)) {
+                return;
+            }
+
+            // Get candidates based on tab
+            let candidates = allCandidates;
+            if (tab === 'applied') candidates = allCandidates.filter(c => c.type === 'Applied');
+            else if (tab === 'imported') candidates = allCandidates.filter(c => c.type === 'Imported');
+
+            // Get indices of selected candidates
+            const indicesToRemove = [];
+            selectedCheckboxes.forEach((checkbox) => {
+                const row = checkbox.closest('tr');
+                const rowIndex = Array.from(row.parentNode.children).indexOf(row);
+                if (rowIndex !== -1 && candidates[rowIndex]) {
+                    indicesToRemove.push(candidates[rowIndex]);
+                }
+            });
+
+            // Remove candidates from allCandidates array
+            indicesToRemove.forEach(candidate => {
+                const index = allCandidates.indexOf(candidate);
+                if (index !== -1) {
+                    allCandidates.splice(index, 1);
+                }
+            });
+
+            // Persist the updated data
+            DataPersistence.save('shortlistedCandidates', allCandidates);
+
+            // Re-render tables and update UI
+            renderAllShortlistTables();
+            updateShortlistSelection(tab);
+
+            showToast(`${indicesToRemove.length} candidate(s) deleted successfully`, 'success');
+        }
 
         function viewApplicationShortlist(i, tab) {
             let candidates = allCandidates;
