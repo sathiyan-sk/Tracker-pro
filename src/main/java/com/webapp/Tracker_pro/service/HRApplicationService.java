@@ -1,5 +1,6 @@
 package com.webapp.Tracker_pro.service;
 
+import com.webapp.Tracker_pro.service.EmailService;
 import com.webapp.Tracker_pro.dto.*;
 import com.webapp.Tracker_pro.exception.ResourceNotFoundException;
 import com.webapp.Tracker_pro.model.*;
@@ -30,6 +31,9 @@ public class HRApplicationService {
     private final StudentRepository studentRepository;
     private final CareerPostRepository careerPostRepository;
     private final HRFacultyUserRepository hrFacultyUserRepository;
+
+    private final EmailService emailService;
+
 
     private static final DateTimeFormatter ISO_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
     private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
@@ -177,16 +181,34 @@ public class HRApplicationService {
         Application application = applicationRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Application not found with ID: " + id));
 
+        // Get student details for email
+        Student student = studentRepository.findById(application.getStudentId())
+                .orElseThrow(() -> new ResourceNotFoundException("Student not found"));
+
+        // Get internship details
+        CareerPost careerPost = careerPostRepository.findById(application.getCareerPostId())
+                .orElse(null);
+
         application.setStatus(status);
         application.setReviewedBy(hrUserId);
         application.setReviewedDate(LocalDateTime.now());
-        
+
         if (hrNotes != null && !hrNotes.isEmpty()) {
             application.setHrNotes(hrNotes);
         }
 
         applicationRepository.save(application);
         log.info("Application {} status updated successfully", id);
+
+        // Send email notification (async - won't block the response)
+        try {
+            String internshipTitle = careerPost != null ? careerPost.getTitle() : "Internship";
+            String studentName = student.getFirstName() + " " + (student.getLastName() != null ? student.getLastName() : "");
+            emailService.sendApplicationStatusEmail(student.getEmail(), studentName, internshipTitle, status);
+        } catch (Exception e) {
+            log.warn("Failed to send status update email: {}", e.getMessage());
+            // Don't throw - email failure shouldn't fail the status update
+        }
 
         return getApplicationById(id);
     }
