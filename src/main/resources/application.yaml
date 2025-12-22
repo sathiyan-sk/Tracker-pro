@@ -32,7 +32,7 @@ server:
     host: smtp.gmail.com
     port: 587
     username: sathiyan.pm.inzoho@gmail.com          # Replace with your Gmail
-    password: gdgk pozy yhxb vbdn    # Replace with App Password
+    password: gdgkpozyyhxbvbdn    # Replace with App Password
     properties:
       mail:
         smtp:
