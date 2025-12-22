@@ -15,20 +15,7 @@ spring:
       hibernate:
         dialect: org.hibernate.dialect.MySQLDialect
 
-# JWT Configuration
-jwt:
-  secret: 3cfa76ef14937c1c0ea519f8fc057a80fcd04a7420f8e8bcd0a7567c272e007b
-  expiration: 86400000  # 24 hours in milliseconds
-
-# Server Configuration
-server:
-  port: 8080
-  error:
-    include-message: always
-    include-binding-errors: always
-
-# Email Configuration (Gmail SMTP)
-spring:
+  # Email Configuration (Gmail SMTP)
   mail:
     host: smtp.gmail.com
     port: 587
@@ -44,6 +31,18 @@ spring:
           connectiontimeout: 5000
           timeout: 5000
           writetimeout: 5000
+
+# JWT Configuration
+jwt:
+  secret: 3cfa76ef14937c1c0ea519f8fc057a80fcd04a7420f8e8bcd0a7567c272e007b
+  expiration: 86400000  # 24 hours in milliseconds
+
+# Server Configuration
+server:
+  port: 8080
+  error:
+    include-message: always
+    include-binding-errors: always
 
 # Custom email settings
 app:
