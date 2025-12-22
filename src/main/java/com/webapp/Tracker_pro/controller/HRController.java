@@ -44,6 +44,7 @@ import java.util.Map;
 public class HRController {
 
     private final HRApplicationService hrApplicationService;
+    private final com.webapp.Tracker_pro.service.EmailService emailService;
 
     // ==================== Applications Management ====================
 
