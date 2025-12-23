@@ -164,6 +164,69 @@ function showHRToast(message, type = 'success') {
     }
 }
 
+/**
+ * Check if user is authenticated
+ * Redirects to login page if no valid token exists
+ */
+function checkHRAuthentication() {
+    const token = getHRAuthToken();
+    
+    if (!token) {
+        console.warn('No authentication token found. Redirecting to login...');
+        window.location.href = '/loginPage.html';
+        return false;
+    }
+    
+    // Optionally verify token is not expired (basic check)
+    try {
+        // JWT tokens have 3 parts separated by dots
+        const tokenParts = token.split('.');
+        if (tokenParts.length !== 3) {
+            console.warn('Invalid token format. Redirecting to login...');
+            removeHRAuthToken();
+            window.location.href = '/loginPage.html';
+            return false;
+        }
+        
+        // Decode payload to check expiration
+        const payload = JSON.parse(atob(tokenParts[1]));
+        const currentTime = Math.floor(Date.now() / 1000);
+        
+        if (payload.exp && payload.exp < currentTime) {
+            console.warn('Token has expired. Redirecting to login...');
+            removeHRAuthToken();
+            window.location.href = '/loginPage.html';
+            return false;
+        }
+        
+        console.log('✅ Authentication verified - Token is valid');
+        return true;
+    } catch (error) {
+        console.error('Error validating token:', error);
+        removeHRAuthToken();
+        window.location.href = '/loginPage.html';
+        return false;
+    }
+}
+
+/**
+ * Initialize HR page authentication
+ * Call this when page loads
+ */
+function initHRAuthentication() {
+    // Check authentication on page load
+    if (!checkHRAuthentication()) {
+        return false;
+    }
+    
+    // Set up periodic token check (every 5 minutes)
+    setInterval(() => {
+        checkHRAuthentication();
+    }, 5 * 60 * 1000);
+    
+    return true;
+}
+
 // ==========================================
 // HR API ENDPOINTS
 // ==========================================
