@@ -550,11 +550,3 @@ window.removeHRAuthToken = removeHRAuthToken;
 window.getHRUserInfo = getHRUserInfo;
 
 console.log('✅ HR API Client loaded successfully');
-
-// Automatically check authentication when script loads
-// This ensures user is authenticated before any HR page operations
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initHRAuthentication);
-} else {
-    initHRAuthentication();
-}
