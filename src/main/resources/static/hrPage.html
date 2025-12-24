@@ -3043,8 +3043,8 @@ HR Team`
         }
 
         function saveFeedback() {
-            interviewFeedback[currentInterviewForFeedback] = document.getElementById('feedbackTextarea').value;
             interviewNotes[currentInterviewForFeedback] = document.getElementById('feedbackTextarea').value;
+            DataPersistence.save('interviewNotes', interviewNotes);
             document.getElementById('feedbackModal').classList.remove('active');
             renderInterviews();
             showToast('Feedback saved successfully');
