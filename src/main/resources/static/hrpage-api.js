@@ -580,6 +580,7 @@ window.HRApplicationsAPI = HRApplicationsAPI;
 window.HRDashboardAPI = HRDashboardAPI;
 window.HRInterviewsAPI = HRInterviewsAPI;
 window.HRHiredAPI = HRHiredAPI;
+window.HREmailAPI = HREmailAPI;
 
 // Export helper functions
 window.loadHRApplications = loadHRApplications;
