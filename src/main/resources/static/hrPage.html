@@ -2352,42 +2352,54 @@ HR Team`
             document.getElementById('emailBody').value = template.body;
         }
 
-        // Email template validation
-        function sendEmailTemplate() {
+        // Email template validation and sending
+        async function sendEmailTemplate() {
             const subject = document.getElementById('emailSubject').value;
             const body = document.getElementById('emailBody').value;
             
             // Validation
             if (!subject || !subject.trim()) {
-                showToast('Email subject cannot be empty');
+                showToast('Email subject cannot be empty', 'error');
                 return;
             }
             
             if (!body || !body.trim()) {
-                showToast('Email body cannot be empty');
+                showToast('Email body cannot be empty', 'error');
                 return;
             }
             
             if (selectedShortlistCandidates[currentShortlistTab].length === 0) {
-                showToast('No candidates selected');
+                showToast('No candidates selected', 'error');
                 return;
             }
             
-            // Continue with sending...
-            
-            if (!subject || !body) {
-                showToast('Please fill in email subject and body');
-                return;
+            try {
+                // Prepare recipients array with email and name
+                const recipients = selectedShortlistCandidates[currentShortlistTab].map(candidate => ({
+                    email: candidate.email,
+                    name: candidate.candidateName
+                }));
+                
+                console.log('Sending bulk emails to:', recipients);
+                
+                // Call API to send emails
+                const response = await HREmailAPI.sendBulkEmails(recipients, subject, body);
+                
+                if (response.success) {
+                    showToast(`✅ ${response.successCount} email(s) sent successfully!`, 'success');
+                    closeEmailTemplateModal();
+                    
+                    // Clear selections
+                    document.querySelectorAll('.shortlisted-checkbox:checked').forEach(cb => cb.checked = false);
+                    selectedShortlistCandidates[currentShortlistTab] = [];
+                    updateShortlistSelection(currentShortlistTab);
+                } else {
+                    showToast('Error: ' + (response.message || 'Failed to send emails'), 'error');
+                }
+            } catch (error) {
+                console.error('Error sending emails:', error);
+                showToast('Failed to send emails. Please try again.', 'error');
             }
-            
-            const count = selectedShortlistCandidates[currentShortlistTab].length;
-            showToast(`Emails sent to ${count} candidates`);
-            closeEmailTemplateModal();
-            
-            // Clear selections
-            document.querySelectorAll('.shortlisted-checkbox:checked').forEach(cb => cb.checked = false);
-            selectedShortlistCandidates[currentShortlistTab] = [];
-            updateShortlistSelection(currentShortlistTab);
         }
 
         // =======================
