@@ -3027,7 +3027,7 @@ HR Team`
 
         function openFeedbackModal(index) {
             currentInterviewForFeedback = index;
-            document.getElementById('feedbackTextarea').value = interviewFeedback[index] || '';
+            document.getElementById('feedbackTextarea').value = interviewNotes[index] || '';
             updateFeedbackCharCount();
             document.getElementById('feedbackModal').classList.add('active');
         }
