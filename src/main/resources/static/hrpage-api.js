@@ -416,6 +416,54 @@ const HRHiredAPI = {
     }
 };
 
+/**
+ * HR EMAIL API
+ * For sending emails to candidates
+ */
+const HREmailAPI = {
+    /**
+     * Send bulk emails to multiple candidates
+     * @param {Array} recipients - Array of {email, name} objects
+     * @param {String} subject - Email subject
+     * @param {String} body - Email body
+     * @returns {Promise<Object>} Response with success count
+     */
+    async sendBulkEmails(recipients, subject, body) {
+        return await makeHRRequest('/hr/emails/send-bulk', {
+            method: 'POST',
+            body: {
+                recipients,
+                subject,
+                body
+            }
+        });
+    },
+
+    /**
+     * Send interview invitation to a candidate
+     * @param {Object} inviteData - Interview invitation data
+     * @returns {Promise<Object>} Response
+     */
+    async sendInterviewInvite(inviteData) {
+        return await makeHRRequest('/hr/emails/send-interview-invite', {
+            method: 'POST',
+            body: inviteData
+        });
+    },
+
+    /**
+     * Send test email to verify configuration
+     * @param {String} email - Test recipient email
+     * @returns {Promise<Object>} Response
+     */
+    async sendTestEmail(email) {
+        return await makeHRRequest('/hr/emails/test', {
+            method: 'POST',
+            queryParams: { email }
+        });
+    }
+};
+
 // ==========================================
 // HELPER FUNCTIONS FOR HR PAGE
 // ==========================================
