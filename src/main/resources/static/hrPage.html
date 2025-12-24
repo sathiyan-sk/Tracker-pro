@@ -2976,13 +2976,43 @@ HR Team`
             dropdown.classList.toggle('active');
         }
 
-        function sendInvite(index) {
+        async function sendInvite(index) {
             const interview = scheduledInterviews[index];
             if (interview) {
-                interview.status = 'In-Progress';
-                interview.inviteSent = true;
-                renderInterviews();
-                showToast(`Invite sent to ${interview.candidateName}`);
+                try {
+                    // Prepare interview invitation data
+                    const inviteData = {
+                        candidateEmail: interview.email,
+                        candidateName: interview.candidateName,
+                        interviewDate: interview.date,
+                        interviewTime: interview.timeSlot,
+                        interviewMode: interview.mode,
+                        meetingLink: interview.meetingLink || '',
+                        hrManagerName: interview.hrManager,
+                        interviewTitle: interview.title || 'Interview',
+                        additionalNotes: interview.notes || ''
+                    };
+                    
+                    console.log('Sending interview invitation:', inviteData);
+                    
+                    // Call API to send interview invitation
+                    const response = await HREmailAPI.sendInterviewInvite(inviteData);
+                    
+                    if (response.success) {
+                        interview.status = 'In-Progress';
+                        interview.inviteSent = true;
+                        renderInterviews();
+                        showToast(`✅ Interview invitation sent to ${interview.candidateName}`, 'success');
+                        
+                        // Save to persistence
+                        DataPersistence.save('scheduledInterviews', scheduledInterviews);
+                    } else {
+                        showToast('Error: ' + (response.message || 'Failed to send invitation'), 'error');
+                    }
+                } catch (error) {
+                    console.error('Error sending interview invitation:', error);
+                    showToast('Failed to send interview invitation. Please try again.', 'error');
+                }
             }
         }
 
