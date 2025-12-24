@@ -2982,17 +2982,23 @@ HR Team`
             const interview = scheduledInterviews[index];
             if (interview) {
                 try {
-                    // Prepare interview invitation data
+                    // Validate required fields
+                    if (!interview.candidateName || !interview.email || !interview.date || !interview.time || !interview.mode || !interview.hrManager) {
+                        showToast('Missing required interview details. Please reschedule the interview with complete information.', 'error');
+                        return;
+                    }
+                    
+                    // Prepare interview invitation data matching backend DTO
                     const inviteData = {
                         candidateEmail: interview.email,
                         candidateName: interview.candidateName,
                         interviewDate: interview.date,
-                        interviewTime: interview.timeSlot,
+                        interviewTime: interview.time || interview.timeSlot || '',
                         interviewMode: interview.mode,
-                        meetingLink: interview.meetingLink || '',
+                        meetingLink: interview.videoLink || interview.meetingLink || '',
                         hrManagerName: interview.hrManager,
                         interviewTitle: interview.title || 'Interview',
-                        additionalNotes: interview.notes || ''
+                        additionalNotes: interview.description || interview.notes || ''
                     };
                     
                     console.log('Sending interview invitation:', inviteData);
@@ -3013,7 +3019,8 @@ HR Team`
                     }
                 } catch (error) {
                     console.error('Error sending interview invitation:', error);
-                    showToast('Failed to send interview invitation. Please try again.', 'error');
+                    const errorMsg = error.data?.message || error.message || 'Failed to send interview invitation';
+                    showToast(errorMsg + '. Please check all required fields are filled.', 'error');
                 }
             }
         }
