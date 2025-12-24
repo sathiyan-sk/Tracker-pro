@@ -1,6 +1,5 @@
 package com.webapp.Tracker_pro.service;
 
-import com.webapp.Tracker_pro.service.EmailService;
 import com.webapp.Tracker_pro.dto.*;
 import com.webapp.Tracker_pro.exception.ResourceNotFoundException;
 import com.webapp.Tracker_pro.model.*;
@@ -19,7 +18,6 @@ import java.util.stream.Collectors;
 /**
  * Service for HR Application Management operations
  * Handles viewing, filtering, and updating student internship applications
- * 
  * Note: This is separate from HRFacultyUserService which handles HR user account management
  */
 @Service
@@ -32,7 +30,6 @@ public class HRApplicationService {
     private final CareerPostRepository careerPostRepository;
     private final HRFacultyUserRepository hrFacultyUserRepository;
 
-    private final EmailService emailService;
 
 
     private static final DateTimeFormatter ISO_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
@@ -200,15 +197,6 @@ public class HRApplicationService {
         applicationRepository.save(application);
         log.info("Application {} status updated successfully", id);
 
-        // Send email notification (async - won't block the response)
-        try {
-            String internshipTitle = careerPost != null ? careerPost.getTitle() : "Internship";
-            String studentName = student.getFirstName() + " " + (student.getLastName() != null ? student.getLastName() : "");
-            emailService.sendApplicationStatusEmail(student.getEmail(), studentName, internshipTitle, status);
-        } catch (Exception e) {
-            log.warn("Failed to send status update email: {}", e.getMessage());
-            // Don't throw - email failure shouldn't fail the status update
-        }
 
         return getApplicationById(id);
     }
